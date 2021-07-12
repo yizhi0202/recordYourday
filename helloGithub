@@ -1,0 +1,19 @@
+#include<iostream>
+using namespace std;
+#include<string>
+
+typedef struct{
+  string name;
+  int id;
+}helloGithub;
+
+int main()
+{ 
+  helloGithub hg;
+  hg.id = 2021
+  hg.name = "hello, github.";
+  cout<<hg.id<<" "<<hg.name<<endl;
+  cout<<"over"<<endl;
+  return 0;
+
+}
