@@ -13,6 +13,7 @@ int main()
   hg.id = 2021
   hg.name = "hello, github.";
   cout<<hg.id<<" "<<hg.name<<endl;
+  cout<<"over"<<endl;
   return 0;
 
 }
