@@ -1,10 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-/// the audit's state of paceNote
-
-enum Myaudit { unknown, auditing, pass, reject }
+import 'auditState.dart';
 
 class paceNote extends StatefulWidget {
   int paceNoteID = 0; //to find the senicspots of the paceNote
