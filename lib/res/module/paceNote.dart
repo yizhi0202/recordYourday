@@ -7,8 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 enum Myaudit { unknown, auditing, pass, reject }
 
 class paceNote extends StatefulWidget {
-  int paceNoteID = 0;
-  int userID = 0;
+  int paceNoteID = 0; //to find the senicspots of the paceNote
+  int userID = 0; //to find the avatar and the nickname of the user
   DateTime? publishTime = DateTime.now();
   String? title = '';
   String? note = ''; //the feeling of the paceNote
@@ -66,7 +66,7 @@ class _paceNoteState extends State<paceNote> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           AspectRatio(
-              aspectRatio: 16 / 9,
+              aspectRatio: 4 / 3,
               child: Image.network(
                 '${widget.photo}',
                 fit: BoxFit.cover,
