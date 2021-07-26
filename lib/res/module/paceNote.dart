@@ -66,7 +66,7 @@ class _paceNoteState extends State<paceNote> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           AspectRatio(
-              aspectRatio: 4 / 3,
+              aspectRatio: 3 / 1,
               child: Image.network(
                 '${widget.photo}',
                 fit: BoxFit.cover,
