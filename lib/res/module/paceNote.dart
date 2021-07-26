@@ -18,22 +18,19 @@ class paceNote extends StatefulWidget {
   String? avatar;
   String? nickName;
 
-  bool
-      paceNoteType; //choose the type of paceNote, if true it is paceNote, else it is diary or self-plan
-  paceNote(
-      {Key? key,
-      required this.paceNoteID,
-      required this.userID,
-      this.publishTime,
-      this.title,
-      this.note,
-      this.score = 0,
-      this.audit,
-      this.photo = 'https://www.itying.com/images/flutter/2.png',
-      this.avatar = 'https://www.itying.com/images/flutter/4.png',
-      this.nickName = '网瘾少年',
-      this.paceNoteType = true})
-      : super(key: key) {
+  paceNote({
+    Key? key,
+    required this.paceNoteID,
+    required this.userID,
+    this.publishTime,
+    this.title,
+    this.note,
+    this.score = 0,
+    this.audit,
+    this.photo = 'https://www.itying.com/images/flutter/2.png',
+    this.avatar = 'https://www.itying.com/images/flutter/4.png',
+    this.nickName = '网瘾少年',
+  }) : super(key: key) {
     assert(score! >= 0 && score! <= 100);
   }
   _SetAudit(int index) {
