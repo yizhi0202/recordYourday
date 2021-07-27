@@ -83,35 +83,6 @@ class _scenicSpotState extends State<scenicSpot> {
         color: Colors.grey,
       ),
     ];
-    return Container(
-        width: 400,
-        height: 800,
-        child: Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    child: VerticalCardPager(
-                        titles: titles, // required
-                        images: images, // required
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold), // optional
-                        onPageChanged: (page) {
-                          // optional
-                        },
-                        onSelectedItem: (index) {
-                          // optional
-                        },
-                        initialPage: 0, // optional
-                        align: ALIGN.CENTER // optional
-                        ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
+    return Container();
   }
 }
