@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../pages/tabs/catagory.dart';
-import '../pages/tabs/home.dart';
-import '../pages/tabs/setting.dart';
+import '../pages/tabs/scenicSpotPage.dart';
+import '../pages/tabs/paceNotePage.dart';
+import '../pages/tabs/emgContact.dart';
 import '../pages/tab.dart';
 import '../pages/tabs/search.dart';
 
 //配置路由,定义 Map 类型的 routes,Key 为 String 类型，Value 为 Function 类型
 final Map<String, Function> routes = {
   '/': (context) => tab(),
-  '/category': (context) => categoryPage(),
-  '/home': (context) => homePage(),
-  '/setting': (context) => settingPage(),
+  '/scenicSpot': (context) => scenicSpotPage(),
+  '/paceNote': (context) => paceNotePage(),
+  '/emgContact': (context) => emgContactPage(),
   '/search': (context) => searchPage()
 };
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../res/module/paceNote.dart';
 
-class homePage extends StatelessWidget {
-  const homePage({Key? key}) : super(key: key);
+class paceNotePage extends StatelessWidget {
+  const paceNotePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

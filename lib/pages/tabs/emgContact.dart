@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 
-class settingPage extends StatefulWidget {
-  settingPage({Key? key}) : super(key: key);
+class emgContactPage extends StatefulWidget {
+  emgContactPage({Key? key}) : super(key: key);
 
   @override
-  _settingPageState createState() => _settingPageState();
+  _emgContactPageState createState() => _emgContactPageState();
 }
 
-class _settingPageState extends State<settingPage> {
+class _emgContactPageState extends State<emgContactPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(

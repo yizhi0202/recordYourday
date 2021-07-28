@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fancy_bar/fancy_bar.dart';
-import 'tabs/catagory.dart';
-import 'tabs/setting.dart';
-import 'tabs/home.dart';
-import 'tabs/welcome.dart';
+import 'tabs/scenicSpotPage.dart';
+import 'tabs/emgContact.dart';
+import 'tabs/paceNotePage.dart';
+import 'tabs/selfHomePage.dart';
 
 class tab extends StatefulWidget {
   tab({Key? key}) : super(key: key);
@@ -16,11 +16,11 @@ class _tabState extends State<tab> {
   int _currentIndex = 0;
   Color selectColor = Colors.yellow;
   List _pageList = [
-    homePage(),
-    categoryPage(),
-    homePage(),
-    settingPage(),
-    WelcomePage()
+    paceNotePage(),
+    scenicSpotPage(),
+    paceNotePage(),
+    emgContactPage(),
+    selfHomePage()
   ];
   @override
   Widget build(BuildContext context) {
