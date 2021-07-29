@@ -77,7 +77,7 @@ class _tabState extends State<tab> {
           height: 80,
           width: 80,
           padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(top: 16),
+          margin: EdgeInsets.only(top: 18),
           child: FloatingActionButton(
             child: Icon(
               Icons.add,
@@ -126,7 +126,7 @@ class _tabState extends State<tab> {
           ],
           onItemSelected: (index) {
             setState(() {
-              this._currentIndex = index;
+              if (index != 2) this._currentIndex = index;
             });
           },
         ),

@@ -1,8 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'auditState.dart';
-import 'package:card_swiper/card_swiper.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class scenicSpot extends StatefulWidget {
   int scenicSpotID = 0; //to find the senicspots of the paceNote
@@ -57,70 +58,66 @@ class _scenicSpotState extends State<scenicSpot> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
-      width: 200,
-      child: Card(
-          child: Stack(
-        children: <Widget>[
-          Image.network(
-            '${widget.photo![0]}',
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-            child: Container(
-              height: 36,
-              width: 64,
-              child: Image.network(
-                '${widget.photo![0]}',
-                fit: BoxFit.cover,
-              ),
-            ),
-            left: 10,
-            top: 10,
-          ),
-          Positioned(
-            child: Text(
-              '${widget.introduction}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            top: 10,
-            left: 74,
-          ),
-          Positioned(
-            top: 14,
-            left: 74,
-            child: Container(
-              width: 60,
-              height: 30,
-              child: ListTile(
-                leading: Container(
-                    height: 30,
-                    width: 30,
-                    child: ClipOval(
-                      child: Image.network(
-                        '${widget.profilePhoto}',
-                        height: 30,
-                        width: 30,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage('${widget.photo![0]}'), fit: BoxFit.cover)),
+        margin: EdgeInsets.all(10),
+        height: 240,
+        width: double.infinity,
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  '${widget.title}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 5,
+                  ),
+                ),
+                Expanded(
+                    child: Text(
+                  '${widget.introduction}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                )),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 30.0,
                       ),
-                    )),
-                title: Text('${widget.nickName}'),
-              ),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage('${widget.profilePhoto}'),
+                      ),
+                    ),
+                    Text('${widget.nickName}',
+                        style: TextStyle(color: Colors.white70)),
+                    SizedBox(
+                      width: 260,
+                    ),
+                    IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.heart,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
-          Positioned(
-              top: 14,
-              right: 10,
-              child: Container(
-                  height: 20,
-                  width: 20,
-                  child: IconButton(
-                    icon: FaIcon(FontAwesomeIcons.heart),
-                    onPressed: () {},
-                  )))
-        ],
-      )),
-    );
+        ));
     // child: GFCard(
     //   boxFit: BoxFit.cover,
     //   imageOverlay: AssetImage('images/forest.jpg'),

@@ -20,19 +20,56 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
-        // Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction:
+              '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
+        ),
         Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction: '如有一味绝境，必经十方生死!',
+        ),
         Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction: '如有一味绝境，必经十方生死!',
+        ),
         Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction: '如有一味绝境，必经十方生死!',
+        ),
         Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction: '如有一味绝境，必经十方生死!',
+        ),
         Divider(),
-        scenicSpot(scenicSpotID: 1, userID: 2, photo: myphoto)
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction:
+              '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!',
+        ),
+        Divider(),
+        scenicSpot(
+          scenicSpotID: 1,
+          userID: 2,
+          photo: myphoto,
+          introduction: '如有一味绝境，必经十方生死!',
+        ),
       ],
     );
   }
