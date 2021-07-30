@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fancy_bar/fancy_bar.dart';
 import 'tabs/scenicSpotPage.dart';
-import 'tabs/emgContact.dart';
+import 'tabs/emgContactPage.dart';
 import 'tabs/paceNotePage.dart';
 import 'tabs/selfHomePage.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/tabs/scenicSpotPage.dart';
 import '../pages/tabs/paceNotePage.dart';
-import '../pages/tabs/emgContact.dart';
+import '../pages/tabs/emgContactPage.dart';
 import '../pages/tab.dart';
 import '../pages/tabs/search.dart';
 
