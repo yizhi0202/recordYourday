@@ -49,7 +49,7 @@ class _paceNoteState extends State<paceNote> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(8),
       shadowColor: Colors.lightGreen,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
