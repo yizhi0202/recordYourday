@@ -23,7 +23,7 @@ class _emgContactPageState extends State<emgContactPage> {
             GFButton(
               onPressed: () {},
               text: "新建紧急联系人",
-              textStyle: TextStyle(color: Colors.black, fontSize: 16.0),
+              textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
               icon: Icon(
                 Icons.add_call,
                 color: Colors.white,
@@ -37,7 +37,7 @@ class _emgContactPageState extends State<emgContactPage> {
             GFButton(
               onPressed: () {},
               text: "设置报警时间",
-              textStyle: TextStyle(color: Colors.black, fontSize: 16.0),
+              textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
               icon: Icon(
                 Icons.add_alert_rounded,
                 color: Colors.white,
