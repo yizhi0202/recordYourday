@@ -68,11 +68,10 @@ class _paceNoteState extends State<paceNote> {
                 '${widget.photo}',
                 fit: BoxFit.cover,
               )),
-          Text(
-            '${widget.title} | ${widget.note}',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+          Text('${widget.title} | ${widget.note}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 16.0, color: Colors.grey)),
           ListTile(
             leading: ClipOval(
               child: Image.network(
@@ -82,7 +81,10 @@ class _paceNoteState extends State<paceNote> {
                 width: 40,
               ),
             ),
-            title: Text('${widget.nickName} up主推荐率 ${widget.score}%'),
+            title: Text(
+              '${widget.nickName} up主推荐率 ${widget.score}%',
+              style: TextStyle(fontSize: 16.0),
+            ),
           ),
           Row(
             children: <Widget>[

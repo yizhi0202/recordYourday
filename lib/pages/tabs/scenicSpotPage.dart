@@ -27,35 +27,55 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           introduction:
               '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,
           photo: myphoto,
           introduction: '如有一味绝境，必经十方生死!',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,
           photo: myphoto,
           introduction: '如有一味绝境，必经十方生死!',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,
           photo: myphoto,
           introduction: '如有一味绝境，必经十方生死!',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,
           photo: myphoto,
           introduction: '如有一味绝境，必经十方生死!',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,
@@ -63,7 +83,11 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           introduction:
               '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!',
         ),
-        Divider(),
+        Divider(
+          color: Colors.green,
+          indent: 8.0,
+          endIndent: 8.0,
+        ),
         scenicSpot(
           scenicSpotID: 1,
           userID: 2,

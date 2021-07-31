@@ -61,7 +61,7 @@ class _scenicSpotState extends State<scenicSpot> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: NetworkImage('${widget.photo![0]}'), fit: BoxFit.cover)),
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(8),
         height: 240,
         width: double.infinity,
         child: ClipRRect(
@@ -84,7 +84,7 @@ class _scenicSpotState extends State<scenicSpot> {
                   '${widget.introduction}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Colors.white70,
                   ),
                   maxLines: 3,
@@ -101,7 +101,8 @@ class _scenicSpotState extends State<scenicSpot> {
                       ),
                     ),
                     Text('${widget.nickName}',
-                        style: TextStyle(color: Colors.white70)),
+                        style:
+                            TextStyle(color: Colors.white70, fontSize: 16.0)),
                     SizedBox(
                       width: 260,
                     ),
