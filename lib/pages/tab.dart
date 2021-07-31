@@ -27,51 +27,6 @@ class _tabState extends State<tab> {
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(45),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 25,
-                    width: 50,
-                    child: Padding(
-                        padding: const EdgeInsets.only(left: 8, top: 0),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                        )),
-                  ),
-                  Container(
-                      height: 45,
-                      width: 300,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8, top: 2),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "请输入关键字",
-                            //border: OutlineInputBorder(),
-                          ),
-                        ),
-                      )),
-
-                  // child: TextField(
-                  //   decoration: InputDecoration(
-                  //       hintText: "请输入关键字", labelText: "关键字"),
-                  // )),
-                ],
-              )),
-          centerTitle: true,
-        ),
         body: this._pageList[this._currentIndex],
         floatingActionButton: Container(
           height: 80,

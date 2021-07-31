@@ -18,83 +18,101 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction:
-              '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
+    return Scaffold(
+        appBar: AppBar(
+          primary: true,
+          backgroundColor: Colors.yellow,
+          centerTitle: true,
+          title: Text('景点'),
+          leading: IconButton(
+            //drawer
+            icon: Icon(Icons.menu),
+            onPressed: () {},
+          ),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.search),
+            )
+          ],
         ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction: '如有一味绝境，必经十方生死!',
-        ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction: '如有一味绝境，必经十方生死!',
-        ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction: '如有一味绝境，必经十方生死!',
-        ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction: '如有一味绝境，必经十方生死!',
-        ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction:
-              '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!',
-        ),
-        Divider(
-          color: Colors.green,
-          indent: 8.0,
-          endIndent: 8.0,
-        ),
-        scenicSpot(
-          scenicSpotID: 1,
-          userID: 2,
-          photo: myphoto,
-          introduction: '如有一味绝境，必经十方生死!',
-        ),
-      ],
-    );
+        body: ListView(
+          children: [
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction:
+                  '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction: '如有一味绝境，必经十方生死!',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction: '如有一味绝境，必经十方生死!',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction: '如有一味绝境，必经十方生死!',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction: '如有一味绝境，必经十方生死!',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction:
+                  '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!',
+            ),
+            Divider(
+              color: Colors.green,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            scenicSpot(
+              scenicSpotID: 1,
+              userID: 2,
+              photo: myphoto,
+              introduction: '如有一味绝境，必经十方生死!',
+            ),
+          ],
+        ));
   }
 }

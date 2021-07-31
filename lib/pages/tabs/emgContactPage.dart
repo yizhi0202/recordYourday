@@ -81,17 +81,24 @@ class _emgContactPageState extends State<emgContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 280,
-      width: double.infinity,
-      color: Colors.white,
-      child: ListView.builder(
-        itemBuilder: (c, index) {
-          return _item(index);
-        },
-        itemCount: emgContactList.length,
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          primary: true,
+          backgroundColor: Colors.yellow,
+          centerTitle: true,
+          title: Text('路书'),
+        ),
+        body: Container(
+          height: 280,
+          width: double.infinity,
+          color: Colors.white,
+          child: ListView.builder(
+            itemBuilder: (c, index) {
+              return _item(index);
+            },
+            itemCount: emgContactList.length,
+          ),
+        ));
 
     // return ListView(
     //   children: <Widget>[

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'res/listData.dart';
 import 'routes/Routes.dart';
 
 void main() {
