@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../res/module/paceNote.dart';
+import '../../res/module/paceNote/paceNote.dart';
 
 class paceNotePage extends StatelessWidget {
   const paceNotePage({Key? key}) : super(key: key);

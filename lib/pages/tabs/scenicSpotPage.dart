@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_y/res/module/scenicSpot.dart';
+import 'package:flutter_app_y/res/module/scenicSpot/scenicSpot.dart';
 
 class scenicSpotPage extends StatefulWidget {
   scenicSpotPage({Key? key}) : super(key: key);

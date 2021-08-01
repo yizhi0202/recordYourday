@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../res/module/emgContact.dart';
+import '../../res/module/emgContact/emgContact.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 

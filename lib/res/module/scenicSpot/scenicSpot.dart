@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'auditState.dart';
+import '../auditState.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class scenicSpot extends StatefulWidget {

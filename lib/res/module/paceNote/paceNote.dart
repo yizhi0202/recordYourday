@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'auditState.dart';
+import '../auditState.dart';
 
 class paceNote extends StatefulWidget {
   int paceNoteID = 0; //to find the senicspots of the paceNote
@@ -116,32 +116,3 @@ class _paceNoteState extends State<paceNote> {
     );
   }
 }
-// class paceNote extends StatelessWidget {
-//   int paceNoteID = 0;
-//   int userID = 0;
-//   DateTime publishTime = DateTime.now();
-//   String title = '';
-//   String note = ''; //the feeling of the paceNote
-//   int score = 0; //the score of the paceNote, the autor gives
-//   Myaudit audit = Myaudit.unknown;
-//   String photo = '/images/forest.jpg';
-//   paceNote({
-//     Key? key,
-//     @required paceNoteID,
-//     @required userID,
-//     publishTime,
-//     title,
-//     note,
-//     score,
-//     audit,
-//     photo,
-//     image,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: null,
-//     );
-//   }
-// }
