@@ -87,6 +87,11 @@ class _emgContactPageState extends State<emgContactPage> {
           backgroundColor: Colors.red,
           centerTitle: true,
           title: Text('紧急联系人'),
+          leading: IconButton(
+            //drawer
+            icon: Icon(Icons.menu),
+            onPressed: () {},
+          ),
         ),
         body: Column(
           // height: 260,

@@ -11,6 +11,17 @@ class selfHomePage extends StatelessWidget {
         profilePhoto: 'https://www.itying.com/images/flutter/4.png',
         nickname: 'ak43');
     return Scaffold(
+      appBar: AppBar(
+        primary: true,
+        backgroundColor: Colors.lightBlue,
+        centerTitle: true,
+        title: Text('我的'),
+        leading: IconButton(
+          //drawer
+          icon: Icon(Icons.menu),
+          onPressed: () {},
+        ),
+      ),
       backgroundColor: Colors.transparent,
       body: usrpage.build(context),
     );
