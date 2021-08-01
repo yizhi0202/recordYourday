@@ -84,90 +84,55 @@ class _emgContactPageState extends State<emgContactPage> {
     return Scaffold(
         appBar: AppBar(
           primary: true,
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.red,
           centerTitle: true,
-          title: Text('路书'),
+          title: Text('紧急联系人'),
         ),
-        body: Container(
-          height: 280,
-          width: double.infinity,
-          color: Colors.white,
-          child: ListView.builder(
-            itemBuilder: (c, index) {
-              return _item(index);
-            },
-            itemCount: emgContactList.length,
-          ),
+        body: Column(
+          // height: 260,
+          // width: double.infinity,
+          // color: Colors.white,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 8,
+                ),
+                GFButton(
+                  onPressed: () {},
+                  text: "新建紧急联系人",
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  icon: Icon(
+                    Icons.add_call,
+                    color: Colors.white,
+                  ),
+                  color: Colors.red,
+                  shape: GFButtonShape.pills,
+                ),
+                SizedBox(
+                  width: 160.0,
+                ),
+                GFButton(
+                  onPressed: () {},
+                  text: "设置报警时间",
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  icon: Icon(
+                    Icons.add_alert_rounded,
+                    color: Colors.white,
+                  ),
+                  shape: GFButtonShape.pills,
+                  color: Colors.yellow,
+                ),
+              ],
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemBuilder: (c, index) {
+                return _item(index);
+              },
+              itemCount: emgContactList.length,
+            ),
+          ],
         ));
-
-    // return ListView(
-    //   children: <Widget>[
-    //     Row(
-    //       children: <Widget>[
-    //         SizedBox(
-    //           width: 8,
-    //         ),
-    //         GFButton(
-    //           onPressed: () {},
-    //           text: "新建紧急联系人",
-    //           textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
-    //           icon: Icon(
-    //             Icons.add_call,
-    //             color: Colors.white,
-    //           ),
-    //           color: Colors.redAccent,
-    //           shape: GFButtonShape.pills,
-    //         ),
-    //         SizedBox(
-    //           width: 160.0,
-    //         ),
-    //         GFButton(
-    //           onPressed: () {},
-    //           text: "设置报警时间",
-    //           textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
-    //           icon: Icon(
-    //             Icons.add_alert_rounded,
-    //             color: Colors.white,
-    //           ),
-    //           shape: GFButtonShape.pills,
-    //           color: Colors.yellow,
-    //         ),
-    //       ],
-    //     ),
-    //     Divider(
-    //       color: Colors.red,
-    //       indent: 8.0,
-    //       endIndent: 8.0,
-    //     ),
-    //     emgContact(
-    //         name: '苏珊',
-    //         profilePhoto: 'https://www.itying.com/images/flutter/1.png',
-    //         phoneNumber: 18765467890),
-    //     Divider(
-    //       color: Colors.red,
-    //       indent: 8.0,
-    //       endIndent: 8.0,
-    //     ),
-    //     emgContact(
-    //         name: '苏珊andognni',
-    //         profilePhoto: 'https://www.itying.com/images/flutter/2.png',
-    //         phoneNumber: 18765467890),
-    //     Divider(
-    //       color: Colors.red,
-    //       indent: 8.0,
-    //       endIndent: 8.0,
-    //     ),
-    //     emgContact(
-    //       name: '李月',
-    //       profilePhoto: 'https://www.itying.com/images/flutter/4.png',
-    //       phoneNumber: 19876543432,
-    //     ),
-    //     Divider(
-    //       color: Colors.red,
-    //       indent: 8.0,
-    //       endIndent: 8.0,
-    //     ),
-    //   ],
-    // );
   }
 }

@@ -21,7 +21,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     return Scaffold(
         appBar: AppBar(
           primary: true,
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.lightGreen,
           centerTitle: true,
           title: Text('景点'),
           leading: IconButton(

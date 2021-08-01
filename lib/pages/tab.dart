@@ -64,7 +64,7 @@ class _tabState extends State<tab> {
             FancyItem(
                 textColor: Colors.yellow, title: '加号', icon: Icon(Icons.face)),
             FancyItem(
-                textColor: Colors.redAccent,
+                textColor: Colors.red,
                 title: '紧急联系人',
                 icon: Icon(
                   Icons.people,
