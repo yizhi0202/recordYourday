@@ -29,15 +29,15 @@ class _tabState extends State<tab> {
         backgroundColor: Colors.white,
         body: this._pageList[this._currentIndex],
         floatingActionButton: Container(
-          height: 80,
-          width: 80,
+          height: 90,
+          width: 90,
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.only(top: 18),
           child: FloatingActionButton(
             child: Icon(
               Icons.add,
               color: Colors.white70,
-              size: 50,
+              size: 60,
             ),
             onPressed: () {},
             backgroundColor: Colors.yellow,

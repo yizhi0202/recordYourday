@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'routes/Routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/loginPass',
       onGenerateRoute: onGenerateRoute,
       theme: ThemeData(
         brightness: Brightness.light,

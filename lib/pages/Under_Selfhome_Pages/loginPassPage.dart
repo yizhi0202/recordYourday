@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 
 class loginPassPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           Align(
@@ -20,6 +21,30 @@ class loginPassPage extends StatelessWidget {
                   '终于等到你',
                   style: TextStyle(fontSize: 20),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(8.0),
+                        labelText: '请输入手机号'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32),
+                  child: TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(labelText: '请输入密码'),
+                  ),
+                ),
+                GFButton(
+                  onPressed: () {},
+                  text: "忘记密码？",
+                  textStyle: TextStyle(fontSize: 16, color: Colors.black),
+                  type: GFButtonType.transparent,
+                  padding: EdgeInsets.only(right: 32),
+                ),
+                SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),
                   decoration: BoxDecoration(
@@ -28,7 +53,7 @@ class loginPassPage extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   width: 250,
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {},
@@ -43,11 +68,17 @@ class loginPassPage extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   width: 250,
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text('注册',
                         style: TextStyle(fontSize: 20, color: Colors.black12)),
                     onPressed: () {},
                   ),
+                ),
+                GFButton(
+                  onPressed: () {},
+                  text: "手机验证码登录",
+                  textStyle: TextStyle(fontSize: 16, color: Colors.black),
+                  type: GFButtonType.transparent,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,12 +92,14 @@ class loginPassPage extends StatelessWidget {
                     SizedBox(
                       width: 8,
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {},
                       child: Text(
                         'English',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                     ),
                   ],
