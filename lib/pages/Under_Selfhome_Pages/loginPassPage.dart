@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+// import '../../routes/Routes.dart';
 
 class loginPassPage extends StatelessWidget {
   @override
@@ -25,9 +25,7 @@ class loginPassPage extends StatelessWidget {
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8.0),
-                        labelText: '请输入手机号'),
+                    decoration: InputDecoration(labelText: '请输入手机号'),
                   ),
                 ),
                 Padding(
@@ -37,12 +35,17 @@ class loginPassPage extends StatelessWidget {
                     decoration: InputDecoration(labelText: '请输入密码'),
                   ),
                 ),
-                GFButton(
-                  onPressed: () {},
-                  text: "忘记密码？",
-                  textStyle: TextStyle(fontSize: 16, color: Colors.black),
-                  type: GFButtonType.transparent,
-                  padding: EdgeInsets.only(right: 32),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/findPass');
+                  },
+                  child: Text(
+                    '忘记密码？',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
                 ),
                 SizedBox(height: 32),
                 Container(
@@ -71,14 +74,22 @@ class loginPassPage extends StatelessWidget {
                   child: TextButton(
                     child: Text('注册',
                         style: TextStyle(fontSize: 20, color: Colors.black12)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/signUp');
+                    },
                   ),
                 ),
-                GFButton(
-                  onPressed: () {},
-                  text: "手机验证码登录",
-                  textStyle: TextStyle(fontSize: 16, color: Colors.black),
-                  type: GFButtonType.transparent,
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/loginCode');
+                  },
+                  child: Text(
+                    '手机验证码登录',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
