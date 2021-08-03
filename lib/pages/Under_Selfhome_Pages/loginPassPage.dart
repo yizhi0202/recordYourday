@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 // import '../../routes/Routes.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_auth/cloudbase_auth.dart';
+import 'package:apifm/apifm.dart' as Apifm;
+
+void QueryMobileLocation(String phonenumber) async {
+  Apifm.init("bd1a95e20f10394f7ea5fd7ec06cfaa5 ");
+  var res = await Apifm.queryMobileLocation(phonenumber);
+  print(res);
+}
 
 class loginPassPage extends StatelessWidget {
   @override
@@ -104,7 +113,9 @@ class loginPassPage extends StatelessWidget {
                       width: 8,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        QueryMobileLocation('18851896831');
+                      },
                       child: Text(
                         'English',
                         style: TextStyle(

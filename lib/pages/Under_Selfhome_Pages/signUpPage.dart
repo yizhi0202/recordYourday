@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
 
 class signUpPage extends StatelessWidget {
+  final vertificationCodeController = TextEditingController();
+  final phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +49,10 @@ class signUpPage extends StatelessWidget {
                         labelStyle: TextStyle(fontSize: 16)),
                   ),
                 ),
-                MyBody(),
+                MyBody(
+                  phoneNumber: '14356784532',
+                  mcontroller: vertificationCodeController,
+                ),
                 SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),

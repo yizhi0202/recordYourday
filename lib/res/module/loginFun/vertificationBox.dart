@@ -3,7 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'asr_manager.dart';
+
 class MyBody extends StatefulWidget {
+  String phoneNumber = '';
+  TextEditingController mcontroller = TextEditingController();
+  MyBody({required this.phoneNumber, required this.mcontroller});
   @override
   _MyBodyState createState() => _MyBodyState();
 }
@@ -14,7 +19,6 @@ class _MyBodyState extends State<MyBody> {
   int count = 60; //初始倒计时时间
   Timer timer =
       Timer.periodic(Duration(seconds: 1), (Timer timer) {}); //倒计时的计时器
-  TextEditingController mController = TextEditingController();
 
   void _buttonClickListen() {
     setState(() {
@@ -76,7 +80,7 @@ class _MyBodyState extends State<MyBody> {
                     child: TextFormField(
                       maxLines: 1,
                       onSaved: (value) {},
-                      controller: mController,
+                      controller: widget.mcontroller,
                       textAlign: TextAlign.left,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -113,9 +117,10 @@ class _MyBodyState extends State<MyBody> {
                         : Colors.transparent,
                     shape: StadiumBorder(side: BorderSide.none),
                     onPressed: () {
-                      //http 发送信息
                       setState(() {
                         _buttonClickListen();
+                        //http 发送验证码
+                        ArsManager.telephone(widget.phoneNumber);
                       });
                     },
 //      child: Text('重新发送 (${secondSy})'),
