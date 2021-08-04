@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
 
 class editPassPage extends StatelessWidget {
-  final vertificationCodeController = TextEditingController();
-  final phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,10 +47,7 @@ class editPassPage extends StatelessWidget {
                         labelStyle: TextStyle(fontSize: 16)),
                   ),
                 ),
-                MyBody(
-                  phoneNumber: '14356780954',
-                  mcontroller: vertificationCodeController,
-                ),
+                MyBody(),
                 SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),

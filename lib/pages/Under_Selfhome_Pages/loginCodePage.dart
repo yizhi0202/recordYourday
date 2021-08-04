@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
-import '../../res/module/loginFun/asr_manager.dart';
 
 class loginCodePage extends StatelessWidget {
-  final vertificationCodeController = TextEditingController();
-  final phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +32,13 @@ class loginCodePage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
-                    controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: '请输入手机号',
                         labelStyle: TextStyle(fontSize: 16.0)),
                   ),
                 ),
-                MyBody(
-                  phoneNumber: phoneController.text,
-                  mcontroller: vertificationCodeController,
-                ),
+                MyBody(),
                 SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),
@@ -58,9 +51,7 @@ class loginCodePage extends StatelessWidget {
                   child: TextButton(
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {
-                      login(context);
-                    },
+                    onPressed: () {},
                   ),
                 ),
               ],
@@ -69,20 +60,5 @@ class loginCodePage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  login(BuildContext context) {
-    Map ages = {};
-    ages['phone'] = phoneController.text;
-    ages['code'] = vertificationCodeController.text;
-    ArsManager.correct(ages).then((result) {
-      int code = result["code"];
-      String message = result["message"];
-      if (message == "提交验证码正确") {
-        Navigator.pushNamed(context, '/');
-      } else {
-        print(message);
-      }
-    });
   }
 }
