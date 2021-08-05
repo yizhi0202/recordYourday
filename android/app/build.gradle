@@ -23,14 +23,9 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.mob.sdk'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-MobSDK{
-  appKey "33faaaa3f7ce8"
-  appSecret "e727204b60de8ddb65d456880e15216e"
-  SMSSDK {}
-}
+
 android {
     compileSdkVersion 29
 
