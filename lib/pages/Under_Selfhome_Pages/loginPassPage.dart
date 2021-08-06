@@ -3,14 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:apifm/apifm.dart' as Apifm;
+import 'package:dio/dio.dart';
 
-void QueryMobileLocation(String phonenumber) async {
-  Apifm.init("bd1a95e20f10394f7ea5fd7ec06cfaa5 ");
-  var res = await Apifm.queryMobileLocation(phonenumber);
-  print(res);
-}
+// void QueryMobileLocation(String phonenumber) async {
+//   Apifm.init("bd1a95e20f10394f7ea5fd7ec06cfaa5 ");
+//   var res = await Apifm.queryMobileLocation(phonenumber);
+//   print(res);
+// }
 
 class loginPassPage extends StatelessWidget {
+  TextEditingController phone =
+      TextEditingController(); //get the input of phonenumber
+  TextEditingController pass =
+      TextEditingController(); //get the input of password
+
+  void callLoginPass(String ph, String pa, context) async {
+    try {
+      //call the cloud function
+      var response = await Dio().post(
+          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/loginPass',
+          data: {'phone': ph, 'pass': pa});
+      print(response);
+      var result = response.toString();
+      if (result == 'true') Navigator.pushNamed(context, '/');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +53,7 @@ class loginPassPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
+                    controller: phone,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: '请输入手机号'),
                   ),
@@ -40,6 +61,7 @@ class loginPassPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
+                    controller: pass,
                     obscureText: true,
                     decoration: InputDecoration(labelText: '请输入密码'),
                   ),
@@ -68,7 +90,9 @@ class loginPassPage extends StatelessWidget {
                   child: TextButton(
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {},
+                    onPressed: () {
+                      callLoginPass(phone.text, pass.text, context);
+                    },
                   ),
                 ),
                 Container(
@@ -113,9 +137,7 @@ class loginPassPage extends StatelessWidget {
                       width: 8,
                     ),
                     TextButton(
-                      onPressed: () {
-                        QueryMobileLocation('18851896831');
-                      },
+                      onPressed: () {},
                       child: Text(
                         'English',
                         style: TextStyle(

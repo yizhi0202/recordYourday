@@ -10,7 +10,7 @@ class signUpPage extends StatelessWidget {
   void callSignUp(String ph, String pa) async {
     try {
       var response = await Dio().post(
-          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/loginFun',
+          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/signUpFun',
           data: {'phone': ph, 'pass': pa});
       print(response);
     } catch (e) {
