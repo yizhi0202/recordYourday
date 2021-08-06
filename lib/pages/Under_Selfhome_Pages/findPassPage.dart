@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
 
 class findPassPage extends StatelessWidget {
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController vertificationCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +40,9 @@ class findPassPage extends StatelessWidget {
                         labelStyle: TextStyle(fontSize: 16.0)),
                   ),
                 ),
-                MyBody(),
+                MyBody(
+                    phone: phoneController.text,
+                    codeController: vertificationCodeController),
                 SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),

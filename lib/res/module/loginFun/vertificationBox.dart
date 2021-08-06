@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:apifm/apifm.dart' as Apifm;
 
 class MyBody extends StatefulWidget {
+  TextEditingController codeController = TextEditingController();
+  String phone = '';
+  MyBody({required this.codeController, required this.phone});
   @override
   _MyBodyState createState() => _MyBodyState();
 }
@@ -14,7 +18,6 @@ class _MyBodyState extends State<MyBody> {
   int count = 60; //初始倒计时时间
   Timer timer =
       Timer.periodic(Duration(seconds: 1), (Timer timer) {}); //倒计时的计时器
-  TextEditingController mController = TextEditingController();
 
   void _buttonClickListen() {
     setState(() {
@@ -76,7 +79,7 @@ class _MyBodyState extends State<MyBody> {
                     child: TextFormField(
                       maxLines: 1,
                       onSaved: (value) {},
-                      controller: mController,
+                      controller: widget.codeController,
                       textAlign: TextAlign.left,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -114,6 +117,7 @@ class _MyBodyState extends State<MyBody> {
                     shape: StadiumBorder(side: BorderSide.none),
                     onPressed: () {
                       //http 发送信息
+                      Apifm.smsValidateCode(widget.phone);
                       setState(() {
                         _buttonClickListen();
                       });

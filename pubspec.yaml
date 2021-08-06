@@ -35,6 +35,8 @@ dependencies:
   cloudbase_core: ^0.0.9
   cloudbase_auth: ^0.0.11
   apifm: ^0.0.2
+  jpush_flutter: ^2.1.5
+  dio: ^3.0.7
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
