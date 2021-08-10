@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import '../../routes/Routes.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:apifm/apifm.dart' as Apifm;
 import 'package:dio/dio.dart';
 
@@ -16,6 +17,46 @@ class loginPassPage extends StatelessWidget {
       TextEditingController(); //get the input of phonenumber
   TextEditingController pass =
       TextEditingController(); //get the input of password
+
+  void prepareForLogin(String phone, String pass, context) async {
+    // 初始化
+    CloudBaseCore core = CloudBaseCore.init({
+      'env': 'hello-cloudbase-7gk3odah3c13f4d1',
+      'appAccess': {'key': '8b94be2cb5bbd669ed0c7e98dc8c3a25', 'version': '1'}
+    });
+// // 获取登录对象
+//     CloudBaseAuth auth = CloudBaseAuth(core);
+//     // 获取登录状态
+//     CloudBaseAuthState authState = await auth.getAuthState();
+
+// // 唤起匿名登录
+//     if (authState == null) {
+//       await auth.signInAnonymously().then((success) {
+//         print('匿名登录成功');
+//       }).catchError((err) {
+//         print('匿名登录失败');
+//         // 登录失败
+//       });
+//     }
+    //初始化数据库
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    Collection collection = db.collection('Users');
+    var _ = db.command;
+    var res = await collection
+        .where(_.and([
+          {phone: _.eq(phone)},
+          {pass: _.eq(pass)}
+        ]))
+        .get();
+    print(res);
+    if (res.data == null) {
+      print('name or password is wrong!');
+      Navigator.pushNamed(context, '/');
+    } else {
+      print('login success!');
+      Navigator.pushNamed(context, '/');
+    }
+  }
 
   void callLoginPass(String ph, String pa, context) async {
     try {
@@ -91,7 +132,8 @@ class loginPassPage extends StatelessWidget {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      callLoginPass(phone.text, pass.text, context);
+                      //callLoginPass(phone.text, pass.text, context);
+                      prepareForLogin(phone.text, pass.text, context);
                     },
                   ),
                 ),

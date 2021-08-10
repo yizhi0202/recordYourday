@@ -32,11 +32,15 @@ dependencies:
   getwidget: ^2.0.3
   flutter_swipe_action_cell: ^2.1.1
   shared_preferences: ^0.5.6
-  cloudbase_core: ^0.0.9
-  cloudbase_auth: ^0.0.11
+  cloudbase_core: ^0.0.4
+  cloudbase_auth: ^0.0.4
+  cloudbase_database: ^0.0.7
+  qiniu_flutter_sdk: ^0.2.0
   apifm: ^0.0.2
   jpush_flutter: ^2.1.5
   dio: ^3.0.7
+  image_picker: ^0.6.1
+  cloudbase_storage: ^0.0.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0

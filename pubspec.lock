@@ -64,6 +64,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.11"
+  cloudbase_database:
+    dependency: "direct main"
+    description:
+      name: cloudbase_database
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.12+2"
+  cloudbase_storage:
+    dependency: "direct main"
+    description:
+      name: cloudbase_storage
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.3"
   collection:
     dependency: transitive
     description:
@@ -139,6 +153,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.11"
   flutter_swipe_action_cell:
     dependency: "direct main"
     description:
@@ -184,6 +205,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.4"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.6.7+22"
+  image_picker_platform_interface:
+    dependency: transitive
+    description:
+      name: image_picker_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.6"
   jpush_flutter:
     dependency: "direct main"
     description:
@@ -275,6 +310,20 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.2.3"
+  qiniu_flutter_sdk:
+    dependency: "direct main"
+    description:
+      name: qiniu_flutter_sdk
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
+  qiniu_sdk_base:
+    dependency: transitive
+    description:
+      name: qiniu_sdk_base
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.2"
   shared_preferences:
     dependency: "direct main"
     description:
