@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
+import 'package:dio/dio.dart';
 
 class signUpPage extends StatelessWidget {
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController vertificationCodeController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+
+  void callSignUp(String ph, String pa) async {
+    try {
+      var response = await Dio().post(
+          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/test',
+          data: {'phone': ph, 'pass': pa});
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +47,7 @@ class signUpPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
+                    controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: '请输入手机号',
@@ -41,13 +57,17 @@ class signUpPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
+                    controller: passController,
                     obscureText: true,
                     decoration: InputDecoration(
                         labelText: '请输入密码',
                         labelStyle: TextStyle(fontSize: 16)),
                   ),
                 ),
-                MyBody(),
+                MyBody(
+                  phone: phoneController.text,
+                  codeController: vertificationCodeController,
+                ),
                 SizedBox(height: 32),
                 Container(
                   margin: EdgeInsets.only(top: 32, bottom: 16),
@@ -60,7 +80,9 @@ class signUpPage extends StatelessWidget {
                   child: TextButton(
                     child: Text('注册',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {},
+                    onPressed: () {
+                      callSignUp(phoneController.text, passController.text);
+                    },
                   ),
                 ),
               ],
