@@ -4,6 +4,7 @@ import 'tabs/scenicSpotPage.dart';
 import 'tabs/emgContactPage.dart';
 import 'tabs/paceNotePage.dart';
 import 'tabs/selfHomePage.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class tab extends StatefulWidget {
   tab({Key? key}) : super(key: key);
@@ -32,15 +33,33 @@ class _tabState extends State<tab> {
           height: 90,
           width: 90,
           padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(top: 18),
-          child: FloatingActionButton(
+          margin: EdgeInsets.only(top: 22),
+          child: SpeedDial(
+            tooltip: '新建景点或者路书',
+            childrenButtonSize: 60,
+            direction: SpeedDialDirection.Up,
+            overlayColor: Colors.grey,
+            backgroundColor: Colors.yellow,
             child: Icon(
               Icons.add,
               color: Colors.white70,
               size: 60,
             ),
-            onPressed: () {},
-            backgroundColor: Colors.yellow,
+            children: [
+              SpeedDialChild(
+                  child: Icon(Icons.nature_people),
+                  backgroundColor: Colors.green,
+                  label: '新建景点',
+                  labelStyle: TextStyle(fontSize: 18.0),
+                  onTap: () => print('SECOND CHILD')),
+              SpeedDialChild(
+                child: Icon(Icons.menu_book),
+                backgroundColor: Colors.yellow,
+                label: '新建路书',
+                labelStyle: TextStyle(fontSize: 18.0),
+                onTap: () => print('FIRST CHILD'),
+              ),
+            ],
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -9,19 +9,23 @@ import '../pages/tabs/search.dart';
 import '../pages/Under_Selfhome_Pages/loginCodePage.dart';
 import '../pages/Under_Selfhome_Pages/signUpPage.dart';
 import '../pages/Under_Selfhome_Pages/editPassPage.dart';
+import '../pages/Under_ScenicSpot_Pages/scenicSpotDetailPage.dart';
 
 //配置路由,定义 Map 类型的 routes,Key 为 String 类型，Value 为 Function 类型
 final Map<String, Function> routes = {
-  '/': (context) => tab(),
-  '/scenicSpot': (context) => scenicSpotPage(),
-  '/paceNote': (context) => paceNotePage(),
-  '/emgContact': (context) => emgContactPage(),
-  '/search': (context) => searchPage(),
-  '/loginPass': (context) => loginPassPage(),
-  '/loginCode': (context) => loginCodePage(),
-  '/signUp': (context) => signUpPage(),
-  '/editPass': (context) => editPassPage(),
-  '/findPass': (context) => findPassPage(),
+  '/': (context, {arguments}) => tab(),
+  '/scenicSpot': (context, {arguments}) => scenicSpotPage(),
+  '/paceNote': (context, {arguments}) => paceNotePage(),
+  '/emgContact': (context, {arguments}) => emgContactPage(),
+  '/search': (context, {arguments}) => searchPage(),
+  '/loginPass': (context, {arguments}) => loginPassPage(),
+  '/loginCode': (context, {arguments}) => loginCodePage(),
+  '/signUp': (context, {arguments}) => signUpPage(),
+  '/editPass': (context, {arguments}) => editPassPage(),
+  '/findPass': (context, {arguments}) => findPassPage(),
+  '/scenicSpotDetail': (context, {arguments}) => scenicSpotDetailPage(
+        arguments: arguments,
+      )
 };
 
 var onGenerateRoute = (RouteSettings settings) {

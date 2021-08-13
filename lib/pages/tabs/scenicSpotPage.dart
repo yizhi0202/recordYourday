@@ -38,12 +38,23 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
         ),
         body: ListView(
           children: [
-            scenicSpot(
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction:
-                  '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
+                  'userID': '1897654',
+                  'scenicSpotName': '荔波',
+                  'scenicSpotLocation': '贵州',
+                  'introduction':
+                      '荔波一生必去的地方，荔波是中共一大代表邓恩铭烈士的故乡，境内生态良好，气候宜人，拥有国家5A级樟江风景名胜区、国家级茂兰自然保护区、水春河漂流、黄江河国家级湿地公园、瑶山古寨景区、四季花海和寨票、水浦、大土民宿等景区景点。'
+                });
+              },
+              child: scenicSpot(
+                scenicSpotID: 1,
+                userID: 2,
+                photo: myphoto,
+                introduction:
+                    '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
+              ),
             ),
             Divider(
               color: Colors.green,

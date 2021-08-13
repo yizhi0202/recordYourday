@@ -22,8 +22,9 @@ class loginPassPage extends StatelessWidget {
     // 初始化
     CloudBaseCore core = CloudBaseCore.init({
       'env': 'hello-cloudbase-7gk3odah3c13f4d1',
-      'appAccess': {'key': '8b94be2cb5bbd669ed0c7e98dc8c3a25', 'version': '1'}
+      'appAccess': {'key': 'f9fadd353a3e75450ba4080b75789ebd', 'version': '1'}
     });
+
 // // 获取登录对象
 //     CloudBaseAuth auth = CloudBaseAuth(core);
 //     // 获取登录状态
