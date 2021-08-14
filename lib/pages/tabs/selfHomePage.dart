@@ -6,14 +6,12 @@ import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:dio/dio.dart';
-import 'package:qiniu_flutter_sdk/qiniu_flutter_sdk.dart';
 
 class selfHomePage extends StatefulWidget {
   int userID = 0;
   String userPass = '';
   userType myType = userType.traveler;
-  String profilePhoto =
-      'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/image_picker1889215763.jpg';
+  String profilePhoto = 'https://www.itying.com/images/flutter/3.png';
   userSex mySex = userSex.male;
   String nickName = 'ak43';
   selfHomePage({Key? key}) : super(key: key);
@@ -42,7 +40,7 @@ class _selfHomePageState extends State<selfHomePage> {
         CloudBaseCore core = CloudBaseCore.init({
           'env': 'hello-cloudbase-7gk3odah3c13f4d1',
           'appAccess': {
-            'key': '8b94be2cb5bbd669ed0c7e98dc8c3a25',
+            'key': 'f9fadd353a3e75450ba4080b75789ebd',
             'version': '1'
           }
         });
@@ -84,24 +82,6 @@ class _selfHomePageState extends State<selfHomePage> {
       print('没有照片');
     }
   }
-
-  // Future<void> selectAssets() async {
-  //   List<AssetEntity> assets = await AssetPicker.pickAssets(context);
-  //   final List<AssetEntity> result = (await AssetPicker.pickAssets(
-  //     context,
-  //     maxAssets: 9,
-  //     pathThumbSize: 84,
-  //     gridCount: 4,
-  //     selectedAssets: assets,
-  //   ));
-  //   if (result != null) {
-  //     assets = List<AssetEntity>.from(result);
-  //     print(assets.first);
-  //     AssetEntity asset = assets.first;
-  //     File file = await asset.file ?? File('');
-  //     print(file.path);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +131,25 @@ class _selfHomePageState extends State<selfHomePage> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
-                  (widget.mySex == userSex.male)
-                      ? Icon(
-                          Icons.male,
-                          color: Colors.lightBlue,
-                        )
-                      : Icon(
-                          Icons.female,
-                          color: Colors.pink,
-                        )
+                  GestureDetector(
+                    child: (widget.mySex == userSex.male)
+                        ? Icon(
+                            Icons.male,
+                            color: Colors.lightBlue,
+                          )
+                        : Icon(
+                            Icons.female,
+                            color: Colors.pink,
+                          ),
+                    onTap: () {
+                      setState(() {
+                        if (widget.mySex == userSex.male)
+                          widget.mySex = userSex.female;
+                        else
+                          widget.mySex = userSex.male;
+                      });
+                    },
+                  ),
                 ],
               )
             ]),
@@ -281,143 +271,3 @@ class _selfHomePageState extends State<selfHomePage> {
     );
   }
 }
-// class selfHomePage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     var usrpage = userInfoPage();
-//     usrpage.initUser(
-//         userID: 15678909876,
-//         userPass: '1245',
-//         profilePhoto: 'https://www.itying.com/images/flutter/4.png',
-//         nickname: 'ak43');
-//     return Scaffold(
-      // appBar: AppBar(
-      //   primary: true,
-      //   backgroundColor: Colors.lightBlue,
-      //   centerTitle: true,
-      //   title: Text('我的'),
-      //   leading: IconButton(
-      //     //drawer
-      //     icon: Icon(Icons.menu),
-      //     onPressed: () {},
-      //   ),
-      // ),
-      // backgroundColor: Colors.transparent,
-//       body: Scaffold(
-    //     body: Column(
-    //       mainAxisAlignment: MainAxisAlignment.start,
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {
-    //             print('tap my paceNote');
-    //           },
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.menu_book,
-    //                 color: Colors.yellow,
-    //                 size: 32.0,
-    //               ),
-    //               Text(
-    //                 '我的路书',
-    //                 style: TextStyle(fontSize: 18.0),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {},
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.nature_people,
-    //                 color: Colors.lightGreen,
-    //                 size: 32,
-    //               ),
-    //               Text(
-    //                 '我的景点',
-    //                 style: TextStyle(fontSize: 18.0),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {},
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.star,
-    //                 color: Colors.yellow,
-    //                 size: 32,
-    //               ),
-    //               Text(
-    //                 '我的收藏',
-    //                 style: TextStyle(fontSize: 18),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {},
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.account_circle,
-    //                 color: Colors.lightBlue,
-    //                 size: 32,
-    //               ),
-    //               Text(
-    //                 '个人资料',
-    //                 style: TextStyle(fontSize: 18),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {},
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.lock_rounded,
-    //                 color: Colors.yellow,
-    //                 size: 32,
-    //               ),
-    //               Text(
-    //                 '修改密码',
-    //                 style: TextStyle(fontSize: 18),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: 8),
-    //         GestureDetector(
-    //           onTap: () {},
-    //           child: ButtonBar(
-    //             alignment: MainAxisAlignment.start,
-    //             children: [
-    //               Icon(
-    //                 Icons.logout_outlined,
-    //                 color: Colors.yellow,
-    //                 size: 32,
-    //               ),
-    //               Text('退出登录', style: TextStyle(fontSize: 18))
-    //             ],
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
-//   }
-// }

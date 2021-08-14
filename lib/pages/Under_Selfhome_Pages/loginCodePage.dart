@@ -3,7 +3,7 @@ import '../../res/module/loginFun/vertificationBox.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:apifm/apifm.dart' as Apifm;
+
 import 'package:dio/dio.dart';
 
 class loginCodePage extends StatefulWidget {
