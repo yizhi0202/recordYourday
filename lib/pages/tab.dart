@@ -51,7 +51,9 @@ class _tabState extends State<tab> {
                   backgroundColor: Colors.green,
                   label: '新建景点',
                   labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => print('SECOND CHILD')),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/addScenicSpot');
+                  }),
               SpeedDialChild(
                 child: Icon(Icons.menu_book),
                 backgroundColor: Colors.yellow,

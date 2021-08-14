@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:apifm/apifm.dart' as Apifm;
 
 class MyBody extends StatefulWidget {
   TextEditingController codeController = TextEditingController();
@@ -117,7 +116,7 @@ class _MyBodyState extends State<MyBody> {
                     shape: StadiumBorder(side: BorderSide.none),
                     onPressed: () {
                       //http 发送信息
-                      Apifm.smsValidateCode(widget.phone);
+
                       setState(() {
                         _buttonClickListen();
                       });

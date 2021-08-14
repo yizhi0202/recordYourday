@@ -6,7 +6,6 @@ import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:dio/dio.dart';
-import 'package:qiniu_flutter_sdk/qiniu_flutter_sdk.dart';
 
 class selfHomePage extends StatefulWidget {
   int userID = 0;
