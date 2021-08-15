@@ -1,15 +1,18 @@
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:list_tile_more_customizable/list_tile_more_customizable.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 
-List<String> photos = [
-  'https://www.itying.com/images/flutter/1.png',
-  'https://www.itying.com/images/flutter/2.png',
-  'https://www.itying.com/images/flutter/3.png',
-  'https://www.itying.com/images/flutter/4.png'
+List<String> newPhotos = [
+  'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
+  'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
+  'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
+  'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
 ];
 
 class scenicSpotDetailPage extends StatefulWidget {
@@ -21,12 +24,16 @@ class scenicSpotDetailPage extends StatefulWidget {
 }
 
 class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
-  List<Asset> resultList = <Asset>[];
-  Widget getPhoto(index) {
-    return Image.network(
-      photos[index],
-      fit: BoxFit.cover,
-    );
+  //get the photoUrl of uploading by userID
+  void getPhotoList(String userID) async {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    Collection collection = db.collection('scenicSpotPhoto');
+    var _ = db.command;
+    var res = await collection.where({'userID': _.eq(userID)}).get();
+    for (var i = 0; i < res.data.length; ++i) {
+      newPhotos[i] = res.data[i]['scenicSpotPhotoUrl'];
+    }
   }
 
   @override
@@ -47,7 +54,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                 pagination: true,
                 passiveIndicator: Colors.grey,
                 activeIndicator: Colors.white,
-                items: photos.map(
+                items: newPhotos.map(
                   (url) {
                     return Container(
                       margin: EdgeInsets.all(8.0),
@@ -207,6 +214,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
+                  getPhotoList('18670343782');
                   print('点赞数增加');
                 },
                 child: ButtonBar(
