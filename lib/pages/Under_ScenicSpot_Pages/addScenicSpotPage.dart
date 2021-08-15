@@ -1,10 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class addScenicSpotPage extends StatefulWidget {
   addScenicSpotPage({Key? key}) : super(key: key);
@@ -15,6 +24,7 @@ class addScenicSpotPage extends StatefulWidget {
 
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
+  List<String> imagePath = [];
   // List<String> photoData = [
   //   'https://www.itying.com/images/flutter/1.png',
   //   'https://www.itying.com/images/flutter/2.png',
@@ -44,13 +54,70 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
   //显示二进制数据图像 搭配FutureBuilder使用(目前没有用到)
   Future<Widget> testByteDataPhoto() async {
-    // if (images.length != 0) {
-    //   ByteData byteData = await images[0].getByteData();
-    //   return Image.memory(byteData.buffer.asUint8List());
-    // }
-    // return Image.network('https://www.itying.com/images/flutter/3.png');
-    ByteData byteData = await images[0].getByteData();
-    return Image.memory(byteData.buffer.asUint8List());
+    if (images.length != 0) {
+      ByteData byteData = await images[0].getByteData();
+      var bytesPhoto = byteData.buffer.asUint8List();
+      var strPhoto = String.fromCharCodes(bytesPhoto);
+      List<int> list = strPhoto.codeUnits;
+      var bytesPhoto2 = Uint8List.fromList(list);
+      return Image.memory(bytesPhoto2);
+      // ByteData byteData = await images[0].getByteData();
+      // return Image.memory(byteData.buffer.asUint8List());
+    }
+    return Image.network('https://www.itying.com/images/flutter/3.png');
+  }
+
+  void eachPhotoUp(
+      Asset photo, CloudBaseStorage cbstorage, Collection collection) async {
+    var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
+    String cloudp = 'image/scenicSpotPhoto/' + path.substring(45);
+    try {
+      await cbstorage.uploadFile(
+        cloudPath: cloudp,
+        filePath: path,
+        onProcess: (int count, int total) {
+          // 当前进度
+          print(count);
+          // 总进度
+          print(total);
+        },
+      );
+
+      //getUrl
+      String fileID =
+          'cloud://hello-cloudbase-7gk3odah3c13f4d1.6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742/' +
+              cloudp;
+      List<String> fileIds = [fileID];
+      CloudBaseStorageRes<List<DownloadMetadata>> res =
+          await cbstorage.getFileDownloadURL(fileIds);
+
+      //storage to database
+      collection
+          .add({
+            'userID': '18670343782',
+            'scenicSpotPhotoUrl': res.data[0].downloadUrl
+          })
+          .then((res) {})
+          .catchError((e) {
+            print(e);
+          });
+    } catch (e) {
+      print(e);
+    }
+    print(path);
+  }
+
+  void upCloudDataBase() {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseStorage storage = CloudBaseStorage(core);
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+
+    Collection collection = db.collection('scenicSpotPhoto');
+    if (images.length > 0) {
+      images.forEach((element) async {
+        eachPhotoUp(element, storage, collection);
+      });
+    }
   }
 
   //显示选择后的图像
@@ -122,23 +189,31 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           },
         ),
         actions: [
-          ButtonBar(
-            children: [
-              FaIcon(
-                FontAwesomeIcons.paperPlane,
-                color: Colors.yellow,
-              ),
-              Text('发表')
-            ],
+          GestureDetector(
+            onTap: () {
+              upCloudDataBase();
+            },
+            child: ButtonBar(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.paperPlane,
+                  color: Colors.yellow,
+                ),
+                Text('发表')
+              ],
+            ),
           ),
-          ButtonBar(
-            children: [
-              FaIcon(
-                FontAwesomeIcons.sdCard,
-                color: Colors.yellow,
-              ),
-              Text('保存')
-            ],
+          GestureDetector(
+            onTap: () {},
+            child: ButtonBar(
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.sdCard,
+                  color: Colors.yellow,
+                ),
+                Text('保存')
+              ],
+            ),
           ),
         ],
       ),
@@ -205,6 +280,17 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           Text(
             '我是地址',
           ),
+          FutureBuilder(
+            future: testByteDataPhoto(),
+            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+              /*表示数据成功返回*/
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              } else {
+                return Text('图片加载中');
+              }
+            },
+          )
         ],
       ),
     );
