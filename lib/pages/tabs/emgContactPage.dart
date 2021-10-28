@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../res/module/emgContact/emgContact.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
@@ -87,10 +88,50 @@ class _emgContactPageState extends State<emgContactPage> {
           backgroundColor: Colors.red,
           centerTitle: true,
           title: Text('紧急联系人'),
-          leading: IconButton(
-            //drawer
-            icon: Icon(Icons.menu),
-            onPressed: () {},
+        ),
+        drawer: GFDrawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              GFDrawerHeader(
+                decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15))),
+                currentAccountPicture: GFAvatar(
+                  radius: 50.0,
+                  backgroundImage: NetworkImage(
+                      "https://www.itying.com/images/flutter/3.png"),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('nick name', style: TextStyle(fontSize: 18)),
+                    Icon(
+                      Icons.male,
+                      color: Colors.lightBlue,
+                      size: 32,
+                    )
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.powerOff,
+                      size: 25,
+                      color: Colors.red,
+                    ),
+                    Text('退出登录', style: TextStyle(fontSize: 18))
+                  ],
+                ),
+              )
+            ],
           ),
         ),
         body: Column(

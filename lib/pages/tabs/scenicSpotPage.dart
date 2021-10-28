@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_y/res/module/scenicSpot/scenicSpot.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:getwidget/getwidget.dart';
 
 class scenicSpotPage extends StatefulWidget {
   scenicSpotPage({Key? key}) : super(key: key);
@@ -24,17 +26,57 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           backgroundColor: Colors.lightGreen,
           centerTitle: true,
           title: Text('景点'),
-          leading: IconButton(
-            //drawer
-            icon: Icon(Icons.menu),
-            onPressed: () {},
-          ),
           actions: <Widget>[
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.search),
             )
           ],
+        ),
+        drawer: GFDrawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              GFDrawerHeader(
+                decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15))),
+                currentAccountPicture: GFAvatar(
+                  radius: 50.0,
+                  backgroundImage: NetworkImage(
+                      "https://www.itying.com/images/flutter/3.png"),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('nick name', style: TextStyle(fontSize: 18)),
+                    Icon(
+                      Icons.male,
+                      color: Colors.lightBlue,
+                      size: 32,
+                    )
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.powerOff,
+                      size: 25,
+                      color: Colors.red,
+                    ),
+                    Text('退出登录', style: TextStyle(fontSize: 18))
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
         body: ListView(
           children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../res/module/user/user.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
@@ -91,10 +93,50 @@ class _selfHomePageState extends State<selfHomePage> {
         backgroundColor: Colors.lightBlue,
         centerTitle: true,
         title: Text('我的'),
-        leading: IconButton(
-          //drawer
-          icon: Icon(Icons.menu),
-          onPressed: () {},
+      ),
+      drawer: GFDrawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            GFDrawerHeader(
+              decoration: BoxDecoration(
+                  color: Colors.yellow,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15))),
+              currentAccountPicture: GFAvatar(
+                radius: 50.0,
+                backgroundImage:
+                    NetworkImage("https://www.itying.com/images/flutter/3.png"),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('nick name', style: TextStyle(fontSize: 18)),
+                  Icon(
+                    Icons.male,
+                    color: Colors.lightBlue,
+                    size: 32,
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.powerOff,
+                    size: 25,
+                    color: Colors.red,
+                  ),
+                  Text('退出登录', style: TextStyle(fontSize: 18))
+                ],
+              ),
+            )
+          ],
         ),
       ),
       backgroundColor: Colors.transparent,
@@ -136,11 +178,9 @@ class _selfHomePageState extends State<selfHomePage> {
                         ? Icon(
                             Icons.male,
                             color: Colors.lightBlue,
+                            size: 32,
                           )
-                        : Icon(
-                            Icons.female,
-                            color: Colors.pink,
-                          ),
+                        : Icon(Icons.female, color: Colors.pink, size: 32),
                     onTap: () {
                       setState(() {
                         if (widget.mySex == userSex.male)
@@ -257,10 +297,13 @@ class _selfHomePageState extends State<selfHomePage> {
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.logout_outlined,
-                  color: Colors.yellow,
-                  size: 32,
+                SizedBox(
+                  width: 0.01,
+                ),
+                FaIcon(
+                  FontAwesomeIcons.powerOff,
+                  size: 25,
+                  color: Colors.red,
                 ),
                 Text('退出登录', style: TextStyle(fontSize: 18))
               ],
