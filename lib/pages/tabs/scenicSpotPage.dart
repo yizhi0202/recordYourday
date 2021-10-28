@@ -86,6 +86,8 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
                   'userID': '1897654',
                   'scenicSpotName': '荔波',
                   'scenicSpotLocation': '贵州',
+                  'photoNum':
+                      0, //this varible is to record the number of photo been uploaded by user
                   'introduction':
                       '荔波一生必去的地方，荔波是中共一大代表邓恩铭烈士的故乡，境内生态良好，气候宜人，拥有国家5A级樟江风景名胜区、国家级茂兰自然保护区、水春河漂流、黄江河国家级湿地公园、瑶山古寨景区、四季花海和寨票、水浦、大土民宿等景区景点。'
                 });

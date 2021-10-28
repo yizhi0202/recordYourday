@@ -118,47 +118,5 @@ class _scenicSpotState extends State<scenicSpot> {
             ),
           ),
         ));
-    // child: GFCard(
-    //   boxFit: BoxFit.cover,
-    //   imageOverlay: AssetImage('images/forest.jpg'),
-    //   title: GFListTile(
-    //     title: Text('Awesome scenicspot'),
-    //   ),
-    //   content: Text(
-    //       "GFCards has three types of cards i.e, basic, with avataras and with overlay image"),
-    //   buttonBar: GFButtonBar(
-    //     children: <Widget>[
-    //       Row(
-    //         children: <Widget>[
-    //           Expanded(
-    //             child: ListTile(
-    //               leading: ClipOval(
-    //                 child: Image.network(
-    //                   'https://www.itying.com/images/flutter/2.png',
-    //                   height: 40,
-    //                   width: 40,
-    //                 ),
-    //               ),
-    //               title: Text('${widget.nickName}'),
-    //             ),
-    //             flex: 1,
-    //           ),
-    //           Expanded(
-    //             child: GFButton(
-    //               onPressed: () {},
-    //               text: 'View',
-    //             ),
-    //             flex: 1,
-    //           ),
-    //           Expanded(
-    //             child: IconButton(
-    //                 onPressed: () {}, icon: FaIcon(FontAwesomeIcons.heart)),
-    //             flex: 1,
-    //           )
-    //         ],
-    //       )
-    //     ],
-    //   ),
-    // ));
   }
 }

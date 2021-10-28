@@ -25,47 +25,21 @@ class addScenicSpotPage extends StatefulWidget {
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
   List<String> imagePath = [];
-  // List<String> photoData = [
-  //   'https://www.itying.com/images/flutter/1.png',
-  //   'https://www.itying.com/images/flutter/2.png',
-  //   'https://www.itying.com/images/flutter/3.png',
-  //   'https://www.itying.com/images/flutter/4.png',
-  // ];
-  // List<String> photoPath = [];
-  // Widget getEachPhoto(String photourl) {
-  //   return Container(
-  //     height: 60,
-  //     width: 60,
-  //     child: Image.file(File(photourl)),
-  //     // child: Image.network(
-  //     //   photourl,
-  //     //   fit: BoxFit.cover,
-  //     // ),
-  //   );
-  // }
-
-  // List<Widget> getAllPhoto() {
-  //   return photoData.map((item) => getEachPhoto(item)).toList();
-  // }
-
-  // List<Widget> getAllPhoto1() {
-  //   return photoPath.map((item) => getEachPhoto(item)).toList();
-  // }
 
   //显示二进制数据图像 搭配FutureBuilder使用(目前没有用到)
-  Future<Widget> testByteDataPhoto() async {
-    if (images.length != 0) {
-      ByteData byteData = await images[0].getByteData();
-      var bytesPhoto = byteData.buffer.asUint8List();
-      var strPhoto = String.fromCharCodes(bytesPhoto);
-      List<int> list = strPhoto.codeUnits;
-      var bytesPhoto2 = Uint8List.fromList(list);
-      return Image.memory(bytesPhoto2);
-      // ByteData byteData = await images[0].getByteData();
-      // return Image.memory(byteData.buffer.asUint8List());
-    }
-    return Image.network('https://www.itying.com/images/flutter/3.png');
-  }
+  // Future<Widget> testByteDataPhoto() async {
+  //   if (images.length != 0) {
+  //     ByteData byteData = await images[0].getByteData();
+  //     var bytesPhoto = byteData.buffer.asUint8List();
+  //     var strPhoto = String.fromCharCodes(bytesPhoto);
+  //     List<int> list = strPhoto.codeUnits;
+  //     var bytesPhoto2 = Uint8List.fromList(list);
+  //     return Image.memory(bytesPhoto2);
+  //     // ByteData byteData = await images[0].getByteData();
+  //     // return Image.memory(byteData.buffer.asUint8List());
+  //   }
+  //   return Image.network('https://www.itying.com/images/flutter/3.png');
+  // }
 
   void eachPhotoUp(
       Asset photo, CloudBaseStorage cbstorage, Collection collection) async {
@@ -203,18 +177,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: ButtonBar(
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.sdCard,
-                  color: Colors.yellow,
-                ),
-                Text('保存')
-              ],
-            ),
-          ),
         ],
       ),
       body: ListView(
@@ -280,17 +242,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           Text(
             '我是地址',
           ),
-          FutureBuilder(
-            future: testByteDataPhoto(),
-            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              /*表示数据成功返回*/
-              if (snapshot.hasData) {
-                return snapshot.data!;
-              } else {
-                return Text('图片加载中');
-              }
-            },
-          )
         ],
       ),
     );
