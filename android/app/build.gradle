@@ -40,16 +40,16 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.flutter_app_y"
-        minSdkVersion 19
+        minSdkVersion 21 //19
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        // ndk {
-	      //   //选择要添加的对应 cpu 类型的 .so 库。
-	      //   abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64', 'mips', 'mips64', 'arm64-v8a',        
-        // }
+        ndk {
+	        //选择要添加的对应 cpu 类型的 .so 库。
+	        abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64', 'arm64-v8a'      
+        }
 
         manifestPlaceholders = [
             JPUSH_PKGNAME: applicationId,
@@ -57,6 +57,15 @@ android {
             JPUSH_CHANNEL: "developer-default", /*暂时填写默认值即可.*/
         ]
     /*新加入的*/
+    }
+
+    signingConfigs{
+      debug {
+        keyAlias 'androiddebugkey'
+        keyPassword 'android'
+        storeFile file('../keystore/debug.keystore')
+        storePassword 'android'
+      }
     }
 
     buildTypes {
@@ -73,5 +82,12 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  //3D地图so及jar
+   compile 'com.amap.api:3dmap:latest.integration'
+  //定位功能
+  compile 'com.amap.api:location:latest.integration'
+  //搜索功能
+   compile 'com.amap.api:search:latest.integration'
 }

@@ -46,6 +46,10 @@ dependencies:
   flutter_speed_dial: ^4.2.0
   flutter_absolute_path: ^1.0.6
   path_provider: ^2.0.2
+  #amap_flutter_map: ^2.0.2
+  amap_all_fluttify: ^0.17.0
+  flutter_bmflocation: ^1.0.4
+  permission_handler: ^5.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,6 +74,9 @@ flutter:
     - images/2.0x/forest.jpg
     - images/3.0x/forest.jpg
     - images/forest.jpg
+    - images/2.0x/locationphoto.jpeg
+    - images/3.0x/locationphoto.jpeg
+    - images/locationphoto.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

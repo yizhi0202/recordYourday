@@ -30,59 +30,59 @@ class _selfHomePageState extends State<selfHomePage> {
   String cloudPath = 'image/profilePhoto';
   String fileName = '';
   _openGallery() async {
-    var imagePicker = await picker.getImage(source: ImageSource.gallery);
-    if (imagePicker != null) {
-      imagePath = File(imagePicker.path);
-      selfPath = imagePath.path;
-      print('图片的路径是${selfPath}');
-      fileName = selfPath.substring(45);
-      print('filename is ' + fileName);
-      String cloudp = cloudPath + '/' + fileName;
-      try {
-        CloudBaseCore core = CloudBaseCore.init({
-          'env': 'hello-cloudbase-7gk3odah3c13f4d1',
-          'appAccess': {
-            'key': 'f9fadd353a3e75450ba4080b75789ebd',
-            'version': '1'
-          }
-        });
-        CloudBaseStorage storage = CloudBaseStorage(core);
+    // final imagePicker = await picker.pickImage(source: ImageSource.gallery);
+    // if (imagePicker != null) {
+    //   imagePath = File(imagePicker.path);
+    //   selfPath = imagePath.path;
+    //   print('图片的路径是${selfPath}');
+    //   fileName = selfPath.substring(45);
+    //   print('filename is ' + fileName);
+    //   String cloudp = cloudPath + '/' + fileName;
+    //   try {
+    //     CloudBaseCore core = CloudBaseCore.init({
+    //       'env': 'hello-cloudbase-7gk3odah3c13f4d1',
+    //       'appAccess': {
+    //         'key': 'f9fadd353a3e75450ba4080b75789ebd',
+    //         'version': '1'
+    //       }
+    //     });
+    //     CloudBaseStorage storage = CloudBaseStorage(core);
 
-        await storage.uploadFile(
-          cloudPath: cloudp,
-          filePath: selfPath,
-          onProcess: (int count, int total) {
-            // 当前进度
-            print(count);
-            // 总进度
-            print(total);
-          },
-        );
+    //     await storage.uploadFile(
+    //       cloudPath: cloudp,
+    //       filePath: selfPath,
+    //       onProcess: (int count, int total) {
+    //         // 当前进度
+    //         print(count);
+    //         // 总进度
+    //         print(total);
+    //       },
+    //     );
 
-        //get the url of the upload photo
-        String cloudp2 =
-            'cloud://hello-cloudbase-7gk3odah3c13f4d1.6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742/' +
-                cloudp;
+    //     //get the url of the upload photo
+    //     String cloudp2 =
+    //         'cloud://hello-cloudbase-7gk3odah3c13f4d1.6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742/' +
+    //             cloudp;
 
-        // var response = await Dio().post(
-        //     'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/getPhotoURL',
-        //     data: {'cloudpath': cloudp2});
-        // print(response);
-        // var result = response.toString();
-        // print('temp link is ${result}');
-        List<String> fileIds = [cloudp2];
-        CloudBaseStorageRes<List<DownloadMetadata>> res =
-            await storage.getFileDownloadURL(fileIds);
-        setState(() {
-          widget.profilePhoto = res.data[0].downloadUrl;
-        });
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      imagePath = File('');
-      print('没有照片');
-    }
+    //     // var response = await Dio().post(
+    //     //     'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/getPhotoURL',
+    //     //     data: {'cloudpath': cloudp2});
+    //     // print(response);
+    //     // var result = response.toString();
+    //     // print('temp link is ${result}');
+    //     List<String> fileIds = [cloudp2];
+    //     CloudBaseStorageRes<List<DownloadMetadata>> res =
+    //         await storage.getFileDownloadURL(fileIds);
+    //     setState(() {
+    //       widget.profilePhoto = res.data[0].downloadUrl;
+    //     });
+    //   } catch (e) {
+    //     print(e);
+    //   }
+    // } else {
+    //   imagePath = File('');
+    //   print('没有照片');
+    // }
   }
 
   @override
