@@ -24,18 +24,33 @@ class _ShowPOICitySearchPageState
 
   /// 自定义检索参数
   BMFPoiCitySearchOption? _citySearchOption;
+  Map? spot;
+  dataBack(BuildContext context) {
+    Navigator.pop(context, spot);
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      child: Column(
-        children: [
-          _topSearchBar(),
-          Expanded(
-            child: generateMap(),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            dataBack(context);
+          },
+        ),
+        title: Text('景点地点选择'),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            _topSearchBar(),
+            Expanded(
+              child: generateMap(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -117,6 +132,9 @@ class _ShowPOICitySearchPageState
                   padding: EdgeInsets.all(40),
                   child: Text('暂无数据'));
         });
+
+    // for transfer data of address
+    spot = option;
 
     /// 添加poi marker
     if (option != null) {

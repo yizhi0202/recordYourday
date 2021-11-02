@@ -11,6 +11,7 @@ import '../pages/Under_Selfhome_Pages/signUpPage.dart';
 import '../pages/Under_Selfhome_Pages/editPassPage.dart';
 import '../pages/Under_ScenicSpot_Pages/scenicSpotDetailPage.dart';
 import '../pages/Under_ScenicSpot_Pages/addScenicSpotPage.dart';
+import '../res/module/mapSource/POIsearch.dart';
 
 //配置路由,定义 Map 类型的 routes,Key 为 String 类型，Value 为 Function 类型
 final Map<String, Function> routes = {
@@ -27,7 +28,8 @@ final Map<String, Function> routes = {
   '/scenicSpotDetail': (context, {arguments}) => scenicSpotDetailPage(
         arguments: arguments,
       ),
-  '/addScenicSpot': (context, {arguments}) => addScenicSpotPage()
+  '/addScenicSpot': (context, {arguments}) => addScenicSpotPage(),
+  '/ShowPOICitySearchPage': (context, {arguments}) => ShowPOICitySearchPage()
 };
 
 var onGenerateRoute = (RouteSettings settings) {

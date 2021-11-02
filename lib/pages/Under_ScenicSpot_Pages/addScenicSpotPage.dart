@@ -209,6 +209,13 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
     //to judge if user select a address of scenicSpot
     bool isSelectAddr = false;
+    //to receive the address data choosed by user
+    Map? spot;
+    getScenicSpotAddr(BuildContext context) async {
+      spot =
+          await Navigator.pushNamed(context, '/ShowPOICitySearchPage') as Map;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -297,12 +304,29 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
             shrinkWrap: true,
             children: [buildGridView()],
           ),
+          !isSelectAddr
+              ? GFButton(
+                  onPressed: () {
+                    getScenicSpotAddr(context);
+                    isSelectAddr = true;
+                  },
+                  text: '点此选择景点地址',
+                  icon: Icon(Icons.location_on),
+                )
+              : ListTile(
+                  title: Text(spot!['title'], style: TextStyle(fontSize: 16)),
+                  subtitle: Text(
+                    spot!['address'],
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  trailing: IconButton(
+                    icon: FaIcon(FontAwesomeIcons.trash),
+                    onPressed: () {
+                      isSelectAddr = false;
+                    },
+                  ),
+                )
 
-          Container(
-            height: 580,
-            width: 80,
-            child: ShowPOICitySearchPage(),
-          )
           //TextButton(onPressed: baibuGps, child: Text('开始定位')),
         ],
       ),
