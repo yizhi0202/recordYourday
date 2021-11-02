@@ -36,6 +36,8 @@ class addScenicSpotPage extends StatefulWidget {
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
   List<String> imagePath = [];
+  Map spot = {'title': '名称', 'address': '地址', 'position': ''};
+
   // static final CameraPosition _kInitialPosition = const CameraPosition(
   //   target: LatLng(39.909187, 116.397451),
   //   zoom: 10.0,
@@ -210,10 +212,15 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     //to judge if user select a address of scenicSpot
     bool isSelectAddr = false;
     //to receive the address data choosed by user
-    Map? spot;
+
     getScenicSpotAddr(BuildContext context) async {
       spot =
           await Navigator.pushNamed(context, '/ShowPOICitySearchPage') as Map;
+      print('地点的经度为：' + spot['position'].latitude.toString());
+      //刷新用户选择后的名称和地址
+      setState(() {
+        spot = spot;
+      });
     }
 
     return Scaffold(
@@ -304,28 +311,29 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
             shrinkWrap: true,
             children: [buildGridView()],
           ),
-          !isSelectAddr
-              ? GFButton(
-                  onPressed: () {
-                    getScenicSpotAddr(context);
-                    isSelectAddr = true;
-                  },
-                  text: '点此选择景点地址',
-                  icon: Icon(Icons.location_on),
-                )
-              : ListTile(
-                  title: Text(spot!['title'], style: TextStyle(fontSize: 16)),
-                  subtitle: Text(
-                    spot!['address'],
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  trailing: IconButton(
-                    icon: FaIcon(FontAwesomeIcons.trash),
-                    onPressed: () {
-                      isSelectAddr = false;
-                    },
-                  ),
-                )
+
+          GFButton(
+            onPressed: () {
+              getScenicSpotAddr(context);
+            },
+            text: '点此选择景点地址',
+            icon: Icon(Icons.location_on),
+          ),
+          ListTile(
+            title: Text(spot['title'], style: TextStyle(fontSize: 16)),
+            subtitle: Text(
+              spot['address'],
+              style: TextStyle(fontSize: 16),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {
+                  spot = spot;
+                });
+              },
+            ),
+          )
 
           //TextButton(onPressed: baibuGps, child: Text('开始定位')),
         ],
