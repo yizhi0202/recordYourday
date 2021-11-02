@@ -77,7 +77,7 @@ class paceNotePage extends StatelessWidget {
                 note:
                     "末日生存不服来战,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,",
                 photo:
-                    'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/%E6%A3%AE%E6%9E%97%E9%95%9C%E7%89%87.png?sign=f0a8a5454bbe2204a6a44a0a1508678f&t=1628256160',
+                    'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/%E6%A3%AE%E6%9E%97%E9%95%9C%E7%89%87.png',
               ),
               onTap: () {
                 print('jump to details of paceNote, such as senicspot');

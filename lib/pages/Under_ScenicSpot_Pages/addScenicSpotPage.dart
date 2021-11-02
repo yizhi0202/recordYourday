@@ -21,6 +21,7 @@ import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
+import 'package:flutter_app_y/res/module/mapSource/POIsearch.dart';
 
 // import 'package:amap_flutter_map/amap_flutter_map.dart';
 // import 'package:amap_flutter_base/amap_flutter_base.dart';
@@ -205,6 +206,9 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     //   iosKey: 'c3b60c1f305f5b18aab83056c6971709',
     //   androidKey: 'be529103cc824e1978a8611fa623ebe1',
     // );
+
+    //to judge if user select a address of scenicSpot
+    bool isSelectAddr = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -293,27 +297,15 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
             shrinkWrap: true,
             children: [buildGridView()],
           ),
-          TextButton(onPressed: baibuGps, child: Text('开始定位')),
+
+          Container(
+            height: 580,
+            width: 80,
+            child: ShowPOICitySearchPage(),
+          )
+          //TextButton(onPressed: baibuGps, child: Text('开始定位')),
         ],
       ),
     );
   }
-
-  // AMapController? _mapController;
-  // void onMapCreated(AMapController controller) {
-  //   setState(() {
-  //     _mapController = controller;
-  //     getApprovalNumber();
-  //   });
-  // }
-
-  // /// 获取审图号
-  // void getApprovalNumber() async {
-  //   //普通地图审图号
-  //   String? mapContentApprovalNumber =
-  //       await _mapController?.getMapContentApprovalNumber();
-  //   //卫星地图审图号
-  //   String? satelliteImageApprovalNumber =
-  //       await _mapController?.getSatelliteImageApprovalNumber();
-  // }
 }
