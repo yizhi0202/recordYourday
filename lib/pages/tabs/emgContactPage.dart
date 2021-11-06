@@ -54,14 +54,14 @@ class _emgContactPageState extends State<emgContactPage> {
           },
           color: Colors.red,
         ),
-        SwipeAction(
-            title: "修改",
-            onTap: (CompletionHandler handler) async {
-              ///false means that you just do nothing,it will close
-              /// action buttons by default
-              handler(false);
-            },
-            color: Colors.grey),
+        // SwipeAction(
+        //     title: "修改",
+        //     onTap: (CompletionHandler handler) async {
+        //       ///false means that you just do nothing,it will close
+        //       /// action buttons by default
+        //       handler(false);
+        //     },
+        //     color: Colors.grey),
       ],
       child: Container(
         height: 90,
@@ -144,31 +144,36 @@ class _emgContactPageState extends State<emgContactPage> {
                 SizedBox(
                   width: 8,
                 ),
-                GFButton(
-                  onPressed: () {},
-                  text: "新建紧急联系人",
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
-                  icon: Icon(
-                    Icons.add_call,
-                    color: Colors.white,
+                Expanded(
+                  child: GFButton(
+                    size: 35.0,
+                    onPressed: () {},
+                    text: "新建联系人",
+                    textStyle: TextStyle(color: Colors.white, fontSize: 10.0),
+                    icon: Icon(
+                      Icons.add_call,
+                      color: Colors.white,
+                    ),
+                    color: Colors.red,
+                    shape: GFButtonShape.pills,
                   ),
-                  color: Colors.red,
-                  shape: GFButtonShape.pills,
                 ),
                 SizedBox(
                   width: 160.0,
                 ),
-                GFButton(
+                Expanded(
+                    child: GFButton(
+                  size: 35.0,
                   onPressed: () {},
                   text: "设置报警时间",
-                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  textStyle: TextStyle(color: Colors.black, fontSize: 9.0),
                   icon: Icon(
                     Icons.add_alert_rounded,
                     color: Colors.white,
                   ),
                   shape: GFButtonShape.pills,
                   color: Colors.yellow,
-                ),
+                )),
               ],
             ),
             ListView.builder(

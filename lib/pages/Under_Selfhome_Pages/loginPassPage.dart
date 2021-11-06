@@ -25,20 +25,6 @@ class loginPassPage extends StatelessWidget {
       'appAccess': {'key': 'f9fadd353a3e75450ba4080b75789ebd', 'version': '1'}
     });
 
-// // 获取登录对象
-//     CloudBaseAuth auth = CloudBaseAuth(core);
-//     // 获取登录状态
-//     CloudBaseAuthState authState = await auth.getAuthState();
-
-// // 唤起匿名登录
-//     if (authState == null) {
-//       await auth.signInAnonymously().then((success) {
-//         print('匿名登录成功');
-//       }).catchError((err) {
-//         print('匿名登录失败');
-//         // 登录失败
-//       });
-//     }
     //初始化数据库
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection collection = db.collection('Users');
@@ -92,14 +78,18 @@ class loginPassPage extends StatelessWidget {
                   '终于等到你',
                   style: TextStyle(fontSize: 20),
                 ),
-                Padding(
+                SizedBox(
+                  height: 80,
+                ),
+                SingleChildScrollView(
+                    child: Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
                     controller: phone,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: '请输入手机号'),
                   ),
-                ),
+                )),
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
@@ -133,7 +123,6 @@ class loginPassPage extends StatelessWidget {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      //callLoginPass(phone.text, pass.text, context);
                       prepareForLogin(phone.text, pass.text, context);
                     },
                   ),
@@ -141,9 +130,7 @@ class loginPassPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(top: 0, bottom: 16),
                   decoration: BoxDecoration(
-                    // color: Colors.green,
                     border: Border.all(color: Colors.green),
-                    // shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   width: 250,
@@ -169,7 +156,6 @@ class loginPassPage extends StatelessWidget {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(
                       'Language : ',

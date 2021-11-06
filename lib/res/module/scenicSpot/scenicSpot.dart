@@ -54,6 +54,8 @@ class scenicSpot extends StatefulWidget {
 }
 
 class _scenicSpotState extends State<scenicSpot> {
+  //for change heart's color
+  bool favor = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,16 +104,24 @@ class _scenicSpotState extends State<scenicSpot> {
                     Text('${widget.nickName}',
                         style:
                             TextStyle(color: Colors.white70, fontSize: 16.0)),
-                    SizedBox(
-                      width: 260,
-                    ),
-                    IconButton(
+                    // SizedBox(
+                    //   width: 260,
+                    // ),
+                    //in favor of the scenicSpot
+                    SizedBox(width: 20,),
+                    Expanded(
+                        child: IconButton(
                       icon: FaIcon(
                         FontAwesomeIcons.heart,
-                        color: Colors.white,
+                        color: !favor ? Colors.white : Colors.red,
                       ),
-                      onPressed: () {},
-                    )
+                      onPressed: () {
+                        widget._Vote();
+                        setState(() {
+                          favor = true;
+                        });
+                      },
+                    )),
                   ],
                 ),
               ],
