@@ -14,9 +14,9 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-// import 'package:amap_map_fluttify/amap_map_fluttify.dart';
+
 import 'package:flutter/services.dart';
-import '../../res/module/mapSource/mapChoicePoint.dart';
+
 import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';

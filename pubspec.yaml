@@ -46,8 +46,7 @@ dependencies:
   flutter_speed_dial: ^4.2.0
   flutter_absolute_path: ^1.0.6
   path_provider: ^2.0.2
-  #amap_flutter_map: ^2.0.2
-  amap_all_fluttify: ^0.17.0
+
   flutter_bmflocation: ^1.0.4
 
   flutter_baidu_mapapi_map: ^2.0.1

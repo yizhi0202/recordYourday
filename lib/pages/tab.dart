@@ -55,12 +55,13 @@ class _tabState extends State<tab> {
                     Navigator.pushNamed(context, '/addScenicSpot');
                   }),
               SpeedDialChild(
-                child: Icon(Icons.menu_book),
-                backgroundColor: Colors.yellow,
-                label: '新建路书',
-                labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () => print('FIRST CHILD'),
-              ),
+                  child: Icon(Icons.menu_book),
+                  backgroundColor: Colors.yellow,
+                  label: '新建路书',
+                  labelStyle: TextStyle(fontSize: 18.0),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/addPaceNote');
+                  }),
             ],
           ),
         ),
