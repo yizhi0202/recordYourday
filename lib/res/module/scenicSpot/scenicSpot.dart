@@ -11,6 +11,7 @@ class scenicSpot extends StatefulWidget {
   String? title;
   String? location;
   String? introduction;
+  String? subTitle;
   Myaudit audit = Myaudit.unknown;
   List<String>? photo;
   int voteNum = 0; //记录投票数量
@@ -24,6 +25,7 @@ class scenicSpot extends StatefulWidget {
       this.title = '难忘景点',
       this.location = '中国',
       this.introduction = '',
+      this.subTitle = '',
       this.audit = Myaudit.unknown,
       this.voteNum = 0,
       required this.photo,
@@ -108,7 +110,9 @@ class _scenicSpotState extends State<scenicSpot> {
                     //   width: 260,
                     // ),
                     //in favor of the scenicSpot
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     Expanded(
                         child: IconButton(
                       icon: FaIcon(

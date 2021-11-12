@@ -37,6 +37,9 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
   List<String> imagePath = [];
   Map spot = {'title': '名称', 'address': '地址', 'position': ''};
+  TextEditingController titleController = TextEditingController();
+  TextEditingController subTitleController = TextEditingController();
+  TextEditingController introductionController = TextEditingController();
 
   // static final CameraPosition _kInitialPosition = const CameraPosition(
   //   target: LatLng(39.909187, 116.397451),
@@ -256,6 +259,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           Text('我是标题'),
           TextField(
             keyboardType: TextInputType.multiline,
+            controller: titleController,
             maxLength: 12,
             maxLines: 1,
             minLines: 1,
@@ -272,6 +276,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           Text('我是摘要'),
           TextField(
             keyboardType: TextInputType.multiline,
+            controller: subTitleController,
             maxLength: 84,
             maxLines: 3,
             decoration: InputDecoration(
@@ -287,6 +292,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           Text('我是介绍'),
           TextField(
             keyboardType: TextInputType.multiline,
+            controller: introductionController,
             maxLength: 600,
             maxLines: 6,
             decoration: InputDecoration(

@@ -18,6 +18,7 @@ class loginPassPage extends StatelessWidget {
   TextEditingController pass =
       TextEditingController(); //get the input of password
 
+  //the function of login
   void prepareForLogin(String phone, String pass, context) async {
     // 初始化
     CloudBaseCore core = CloudBaseCore.init({
@@ -45,19 +46,19 @@ class loginPassPage extends StatelessWidget {
     }
   }
 
-  void callLoginPass(String ph, String pa, context) async {
-    try {
-      //call the cloud function
-      var response = await Dio().post(
-          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/loginPass',
-          data: {'phone': ph, 'pass': pa});
-      print(response);
-      var result = response.toString();
-      if (result == 'true') Navigator.pushNamed(context, '/');
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void callLoginPass(String ph, String pa, context) async {
+  //   try {
+  //     //call the cloud function
+  //     var response = await Dio().post(
+  //         'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/loginPass',
+  //         data: {'phone': ph, 'pass': pa});
+  //     print(response);
+  //     var result = response.toString();
+  //     if (result == 'true') Navigator.pushNamed(context, '/');
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
