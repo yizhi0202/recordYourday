@@ -39,9 +39,9 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         filePath: path,
         onProcess: (int count, int total) {
           // 当前进度
-          print(count);
+          //print(count);
           // 总进度
-          print(total);
+          //print(total);
         },
       );
 
@@ -69,7 +69,6 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     if (images.length > 0) {
       images.forEach((element) async {
         String url = await eachPhotoUp(element, storage);
-        print('test');
         print(url);
       });
     }

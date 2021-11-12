@@ -142,7 +142,7 @@ class _ShowPOICitySearchPageState
         position: option['position'],
         title: option['title'],
         subtitle: option['address'],
-        icon: "images/pin_red.png",
+        icon: "images/animation_red.png",
       );
       List<BMFMarker> markers = [];
       markers.add(marker);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'routes/Routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
@@ -21,6 +22,10 @@ void main() {
     // Android 目前不支持接口设置Apikey,
     // 请在主工程的Manifest文件里设置，详细配置方法请参考官网(https://lbsyun.baidu.com/)demo
     BMFMapSDK.setCoordType(BMF_COORD_TYPE.BD09LL);
+    // 这一步设置状态栏颜色为透明
+    SystemUiOverlayStyle systemUiOverlayStyle =
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 }
 

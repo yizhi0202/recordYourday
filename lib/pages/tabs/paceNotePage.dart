@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../res/module/paceNote/paceNote.dart';
 import 'package:getwidget/getwidget.dart';
 import '../../res/module/user/user.dart';
+import '';
 
 class paceNotePage extends StatelessWidget {
   const paceNotePage({Key? key}) : super(key: key);
@@ -80,7 +81,7 @@ class paceNotePage extends StatelessWidget {
                     'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/%E6%A3%AE%E6%9E%97%E9%95%9C%E7%89%87.png',
               ),
               onTap: () {
-                print('jump to details of paceNote, such as senicspot');
+                Navigator.pushNamed(context, '/paceNoteDetail');
               },
             ),
             GestureDetector(
