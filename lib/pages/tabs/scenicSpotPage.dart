@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_y/res/module/scenicSpot/scenicSpot.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
+    show BMFModel, BMFCoordinate;
 
 class scenicSpotPage extends StatefulWidget {
   scenicSpotPage({Key? key}) : super(key: key);
@@ -20,6 +22,10 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
+    BMFCoordinate? pt;
+    pt?.latitude = 12;
+    pt?.longitude = 12;
+
     return Scaffold(
         appBar: AppBar(
           primary: true,
@@ -93,6 +99,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
                 });
               },
               child: scenicSpot(
+                position: pt,
                 scenicSpotID: 1,
                 userID: 2,
                 photo: myphoto,
@@ -106,6 +113,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
               endIndent: 8.0,
             ),
             scenicSpot(
+              position: pt,
               scenicSpotID: 1,
               userID: 2,
               photo: myphoto,
@@ -117,6 +125,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
               endIndent: 8.0,
             ),
             scenicSpot(
+              position: pt,
               scenicSpotID: 1,
               userID: 2,
               photo: myphoto,
@@ -128,6 +137,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
               endIndent: 8.0,
             ),
             scenicSpot(
+              position: pt,
               scenicSpotID: 1,
               userID: 2,
               photo: myphoto,
@@ -137,35 +147,6 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
               color: Colors.green,
               indent: 8.0,
               endIndent: 8.0,
-            ),
-            scenicSpot(
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction: '如有一味绝境，必经十方生死!',
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-            scenicSpot(
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction:
-                  '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!',
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-            scenicSpot(
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction: '如有一味绝境，必经十方生死!',
             ),
           ],
         ));

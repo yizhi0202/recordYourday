@@ -13,6 +13,7 @@ import '../pages/Under_ScenicSpot_Pages/scenicSpotDetailPage.dart';
 import '../pages/Under_ScenicSpot_Pages/addScenicSpotPage.dart';
 import '../pages/Under_PaceNote_Pages/addPaceNotePage.dart';
 import '../pages/Under_PaceNote_Pages/paceNoteDetailPage.dart';
+import '../pages/Under_EmgContact_Pages/addEmgContactPage.dart';
 import '../res/module/mapSource/POIsearch.dart';
 
 //配置路由,定义 Map 类型的 routes,Key 为 String 类型，Value 为 Function 类型
@@ -33,7 +34,8 @@ final Map<String, Function> routes = {
   '/addScenicSpot': (context, {arguments}) => addScenicSpotPage(),
   '/addPaceNote': (context, {arguments}) => addPaceNotePage(),
   '/ShowPOICitySearchPage': (context, {arguments}) => ShowPOICitySearchPage(),
-  '/paceNoteDetail': (context, {arguments}) => paceNoteDetailPage()
+  '/paceNoteDetail': (context, {arguments}) => paceNoteDetailPage(),
+  '/addEmgContact': (context, {arguments}) => addEmgContactPage(),
 };
 
 var onGenerateRoute = (RouteSettings settings) {

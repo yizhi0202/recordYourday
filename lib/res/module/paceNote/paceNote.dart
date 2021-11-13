@@ -5,14 +5,15 @@ import '../auditState.dart';
 
 class paceNote extends StatefulWidget {
   int paceNoteID = 0; //to find the senicspots of the paceNote
-  int userID = 0; //to find the avatar and the nickname of the user
+  int userID = 0; //to find the profilePhoto and the nickname of the user
   DateTime? publishTime = DateTime.now();
   String? title = '';
   String? note = ''; //the feeling of the paceNote
   int? score = 0; //the score of the paceNote, the autor gives
+  int? voteNum = 0;
   Myaudit? audit = Myaudit.unknown;
   String? photo; //this is the cover of paceNote
-  String? avatar;
+  String? profilePhoto;
   String? nickName;
 
   paceNote({
@@ -23,9 +24,10 @@ class paceNote extends StatefulWidget {
     this.title,
     this.note,
     this.score = 0,
+    this.voteNum = 0,
     this.audit,
     this.photo = 'https://www.itying.com/images/flutter/2.png',
-    this.avatar = 'https://www.itying.com/images/flutter/4.png',
+    this.profilePhoto = 'https://www.itying.com/images/flutter/4.png',
     this.nickName = '网瘾少年',
   }) : super(key: key) {
     assert(score! >= 0 && score! <= 100);
@@ -75,7 +77,7 @@ class _paceNoteState extends State<paceNote> {
           ListTile(
             leading: ClipOval(
               child: Image.network(
-                '${widget.avatar}',
+                '${widget.profilePhoto}',
                 fit: BoxFit.cover,
                 height: 40,
                 width: 40,

@@ -3,13 +3,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
+import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
+    show BMFModel, BMFCoordinate;
 
 class scenicSpot extends StatefulWidget {
   int scenicSpotID = 0; //to find the senicspots of the paceNote
   int userID = 0; //to find the avatar and the nickname of the user
   DateTime? publishTime = DateTime.now();
   String? title;
-  String? location;
+  String? address;
+  BMFCoordinate? position;
   String? introduction;
   String? subTitle;
   Myaudit audit = Myaudit.unknown;
@@ -21,9 +24,10 @@ class scenicSpot extends StatefulWidget {
       {Key? key,
       required this.scenicSpotID,
       required this.userID,
+      required this.position,
       this.publishTime,
       this.title = '难忘景点',
-      this.location = '中国',
+      this.address = '中国',
       this.introduction = '',
       this.subTitle = '',
       this.audit = Myaudit.unknown,

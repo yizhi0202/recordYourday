@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
 class emgContact extends StatelessWidget {
-  final String name;
+  final String nickName;
   final int phoneNumber;
   final String email;
   final String profilePhoto;
@@ -10,7 +10,7 @@ class emgContact extends StatelessWidget {
 
   emgContact(
       {Key? key,
-      this.name = '',
+      this.nickName = '',
       this.profilePhoto = 'https://www.itying.com/images/flutter/3.png',
       this.comment = '',
       this.email = '1927423294@qq.com',
@@ -29,7 +29,7 @@ class emgContact extends StatelessWidget {
             backgroundImage: NetworkImage('$profilePhoto'),
             size: 40.0,
           ),
-          titleText: '$name',
+          titleText: '$nickName',
           subTitleText: '$email',
         ));
   }

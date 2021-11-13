@@ -35,7 +35,7 @@ class addScenicSpotPage extends StatefulWidget {
 
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
-  List<String> imagePath = [];
+  // List<String> imagePath = [];
   Map spot = {'title': '名称', 'address': '地址', 'position': ''};
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();

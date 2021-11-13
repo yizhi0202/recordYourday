@@ -6,17 +6,17 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 List<Widget> emgContactList = [
   emgContact(
-    name: '苏珊',
+    nickName: '苏珊',
     profilePhoto: 'https://www.itying.com/images/flutter/1.png',
     phoneNumber: 18765467890,
     email: '1927423284@qq.com',
   ),
   emgContact(
-      name: '苏珊andognni',
+      nickName: '苏珊andognni',
       profilePhoto: 'https://www.itying.com/images/flutter/2.png',
       phoneNumber: 18765467890),
   emgContact(
-    name: '李月',
+    nickName: '李月',
     profilePhoto: 'https://www.itying.com/images/flutter/4.png',
     phoneNumber: 19876543432,
   ),
@@ -110,7 +110,7 @@ class _emgContactPageState extends State<emgContactPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('nick name', style: TextStyle(fontSize: 18)),
+                    Text('nickName', style: TextStyle(fontSize: 18)),
                     Icon(
                       Icons.male,
                       color: Colors.lightBlue,
@@ -143,39 +143,37 @@ class _emgContactPageState extends State<emgContactPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                SizedBox(
-                  width: 8,
-                ),
-                Expanded(
+                Padding(
+                  padding: EdgeInsets.all(10),
                   child: GFButton(
                     size: 35.0,
-                    onPressed: () {},
-                    text: "新建联系人",
-                    textStyle: TextStyle(color: Colors.white, fontSize: 10.0),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/addEmgContact');
+                    },
                     icon: Icon(
                       Icons.add_call,
                       color: Colors.white,
                     ),
                     color: Colors.red,
+                    text: '新建紧急联系人',
                     shape: GFButtonShape.pills,
                   ),
                 ),
-                SizedBox(
-                  width: 160.0,
-                ),
-                Expanded(
-                    child: GFButton(
-                  size: 35.0,
-                  onPressed: () {},
-                  text: "设置报警时间",
-                  textStyle: TextStyle(color: Colors.black, fontSize: 9.0),
-                  icon: Icon(
-                    Icons.add_alert_rounded,
-                    color: Colors.white,
+                //
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: GFButton(
+                    size: 35.0,
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.add_alert_rounded,
+                      color: Colors.white,
+                    ),
+                    shape: GFButtonShape.pills,
+                    color: Colors.yellow,
+                    text: '设置报警时间',
                   ),
-                  shape: GFButtonShape.pills,
-                  color: Colors.yellow,
-                )),
+                ),
               ],
             ),
             ListView.builder(
