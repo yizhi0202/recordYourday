@@ -76,9 +76,6 @@ flutter:
     - images/2.0x/forest.jpg
     - images/3.0x/forest.jpg
     - images/forest.jpg
-    - images/2.0x/locationphoto.jpeg
-    - images/3.0x/locationphoto.jpeg
-    - images/locationphoto.jpeg
     - images/
 
   # An image asset can refer to one or more resolution-specific "variants", see

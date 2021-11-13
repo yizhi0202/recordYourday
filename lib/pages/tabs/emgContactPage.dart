@@ -6,9 +6,11 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 List<Widget> emgContactList = [
   emgContact(
-      name: '苏珊',
-      profilePhoto: 'https://www.itying.com/images/flutter/1.png',
-      phoneNumber: 18765467890),
+    name: '苏珊',
+    profilePhoto: 'https://www.itying.com/images/flutter/1.png',
+    phoneNumber: 18765467890,
+    email: '1927423284@qq.com',
+  ),
   emgContact(
       name: '苏珊andognni',
       profilePhoto: 'https://www.itying.com/images/flutter/2.png',

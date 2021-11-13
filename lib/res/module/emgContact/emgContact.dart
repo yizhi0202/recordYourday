@@ -4,6 +4,7 @@ import 'package:getwidget/getwidget.dart';
 class emgContact extends StatelessWidget {
   final String name;
   final int phoneNumber;
+  final String email;
   final String profilePhoto;
   final String comment;
 
@@ -12,6 +13,7 @@ class emgContact extends StatelessWidget {
       this.name = '',
       this.profilePhoto = 'https://www.itying.com/images/flutter/3.png',
       this.comment = '',
+      this.email = '1927423294@qq.com',
       this.phoneNumber = 19999999999})
       : super(key: key) {
     assert(phoneNumber >= 10000000000 && phoneNumber <= 19999999999);
@@ -24,11 +26,11 @@ class emgContact extends StatelessWidget {
         width: 120,
         child: GFListTile(
           avatar: GFAvatar(
-            backgroundImage: NetworkImage('${profilePhoto}'),
+            backgroundImage: NetworkImage('$profilePhoto'),
             size: 40.0,
           ),
-          titleText: '${name}',
-          subTitleText: '${phoneNumber}',
+          titleText: '$name',
+          subTitleText: '$email',
         ));
   }
 }
