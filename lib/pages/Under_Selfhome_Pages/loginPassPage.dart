@@ -60,6 +60,20 @@ class loginPassPage extends StatelessWidget {
   //   }
   // }
 
+  void callLoginCode(String ph,  context) async {
+    try {
+      //call the cloud function
+      var response = await Dio().post(
+          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
+          data: {'phone': ph});
+      print(response);
+      var result = response.toString();
+      if (result != 'false') Navigator.pushNamed(context, '/');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +138,8 @@ class loginPassPage extends StatelessWidget {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      prepareForLogin(phone.text, pass.text, context);
+                      // prepareForLogin(phone.text, pass.text, context);
+                      callLoginCode(phone.text, context);
                     },
                   ),
                 ),
