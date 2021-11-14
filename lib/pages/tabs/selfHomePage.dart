@@ -149,20 +149,13 @@ class _selfHomePageState extends State<selfHomePage> {
             height: 100,
             width: 280,
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              GestureDetector(
-                child: ClipOval(
-                  child: Image.network(
-                    '${widget.profilePhoto}',
-                    fit: BoxFit.cover,
-                    height: 60,
-                    width: 60,
-                  ),
+              ClipOval(
+                child: Image.network(
+                  '${widget.profilePhoto}',
+                  fit: BoxFit.cover,
+                  height: 60,
+                  width: 60,
                 ),
-                onTap: () {
-                  setState(() {
-                    _openGallery();
-                  });
-                },
               ),
               Column(
                 children: [
@@ -257,7 +250,9 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           SizedBox(height: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/editUserInfo');
+            },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [

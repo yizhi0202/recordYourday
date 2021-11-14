@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/Under_Selfhome_Pages/findPassPage.dart';
 import '../pages/Under_Selfhome_Pages/loginPassPage.dart';
+import '../pages/Under_Selfhome_Pages/editUserInfoPage.dart';
 import '../pages/tabs/scenicSpotPage.dart';
 import '../pages/tabs/paceNotePage.dart';
 import '../pages/tabs/emgContactPage.dart';
@@ -28,6 +29,7 @@ final Map<String, Function> routes = {
   '/signUp': (context, {arguments}) => signUpPage(),
   '/editPass': (context, {arguments}) => editPassPage(),
   '/findPass': (context, {arguments}) => findPassPage(),
+  '/editUserInfo':(context,{arguments})=>editUserInfoPage(),
   '/scenicSpotDetail': (context, {arguments}) => scenicSpotDetailPage(
         arguments: arguments,
       ),

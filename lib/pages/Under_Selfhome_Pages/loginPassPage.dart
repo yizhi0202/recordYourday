@@ -137,8 +137,8 @@ class loginPassPage extends StatelessWidget {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      // prepareForLogin(phone.text, pass.text, context);
-                      callLoginCode(phone.text, context);
+                      prepareForLogin(phone.text, pass.text, context);
+                      // callLoginCode(phone.text, context);
                     },
                   ),
                 ),

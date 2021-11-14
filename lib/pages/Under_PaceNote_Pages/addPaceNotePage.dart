@@ -6,7 +6,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';

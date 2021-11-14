@@ -31,6 +31,8 @@ class emgContactPage extends StatefulWidget {
 
 class _emgContactPageState extends State<emgContactPage> {
   late SwipeActionController controller;
+  //设置一个指定时间
+  var chooseTime = TimeOfDay(hour: 0, minute: 0);
 
   @override
   void initState() {
@@ -164,7 +166,21 @@ class _emgContactPageState extends State<emgContactPage> {
                   padding: EdgeInsets.all(10),
                   child: GFButton(
                     size: 35.0,
-                    onPressed: () {},
+                    onPressed: () {
+                      showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                          builder: (context, child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
+                              child: child!,
+                            );
+                          }).then((value) {if(value == null) return; setState(() {
+                            chooseTime = value;
+                            print('the chooseTime is'+chooseTime.hour.toString());
+                          });});
+                    },
                     icon: Icon(
                       Icons.add_alert_rounded,
                       color: Colors.white,
