@@ -101,7 +101,6 @@ class loginPassPage extends StatelessWidget {
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
                     controller: phone,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: '请输入手机号'),
                   ),
                 )),
