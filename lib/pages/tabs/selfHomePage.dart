@@ -166,23 +166,13 @@ class _selfHomePageState extends State<selfHomePage> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
-                  GestureDetector(
-                    child: (widget.mySex == userSex.male)
-                        ? Icon(
-                            Icons.male,
-                            color: Colors.lightBlue,
-                            size: 32,
-                          )
-                        : Icon(Icons.female, color: Colors.pink, size: 32),
-                    onTap: () {
-                      setState(() {
-                        if (widget.mySex == userSex.male)
-                          widget.mySex = userSex.female;
-                        else
-                          widget.mySex = userSex.male;
-                      });
-                    },
-                  ),
+                  (widget.mySex == userSex.male)
+                      ? Icon(
+                    Icons.male,
+                    color: Colors.lightBlue,
+                    size: 32,
+                  )
+                      : Icon(Icons.female, color: Colors.pink, size: 32),
                 ],
               )
             ]),
