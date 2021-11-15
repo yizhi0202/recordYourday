@@ -185,7 +185,7 @@ class _selfHomePageState extends State<selfHomePage> {
           SizedBox(height: 8),
           GestureDetector(
             onTap: () {
-              print('tap my paceNote');
+              Navigator.pushNamed(context, '/myPaceNote');
             },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
