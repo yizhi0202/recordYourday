@@ -40,7 +40,7 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
       children: [
         Padding(padding: EdgeInsets.all(10),child: Container(height: 180,child: Image.network(imgUrl),)),
         Padding(padding: EdgeInsets.all(10),child: Text('路书标题'),),
-        Container(height: 380,width:280,child: generateMap()),
+        //Container(height: 380,width:280,child: generateMap()),
       ],
     ),
     );
