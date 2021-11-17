@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 // import '../../routes/Routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
@@ -42,7 +43,9 @@ class loginPassPage extends StatelessWidget {
       Navigator.pushNamed(context, '/');
     } else {
       print('login success!');
-      Navigator.pushNamed(context, '/');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("user", phone);
+      Navigator.pushNamed(context, '/', arguments: {"user":phone});
     }
   }
 
