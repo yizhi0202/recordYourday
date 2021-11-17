@@ -11,7 +11,8 @@ import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 class addPaceNotePage extends StatefulWidget {
-  addPaceNotePage({Key? key}) : super(key: key);
+  Map arguments;
+  addPaceNotePage({Key? key, required this.arguments}) : super(key: key);
 
   @override
   _addPaceNotePageState createState() => _addPaceNotePageState();
@@ -65,12 +66,23 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     CloudBaseDatabase db = CloudBaseDatabase(core);
 
     Collection collection = db.collection('paceNote');
+    int len = 0;
+    String image_url = "";
     if (images.length > 0) {
       images.forEach((element) async {
         String url = await eachPhotoUp(element, storage);
+        len++;
+        image_url = url;
         print(url);
       });
     }
+    while(len<images.length){}
+    collection.add({
+      'creator':widget.arguments['user'],
+      'imageUrl':image_url,
+      'paceNoteTitle':paceNoteTitle,
+      'paceNoteFeeling':paceNoteFeeling
+    }).then((_){}).catchError((e){print(e);});
   }
 
   //显示选择后的图像

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_y/res/module/scenicSpot/scenicSpot.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
+
     show BMFModel, BMFCoordinate;
 
 class scenicSpotPage extends StatefulWidget {
@@ -11,21 +16,79 @@ class scenicSpotPage extends StatefulWidget {
   @override
   _scenicSpotPageState createState() => _scenicSpotPageState();
 }
-
+ 
 class _scenicSpotPageState extends State<scenicSpotPage> {
-  List<String> myphoto = [
-    'https://www.itying.com/images/flutter/1.png',
-    'https://www.itying.com/images/flutter/3.png',
-    'https://www.itying.com/images/flutter/2.png',
-    'https://www.itying.com/images/flutter/4.png'
-  ];
+  
+    
+  List _list = [];
 
+  initState() {
+      super.initState();
+      getHttp().then((val){
+        setState(() {
+          _list = val;
+        });
+      });
+    }
+
+
+  Future getHttp() async{
+     try{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseStorage storage = CloudBaseStorage(core);
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('scenicSpot').get();
+      return res.data;
+
+     }catch(e){
+      return print(e);
+     }
+    }
+
+   Widget buildGrid() {
+      List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
+      for(var i in _list) {
+        tiles.add(
+          new scenicSpot(scenicSpotID: i['scenicSpotID'],
+          userID: i['creator'],
+          position: BMFCoordinate(i['longitude'],i['latitude']),
+          photoUrl: i['scenicSpotPhotoUrl'],
+          title: i['title'],
+          address: i['address'],
+          introduction: i['introduction'],
+          subTitle: i['subtitle'],
+          voteNum: i['vote']
+      )
+        );
+      }
+      return ListView(
+          children:tiles
+      );
+    }
   @override
   Widget build(BuildContext context) {
     BMFCoordinate? pt;
-    pt?.latitude = 12;
-    pt?.longitude = 12;
-
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseStorage storage = CloudBaseStorage(core);
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    //  db.collection('scenicSpot').get().then((res){
+    //   setState(() {
+    //   res.data.forEach((i){_list.add(scenicSpot(scenicSpotID: i['scenicSpotID'],
+    //   userID: i['creator'],
+    //   position: BMFCoordinate(i['longitude'],i['latitude']),
+    //   photoUrl: i['scenicSpotPhotoUrl'],
+    //   title: i['title'],
+    //   address: i['address'],
+    //   introduction: i['introduction'],
+    //   subTitle: i['subtitle'],
+    //   voteNum: i['vote']
+    //   ));});
+    //   });
+      
+      
+    // }
+    
+    // );
     return Scaffold(
         appBar: AppBar(
           primary: true,
@@ -84,71 +147,6 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
             ],
           ),
         ),
-        body: ListView(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
-                  'userID': '1897654',
-                  'scenicSpotName': '荔波',
-                  'scenicSpotLocation': '贵州',
-                  'photoNum':
-                      0, //this varible is to record the number of photo been uploaded by user
-                  'introduction':
-                      '荔波一生必去的地方，荔波是中共一大代表邓恩铭烈士的故乡，境内生态良好，气候宜人，拥有国家5A级樟江风景名胜区、国家级茂兰自然保护区、水春河漂流、黄江河国家级湿地公园、瑶山古寨景区、四季花海和寨票、水浦、大土民宿等景区景点。'
-                });
-              },
-              child: scenicSpot(
-                position: pt,
-                scenicSpotID: 1,
-                userID: 2,
-                photo: myphoto,
-                introduction:
-                    '如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，必经十方生死!如有一味绝境，',
-              ),
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-            scenicSpot(
-              position: pt,
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction: '如有一味绝境，必经十方生死!',
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-            scenicSpot(
-              position: pt,
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction: '如有一味绝境，必经十方生死!',
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-            scenicSpot(
-              position: pt,
-              scenicSpotID: 1,
-              userID: 2,
-              photo: myphoto,
-              introduction: '如有一味绝境，必经十方生死!',
-            ),
-            Divider(
-              color: Colors.green,
-              indent: 8.0,
-              endIndent: 8.0,
-            ),
-          ],
-        ));
+        body: buildGrid());
   }
 }

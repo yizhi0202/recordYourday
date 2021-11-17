@@ -34,14 +34,14 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection collection = db.collection('scenicSpotPhoto');
     var _ = db.command;
-    var res = await collection.where({'userID': _.eq(userID)}).get();
-    for (var i = 0; i < res.data.length; ++i) {
-      newPhotos[i] = res.data[i]['scenicSpotPhotoUrl'];
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    newPhotos = widget.arguments["photoURL"].split("###").where((s) => !s.isEmpty).toList();
+    print(newPhotos);
+    print(newPhotos.length);
+    
     double height =
         MediaQuery.of(context).padding.bottom; // 这个很简单，就是获取高度，获取的底部安全区域的高度
     return Scaffold(
@@ -108,8 +108,12 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                       color: Colors.yellow,
                     ),
                   ),
+                  Expanded(
+                      child: 
                   Text(
                     '景点位置${widget.arguments['scenicSpotLocation']}',
+                    maxLines: 20,
+                  )
                   )
                 ],
               ),
@@ -149,7 +153,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
         GestureDetector(
           onTap: () {},
           child: Text(
-            '全部评论({26})',
+            '查看全部评论({})',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -157,57 +161,14 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             textAlign: TextAlign.start,
           ),
         ),
-        Container(
-          child: ListTile(
-              horizontalTitleGap: 8.0,
-              leading: ClipOval(
-                child: Image.network(
-                  'https://www.itying.com/images/flutter/1.png',
-                  fit: BoxFit.cover,
-                  height: 40,
-                  width: 40,
-                ),
-              ),
-              title: Padding(
-                padding: EdgeInsets.only(
-                  left: 0,
-                ),
-                child: Row(
-                  children: [
-                    TextButton(
-                      child: Text('此人昵称'),
-                      onPressed: () {},
-                    ),
-                    Text(
-                      '2021-8-12 14:34',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-              subtitle: Padding(
-                padding: EdgeInsets.only(
-                  left: 7,
-                ),
-                child: Text(
-                  '评论，不错的',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-          height: 100,
-        ),
+        
         Padding(
           padding: EdgeInsets.only(left: 210, right: 32),
-          child: TextButton(
-              onPressed: () {
-                print('查看更多的评论');
-              },
-              child: Text(
-                '查看更多 >',
+          child:Text(
+                '',
                 style: TextStyle(color: Colors.grey),
                 textAlign: TextAlign.center,
-              )),
+              )
         ),
         Row(
           children: [
@@ -224,7 +185,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                   print('点赞数增加');
                 },
                 child: ButtonBar(
-                  children: [FaIcon(FontAwesomeIcons.heart), Text('36')],
+                  children: [FaIcon(FontAwesomeIcons.heart), Text('${widget.arguments['voteNum']}')],
                 ),
               ),
               flex: 1,

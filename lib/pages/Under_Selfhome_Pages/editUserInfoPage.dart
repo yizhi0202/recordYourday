@@ -8,6 +8,8 @@ import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class editUserInfoPage extends StatefulWidget {
   @override
@@ -22,7 +24,8 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
   String nickName = '此人昵称艺术已死';
 
   bool isSelect = false;
-
+  String imageURL = "";
+  bool uploaded = false; 
   TextEditingController nickNameController = TextEditingController();
 
   List<Asset> images = <Asset>[];
@@ -34,23 +37,23 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
     });
   }
 
-  Future<String> eachPhotoUp(
+  void eachPhotoUp(
       Asset photo,
       CloudBaseStorage cbstorage,
       ) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
-    String cloudp = 'image/paceNotePhoto/' + path.substring(45);
+    String cloudp = 'image/profilePhoto/' + path.substring(45);
     try {
       await cbstorage.uploadFile(
         cloudPath: cloudp,
         filePath: path,
         onProcess: (int count, int total) {
           // 当前进度
-          //print(count);
+          print(count);
           // 总进度
-          //print(total);
+          print(total);
         },
-      );
+      ).then((a){});
 
       //getUrl
       String fileID =
@@ -59,26 +62,58 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
       await cbstorage.getFileDownloadURL(fileIds);
-
-      return res.data[0].downloadUrl;
+      imageURL = res.data[0].downloadUrl;
     } catch (e) {
       print(e);
-      return 'error';
     }
   }
-
-  void upCloudDataBase() {
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("user");
+  }
+  void upCloudDataBase()  {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
-    Collection collection = db.collection('paceNote');
+    
+    int len = 0;
     if (images.length > 0) {
       images.forEach((element) async {
-        String url = await eachPhotoUp(element, storage);
-        print(url);
+        eachPhotoUp(element, storage);
+        len++;
       });
     }
+    while(len<images.length){int a = 1;}
+    Collection userInfo = db.collection('userInfo');
+    getid().then((id){
+        userInfo.where(
+      {
+        "userID":id
+      }
+    ).remove().then((res1){
+      // while(false == uploaded){int a = 1;}
+      userInfo.add({
+        "userID":id,
+        "userType":"common",
+        "sex":_radioGroupA==0 ? "male":"female",
+        "profilePhoto":imageURL,
+        "nickname":nickNameController.text
+      }).then((res2){print(res2);});
+    });
+    // userInfo
+    //     .add({
+    //         "nickname":,
+    //         "profilePhoto":,
+    //         "sex":,
+    //         "userID":,
+
+    //       })
+    //       .then((shit) {print(shit);})
+    //       .catchError((e) {
+    //         print(e);
+    //       });
+    });
+    
   }
 
   Widget buildGridView() {
@@ -102,7 +137,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
       },
     );
   }
-
+  
   Future<void> loadAssets() async {
     List<Asset> resultList = <Asset>[];
     String error = 'No Error Detected';
@@ -153,7 +188,9 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
           icon: FaIcon(FontAwesomeIcons.arrowCircleLeft),
           color: Colors.white24,
         ),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.save))],
+        actions: [IconButton(onPressed: () {
+            upCloudDataBase();
+        }, icon: Icon(Icons.save))],
       ),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,

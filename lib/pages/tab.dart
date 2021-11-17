@@ -7,10 +7,12 @@ import 'tabs/selfHomePage.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class tab extends StatefulWidget {
-  tab({Key? key}) : super(key: key);
+  Map arguments;
+  tab({Key? key, required this.arguments} ) : super(key: key);
 
   @override
   _tabState createState() => _tabState();
+  
 }
 
 class _tabState extends State<tab> {
@@ -23,12 +25,13 @@ class _tabState extends State<tab> {
     emgContactPage(),
     selfHomePage()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: this._pageList[this._currentIndex],
+        body:this._pageList[this._currentIndex],
         floatingActionButton: Container(
           height: 90,
           width: 90,
@@ -52,7 +55,7 @@ class _tabState extends State<tab> {
                   label: '新建景点',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addScenicSpot');
+                    Navigator.pushNamed(context, '/addScenicSpot', arguments: {'user':widget.arguments["user"]});
                   }),
               SpeedDialChild(
                   child: Icon(Icons.menu_book),
@@ -60,7 +63,7 @@ class _tabState extends State<tab> {
                   label: '新建路书',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addPaceNote');
+                    Navigator.pushNamed(context, '/addPaceNote', arguments:{'user':widget.arguments["user"]});
                   }),
             ],
           ),
@@ -103,7 +106,11 @@ class _tabState extends State<tab> {
           ],
           onItemSelected: (index) {
             setState(() {
-              if (index != 2) this._currentIndex = index;
+              if (index != 2) 
+              {
+                this._currentIndex = index;
+              }
+              
             });
           },
         ),

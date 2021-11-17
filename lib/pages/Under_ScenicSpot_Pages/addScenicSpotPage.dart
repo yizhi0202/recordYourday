@@ -27,7 +27,8 @@ import 'package:flutter_app_y/res/module/mapSource/POIsearch.dart';
 // import 'package:amap_flutter_base/amap_flutter_base.dart';
 
 class addScenicSpotPage extends StatefulWidget {
-  addScenicSpotPage({Key? key}) : super(key: key);
+  Map arguments;
+  addScenicSpotPage({Key? key, required this.arguments}) : super(key: key);
 
   @override
   _addScenicSpotPageState createState() => _addScenicSpotPageState();
@@ -35,7 +36,7 @@ class addScenicSpotPage extends StatefulWidget {
 
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
-  // List<String> imagePath = [];
+  String imageURL = "";
   Map spot = {'title': '名称', 'address': '地址', 'position': ''};
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
@@ -83,17 +84,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
-
-      //storage to database
-      collection
-          .add({
-            'userID': '18670343782',
-            'scenicSpotPhotoUrl': res.data[0].downloadUrl
-          })
-          .then((res) {})
-          .catchError((e) {
-            print(e);
-          });
+      imageURL = imageURL+ res.data[0].downloadUrl + "###";
     } catch (e) {
       print(e);
     }
@@ -104,18 +95,39 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
+    
+    int len = 0;
 
     Collection collection = db.collection('scenicSpotPhoto');
-    if (images.length > 0) {
-      images.forEach((element) async {
-        eachPhotoUp(element, storage, collection);
+    if (images.length > 0)  {
+      images.forEach((element) async  {
+            eachPhotoUp(element, storage, collection);
+            len++;
       });
     }
+    while(len <images.length){int a = 1;}
+    Collection scenicSpot = db.collection('scenicSpot');
+    scenicSpot
+          .add({
+            'creator': widget.arguments["user"].toString(),
+            'scenicSpotPhotoUrl': imageURL,
+            'title':titleController.text,
+            'subtitle':subTitleController.text,
+            'introduction':introductionController.text,
+            'address':spot["address"],
+            'latitude':spot['position'].latitude,
+            'longitude':spot['position'].longitude,
+            'vote':1
+          })
+          .then((shit) {print(shit);})
+          .catchError((e) {
+            print(e);
+          });
   }
 
   //显示选择后的图像
   Widget buildGridView() {
-    return GridView.count(
+    return GridView.count(  
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
       shrinkWrap: true,
