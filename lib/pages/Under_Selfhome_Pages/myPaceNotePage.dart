@@ -73,6 +73,7 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
         ],
       ),
       body: ListView(
+        shrinkWrap: true,
         children: [
           Row(
             children:[IconButton(
@@ -87,21 +88,19 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
           IconButton(onPressed: (){
             addPaceNote('路书标题', 89);
           }, icon: Icon(Icons.add)),
-          ListView.builder(shrinkWrap:true,itemCount:myPaceNoteList.length,itemBuilder: (context,index){
-            return InkWell(
-              onTap: (){},
-              child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
-                controller.toggle(index);
-              });},child: Container(
-                color: controller.isSelected(index)
-                    ? Colors.yellowAccent:Colors.transparent,
-                height:75,
-                margin: EdgeInsets.only(left:10,right:10,top:10),
-                child:myPaceNoteList[index],
-              ),
-              ),
-            );
-          }),
+         Container(height: 680,child:  ListView.builder(shrinkWrap:true,itemCount:myPaceNoteList.length,itemBuilder: (context,index){
+           return MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
+             controller.toggle(index);
+           });},child: Container(
+             color: controller.isSelected(index)
+                 ? Colors.yellowAccent:Colors.transparent,
+             height:75,
+             margin: EdgeInsets.only(left:10,right:10,top:10),
+             child:myPaceNoteList[index],
+           ),
+           );
+
+         }),),
         ],
       ),
     );

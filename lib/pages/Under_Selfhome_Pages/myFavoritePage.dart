@@ -15,8 +15,8 @@ class _myFavoritePageState extends State<myFavoritePage> {
   Widget getMyFavorPaceNote({String title = '',int voteNum = 0,String nickName = '匿名用户',String photo = 'https://www.itying.com/images/flutter/4.png', })
   {
     return Card(
-      child:  ListView(
-        shrinkWrap: true,
+      child: Column(
+       mainAxisSize: MainAxisSize.min,
         children: [
           Container(height: 190,width: 340,child: Image.network(photo,fit: BoxFit.cover,),),
       Row(mainAxisSize: MainAxisSize.min,children: [
@@ -35,8 +35,8 @@ class _myFavoritePageState extends State<myFavoritePage> {
   Widget getMyFavorSpot({String title = '',int voteNum = 0,String nickName = '匿名用户',String photo = 'https://www.itying.com/images/flutter/4.png', })
   {
     return Card(
-      child:  ListView(
-        shrinkWrap: true,
+      child:  Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(height: 190,width: 340,child: Image.network(photo,fit: BoxFit.cover,),),
           Row(mainAxisSize: MainAxisSize.min,children: [
@@ -151,21 +151,24 @@ class _myFavoritePageState extends State<myFavoritePage> {
                 IconButton(onPressed: (){
                   addMyFavorPaceNote(title:'路书标题', voteNum: 13);
                 }, icon: Icon(Icons.add)),
-                ListView.builder(shrinkWrap:true,itemCount:myFavorPaceNoteList.length,itemBuilder: (context,index){
-                  return InkWell(
-                    onTap: (){},
-                    child: MultiSelectItem(isSelecting: myFavorPaceNotesController.isSelecting, onSelected: (){setState(() {
-                      myFavorPaceNotesController.toggle(index);
-                    });},child: Container(
-                      color: myFavorPaceNotesController.isSelected(index)
-                          ? Colors.yellowAccent:Colors.transparent,
-                      height:280,
-                      margin: EdgeInsets.only(left:10,right:10,top:10),
-                      child:myFavorPaceNoteList[index],
-                    ),
-                    ),
-                  );
-                }),
+                Container(
+                  height: 680,
+                  child: ListView.builder(shrinkWrap:true,itemCount:myFavorPaceNoteList.length,itemBuilder: (context,index){
+                    return InkWell(
+                      onTap: (){},
+                      child: MultiSelectItem(isSelecting: myFavorPaceNotesController.isSelecting, onSelected: (){setState(() {
+                        myFavorPaceNotesController.toggle(index);
+                      });},child: Container(
+                        color: myFavorPaceNotesController.isSelected(index)
+                            ? Colors.yellowAccent:Colors.transparent,
+                        height:290,
+                        margin: EdgeInsets.only(left:10,right:10,top:30),
+                        child:myFavorPaceNoteList[index],
+                      ),
+                      ),
+                    );
+                  }),
+                )
               ],),
           ExpansionTile(leading:Icon(Icons.nature_people,color:Colors.green,),title: Text('收藏的景点'),children: [
             Row(
@@ -182,21 +185,25 @@ class _myFavoritePageState extends State<myFavoritePage> {
             IconButton(onPressed: (){
               addMyFavorSpot(title:'路书标题', voteNum: 13);
             }, icon: Icon(Icons.add)),
-            ListView.builder(shrinkWrap:true,itemCount:myFavorSpotList.length,itemBuilder: (context,index){
-              return InkWell(
-                onTap: (){},
-                child: MultiSelectItem(isSelecting: myFavorSpotsController.isSelecting, onSelected: (){setState(() {
-                  myFavorSpotsController.toggle(index);
-                });},child: Container(
-                  color: myFavorSpotsController.isSelected(index)
-                      ? Colors.yellowAccent:Colors.transparent,
-                  height:280,
-                  margin: EdgeInsets.only(left:10,right:10,top:10),
-                  child:myFavorSpotList[index],
-                ),
-                ),
-              );
-            }),
+            Container(
+              height: 680,
+              child: ListView.builder(shrinkWrap:true,itemCount:myFavorSpotList.length,itemBuilder: (context,index){
+                return InkWell(
+                  onTap: (){},
+                  child: MultiSelectItem(isSelecting: myFavorSpotsController.isSelecting, onSelected: (){setState(() {
+                    myFavorSpotsController.toggle(index);
+                  });},child: Container(
+                    color: myFavorSpotsController.isSelected(index)
+                        ? Colors.yellowAccent:Colors.transparent,
+                    height:290,
+                    margin: EdgeInsets.only(left:10,right:10,top:10),
+                    child:myFavorSpotList[index],
+                  ),
+                  ),
+                );
+              }),
+            )
+
           ],)
 
         ],

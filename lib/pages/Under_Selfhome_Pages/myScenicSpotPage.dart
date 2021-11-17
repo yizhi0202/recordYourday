@@ -103,21 +103,24 @@ class _myScenicSpotPageState extends State<myScenicSpotPage> {
           IconButton(onPressed: (){
             addScenicSpot('景点标题', 89);
           }, icon: Icon(Icons.add)),
-          ListView.builder(shrinkWrap:true,itemCount:myScenicSpotList.length,itemBuilder: (context,index){
-            return InkWell(
-              onTap: (){},
-              child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
-                controller.toggle(index);
-              });},child: Container(
-                color: controller.isSelected(index)
-                    ? Colors.yellowAccent:Colors.transparent,
-                height:75,
-                margin: EdgeInsets.only(left:10,right:10,top:10),
-                child:myScenicSpotList[index],
-              ),
-              ),
-            );
-          }),
+          Container(
+            height: 680,
+            child: ListView.builder(shrinkWrap:true,itemCount:myScenicSpotList.length,itemBuilder: (context,index){
+              return InkWell(
+                onTap: (){},
+                child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
+                  controller.toggle(index);
+                });},child: Container(
+                  color: controller.isSelected(index)
+                      ? Colors.yellowAccent:Colors.transparent,
+                  height:75,
+                  margin: EdgeInsets.only(left:10,right:10,top:10),
+                  child:myScenicSpotList[index],
+                ),
+                ),
+              );
+            }),
+          )
         ],
       ),
     );
