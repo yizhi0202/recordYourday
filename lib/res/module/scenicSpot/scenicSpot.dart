@@ -16,7 +16,7 @@ class scenicSpot extends StatefulWidget {
   String? introduction;
   String? subTitle;
   Myaudit audit = Myaudit.unknown;
-  List<String>? photo;
+  List photo;
   int voteNum = 0; //记录投票数量
   String? profilePhoto; //the avatar of uploader
   String? nickName;

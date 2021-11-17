@@ -26,6 +26,7 @@ class scenicSpotDetailPage extends StatefulWidget {
 
 class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
   bool keyboard = false; //键盘的弹起、收回状态
+  bool favor  = false;
   TextEditingController editingController =
       new TextEditingController(); //输入框的编辑
   //get the photoUrl of uploading by userID
@@ -119,13 +120,17 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                       child: Icon(
                         Icons.circle,
                         size: 42,
-                        color: Colors.grey,
+                        color: (!favor)?Colors.grey:Colors.yellowAccent,
                       ),
                       padding: EdgeInsets.only(top: 8, right: 0)),
                   Padding(
                     padding: EdgeInsets.only(right: 2),
                     child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            favor = true;
+                          });
+                        },
                         icon: FaIcon(
                           FontAwesomeIcons.star,
                           color: Colors.white,

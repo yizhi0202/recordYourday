@@ -20,6 +20,8 @@ class paceNoteDetailPage extends StatefulWidget {
 }
 
 class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
+  bool favor = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +52,33 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
               )),
           Padding(
             padding: EdgeInsets.all(10),
-            child: Text(
-              'the title of pacenote',
-              style: TextStyle(fontSize: 18),
+            //
+            child: ListTile(
+              title: Text('路书标题'),
+              trailing: Stack(
+                children: [
+                  Padding(
+                      child: Icon(
+                        Icons.circle,
+                        size: 42,
+                        color: (!favor)?Colors.grey:Colors.yellowAccent,
+                      ),
+                      padding: EdgeInsets.only(top: 8, right: 0)),
+                  Padding(
+                    padding: EdgeInsets.only(right: 2),
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            favor = true;
+                          });
+                        },
+                        icon: FaIcon(
+                          FontAwesomeIcons.star,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(

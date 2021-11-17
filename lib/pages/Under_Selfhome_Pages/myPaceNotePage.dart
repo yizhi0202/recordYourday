@@ -6,19 +6,16 @@ class myPaceNotePage extends StatefulWidget {
   @override
   _myPaceNotePageState createState() => _myPaceNotePageState();
 }
-
+//Navigator.pushNamed(context, '/myPaceNoteDetail')
 class _myPaceNotePageState extends State<myPaceNotePage> {
   List<Widget> myPaceNoteList = [];
   MultiSelectController controller = MultiSelectController();
   Widget getMyPaceNote({String title = '',int voteNum = 0})
   {
-    return GestureDetector(
-      onTap: (){
+    return Card(
+      child: ListTile(leading: Icon(Icons.menu_book,color: Colors.yellow,),title: Text(title,),trailing: Row(mainAxisSize:MainAxisSize.min ,children: [IconButton(onPressed: (){
         Navigator.pushNamed(context, '/myPaceNoteDetail');
-      },
-      child: Card(
-        child: ListTile(leading: Icon(Icons.menu_book,color: Colors.yellow,),title: Text(title,),trailing: Row(mainAxisSize:MainAxisSize.min ,children: [FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
-      ),
+      }, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('路书详情'),onTap: (){ Navigator.pushNamed(context, '/myPaceNoteDetail');},),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
     );
   }
 
@@ -76,6 +73,7 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
         ],
       ),
       body: ListView(
+        shrinkWrap: true,
         children: [
           Row(
             children:[IconButton(
@@ -90,25 +88,19 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
           IconButton(onPressed: (){
             addPaceNote('路书标题', 89);
           }, icon: Icon(Icons.add)),
-          ListView.builder(shrinkWrap:true,itemCount:myPaceNoteList.length,itemBuilder: (context,index){
-            return InkWell(
-              onTap: (){},
-              child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
-                controller.toggle(index);
-              });},child: Container(
+         Container(height: 680,child:  ListView.builder(shrinkWrap:true,itemCount:myPaceNoteList.length,itemBuilder: (context,index){
+           return MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
+             controller.toggle(index);
+           });},child: Container(
+             color: controller.isSelected(index)
+                 ? Colors.yellowAccent:Colors.transparent,
+             height:75,
+             margin: EdgeInsets.only(left:10,right:10,top:10),
+             child:myPaceNoteList[index],
+           ),
+           );
 
-                height:75,
-                margin: EdgeInsets.only(left:10,right:10,top:10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: controller.isSelected(index)
-                      ? Colors.black:Colors.transparent,
-                ),
-                child:myPaceNoteList[index],
-              ),
-              ),
-            );
-          }),
+         }),),
         ],
       ),
     );

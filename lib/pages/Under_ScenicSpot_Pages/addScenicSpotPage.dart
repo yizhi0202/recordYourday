@@ -108,7 +108,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
     int len = 0;
 
-    Collection collection = db.collection('scenicSpotPhoto');
+    Collection collection = db.collection('scenicSpot');
     if (images.length > 0) {
       images.forEach((element) async {
         eachPhotoUp(element, storage);
