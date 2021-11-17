@@ -1,3 +1,4 @@
+import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_y/res/module/scenicSpot/scenicSpot.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +10,8 @@ import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
 
     show BMFModel, BMFCoordinate;
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 
 class scenicSpotPage extends StatefulWidget {
   scenicSpotPage({Key? key}) : super(key: key);
@@ -18,6 +21,7 @@ class scenicSpotPage extends StatefulWidget {
 }
  
 class _scenicSpotPageState extends State<scenicSpotPage> {
+
   
     
   List _list = [];
@@ -39,6 +43,8 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       CloudBaseDatabase db = CloudBaseDatabase(core);
       var res = await db.collection('scenicSpot').get();
       return res.data;
+
+
 
      }catch(e){
       return print(e);
@@ -90,7 +96,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     
     // );
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
           primary: true,
           backgroundColor: Colors.lightGreen,
           centerTitle: true,
@@ -148,5 +154,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           ),
         ),
         body: buildGrid());
+
+      
   }
 }

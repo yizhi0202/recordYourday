@@ -185,7 +185,7 @@ class _selfHomePageState extends State<selfHomePage> {
           SizedBox(height: 8),
           GestureDetector(
             onTap: () {
-              print('tap my paceNote');
+              Navigator.pushNamed(context, '/myPaceNote');
             },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
@@ -204,7 +204,9 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           SizedBox(height: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/myScenicSpot');
+            },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
@@ -222,7 +224,9 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           SizedBox(height: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/myFavorite');
+            },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myFavoritePage.dart';
+import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myPaceNoteDetailPage.dart';
+import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myPaceNotePage.dart';
+import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myScenicSpotPage.dart';
 import '../pages/Under_Selfhome_Pages/findPassPage.dart';
 import '../pages/Under_Selfhome_Pages/loginPassPage.dart';
 import '../pages/Under_Selfhome_Pages/editUserInfoPage.dart';
@@ -37,6 +41,10 @@ final Map<String, Function> routes = {
   '/addPaceNote': (context, {arguments}) => addPaceNotePage(arguments: arguments),
   '/ShowPOICitySearchPage': (context, {arguments}) => ShowPOICitySearchPage(),
   '/paceNoteDetail': (context, {arguments}) => paceNoteDetailPage(),
+  '/myPaceNote':(context,{arguments})=>myPaceNotePage(),
+  '/myPaceNoteDetail':(context,{arguments})=>myPaceNoteDetailPage(),
+  '/myScenicSpot':(context,{arguments})=>myScenicSpotPage(),
+  '/myFavorite':(context,{arguments})=>myFavoritePage(),
   '/addEmgContact': (context, {arguments}) => addEmgContactPage(),
 };
 

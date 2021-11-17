@@ -20,7 +20,7 @@ class scenicSpot extends StatefulWidget {
   String? introduction;
   String? subTitle;
   Myaudit audit = Myaudit.unknown;
-  List<String>? photo;
+  List photo;
   int voteNum = 0; //记录投票数量
   String? profilePhoto; //the avatar of uploader
   String photoUrl;
@@ -62,6 +62,7 @@ class scenicSpot extends StatefulWidget {
 
 class _scenicSpotState extends State<scenicSpot> {
   //for change heart's color
+  bool like = false;
   bool favor = false;
   @override
   Widget build(BuildContext context) {
@@ -132,6 +133,7 @@ class _scenicSpotState extends State<scenicSpot> {
                 )),
                 Row(
                   children: <Widget>[
+
                     Padding(
                       padding: EdgeInsets.only(
                         left: 30.0,
@@ -150,16 +152,19 @@ class _scenicSpotState extends State<scenicSpot> {
                     SizedBox(
                       width: 20,
                     ),
+
+                    
+
                     Expanded(
                         child: IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.heart,
-                        color: !favor ? Colors.white : Colors.red,
-                      ),
+                      icon:Row(children: [
+                        FaIcon(FontAwesomeIcons.heart,color: !like? Colors.black: Colors.red,),
+                        Text(widget.voteNum.toString()),//这里放点赞数
+                      ],),
                       onPressed: () {
-                        widget._Vote();
+                        if(!like) widget._Vote();
                         setState(() {
-                          favor = true;
+                          like = true;
                         });
                       },
                     )),

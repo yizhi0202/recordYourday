@@ -41,6 +41,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
   TextEditingController introductionController = TextEditingController();
+  
 
   // static final CameraPosition _kInitialPosition = const CameraPosition(
   //   target: LatLng(39.909187, 116.397451),
@@ -62,7 +63,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   // }
 
   void eachPhotoUp(
-      Asset photo, CloudBaseStorage cbstorage, Collection collection) async {
+      Asset photo, CloudBaseStorage cbstorage) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
     String cloudp = 'image/scenicSpotPhoto/' + path.substring(45);
     try {
@@ -71,9 +72,9 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
         filePath: path,
         onProcess: (int count, int total) {
           // 当前进度
-          print(count);
+          //print(count);
           // 总进度
-          print(total);
+          //print(total);
         },
       );
 
@@ -84,7 +85,11 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
+
       imageURL = imageURL+ res.data[0].downloadUrl + "###";
+
+      
+
     } catch (e) {
       print(e);
     }
@@ -98,10 +103,11 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     
     int len = 0;
 
-    Collection collection = db.collection('scenicSpotPhoto');
+
+   
     if (images.length > 0)  {
       images.forEach((element) async  {
-            eachPhotoUp(element, storage, collection);
+            eachPhotoUp(element, storage);
             len++;
       });
     }
@@ -119,10 +125,11 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
             'longitude':spot['position'].longitude,
             'vote':1
           })
-          .then((shit) {print(shit);})
+          .then((res) {print('完成上传');})
           .catchError((e) {
             print(e);
           });
+
   }
 
   //显示选择后的图像
@@ -219,10 +226,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
-    // AmapService.init(
-    //   iosKey: 'c3b60c1f305f5b18aab83056c6971709',
-    //   androidKey: 'be529103cc824e1978a8611fa623ebe1',
-    // );
+
 
     //to judge if user select a address of scenicSpot
     bool isSelectAddr = false;
