@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
-
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:dio/dio.dart';
 
 // void QueryMobileLocation(String phonenumber) async {
@@ -39,13 +39,14 @@ class loginPassPage extends StatelessWidget {
         .get();
     print(res);
     if (res.data == null) {
-      print('name or password is wrong!');
-      Navigator.pushNamed(context, '/');
+      showToast(context, "name or password is wrong!");
     } else {
       print('login success!');
+      
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("user", phone);
+      await prefs.setString("userID", phone);
       Navigator.pushNamed(context, '/', arguments: {"user":phone});
+
     }
   }
 

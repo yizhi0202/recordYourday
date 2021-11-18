@@ -22,8 +22,6 @@ class scenicSpotPage extends StatefulWidget {
  
 class _scenicSpotPageState extends State<scenicSpotPage> {
 
-  
-    
   List _list = [];
 
   initState() {
@@ -59,16 +57,14 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       for(var i in _list) {
         tiles.add(
           new scenicSpot(scenicSpotID: i['scenicSpotID'],
-          userID: i['creator'],
+          userID: i['userID'],
           position: BMFCoordinate(i['longitude'],i['latitude']),
           photoUrl: i['scenicSpotPhotoUrl'],
           title: i['title'],
           address: i['address'],
           introduction: i['introduction'],
           subTitle: i['subtitle'],
-          voteNum: i['voteNum'],
-            profilePhoto: i['profilePhoto'],
-            nickName: i['nickName'],
+          voteNum: i['voteNum']
       )
         );
       }

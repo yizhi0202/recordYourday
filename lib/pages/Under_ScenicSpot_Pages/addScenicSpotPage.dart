@@ -113,9 +113,10 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     }
     while(len <images.length){int a = 1;}
     Collection scenicSpot = db.collection('scenicSpot');
+
     scenicSpot
           .add({
-            'creator': widget.arguments["user"].toString(),
+            'userID': widget.arguments["user"].toString(),
             'scenicSpotPhotoUrl': imageURL,
             'title':titleController.text,
             'subtitle':subTitleController.text,
