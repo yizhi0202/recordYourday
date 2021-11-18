@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
-import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
 
 class scenicSpot extends StatefulWidget {
   int scenicSpotID = 0; //to find the senicspots of the paceNote
-  String userID ; //to find the avatar and the nickname of the user
+  String userID ; //to find the profilePhoto and the nickName of the user
   DateTime? publishTime = DateTime.now();
   String? title;
   String? address;
@@ -20,9 +19,9 @@ class scenicSpot extends StatefulWidget {
   String? introduction;
   String? subTitle;
   Myaudit audit = Myaudit.unknown;
-  List photo;
   int voteNum = 0; //记录投票数量
-  String? profilePhoto; //the avatar of uploader
+  String profilePhoto;
+  String nickName;//the profilePhoto of uploader
   String photoUrl;
   scenicSpot(
       {Key? key,
@@ -36,7 +35,9 @@ class scenicSpot extends StatefulWidget {
       this.introduction = '',
       this.subTitle = '',
       this.audit = Myaudit.unknown,
-      this.voteNum = 0
+      this.voteNum = 0,
+        this.nickName = '匿名用户',
+        this.profilePhoto = 'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/scenicSpotPhoto/IMG_1629028455547.png'
       })
       : super(key: key) ;
   //change the state of audit
@@ -68,23 +69,26 @@ class _scenicSpotState extends State<scenicSpot> {
   Widget build(BuildContext context) {
     String cover = "";
     cover = widget.photoUrl.split("###")[0];
-    print(widget.photoUrl.split("###").length);
-    print(widget.photoUrl.split("###"));
+
     if(cover.length == 0)
     {
       cover = 'https://www.itying.com/images/flutter/4.png';
     }
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-    CloudBaseStorage storage = CloudBaseStorage(core);
+    
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    String nickname = "";
-    String avater = "";
-    db.collection('usereInfo').where({
-          "phone":widget.userID
-      }).get().then((res){
-        nickname = res.data['nickname'];
-        avater = res.data['profilePhoto'];
-      });
+
+
+    // db.collection('userInfo').where({
+    //       "creator":widget.userID
+    //   }).get().then((res){
+    //     print('res.data0的类型是');
+    //     print(res.data[0]);
+    //
+    //     nickName = (res.data[0]["nickName"] ==null)? '匿名用户':res.data[0]["nickName"];
+    //     profilePhoto = res.data[0]["profilePhoto"];
+    //     print('profilePhoto的内容'+profilePhoto);
+    //   });
     return
       GestureDetector(
               onTap: () {
@@ -139,10 +143,10 @@ class _scenicSpotState extends State<scenicSpot> {
                         left: 30.0,
                       ),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage('$avater'),
+                        backgroundImage: NetworkImage(widget.profilePhoto),
                       ),
                     ),
-                    Text('$nickname',
+                    Text(widget.nickName,
                         style:
                             TextStyle(color: Colors.white70, fontSize: 16.0)),
                     // SizedBox(

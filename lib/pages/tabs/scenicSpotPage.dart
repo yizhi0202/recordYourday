@@ -31,6 +31,9 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       getHttp().then((val){
         setState(() {
           _list = val;
+          print('_list内容为');
+          print(_list);
+          print(_list.length);
         });
       });
     }
@@ -63,7 +66,9 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           address: i['address'],
           introduction: i['introduction'],
           subTitle: i['subtitle'],
-          voteNum: i['vote']
+          voteNum: i['voteNum'],
+            profilePhoto: i['profilePhoto'],
+            nickName: i['nickName'],
       )
         );
       }
@@ -77,24 +82,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    //  db.collection('scenicSpot').get().then((res){
-    //   setState(() {
-    //   res.data.forEach((i){_list.add(scenicSpot(scenicSpotID: i['scenicSpotID'],
-    //   userID: i['creator'],
-    //   position: BMFCoordinate(i['longitude'],i['latitude']),
-    //   photoUrl: i['scenicSpotPhotoUrl'],
-    //   title: i['title'],
-    //   address: i['address'],
-    //   introduction: i['introduction'],
-    //   subTitle: i['subtitle'],
-    //   voteNum: i['vote']
-    //   ));});
-    //   });
-      
-      
-    // }
-    
-    // );
+
     return Scaffold(
       appBar: AppBar(
           primary: true,
@@ -154,7 +142,5 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           ),
         ),
         body: buildGrid());
-
-      
   }
 }
