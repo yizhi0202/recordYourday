@@ -27,7 +27,7 @@ class _commentsPageState extends State<commentsPage> {
           centerTitle: true,
           title: Text('评论')
         ),
-      body: buildGrid()
+      body: Text('此处为评论'),
     );
   }
 }
