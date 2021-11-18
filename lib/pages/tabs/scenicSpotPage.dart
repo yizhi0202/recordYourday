@@ -21,32 +21,89 @@ class scenicSpotPage extends StatefulWidget {
 }
  
 class _scenicSpotPageState extends State<scenicSpotPage> {
+  List _list = [];
+  ScrollController _scrollController = new ScrollController();
+  bool isLoading = false;
+  List finalSpotData =[];
+  Future getFinalSpotData() async
+  {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    Collection userInfo = db.collection('userInfo');
+
+    List temp = await getHttp();
+    int len = 0;
+    temp.forEach((element)  async{
+      var result = await userInfo.where({'userID':element['userID']}).get();
+      element['nickName'] = result.data[0]['nickName'];
+      element['profilePhoto'] = result.data[0]['profilePhoto'];
+      len++;
+      if(len == temp.length)
+        {
+          setState(() {
+            isLoading = false;
+            _list = temp;
+          });
+        }
+    });
+
+  }
+
+  void _getMoreData() async {
+
+
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+    getFinalSpotData();
+
+
+    }
+  }
 
   
     
-  List _list = [];
 
+  @override
   initState() {
-      super.initState();
-      getHttp().then((val){
-        setState(() {
-          _list = val;
-          print('_list内容为');
-          print(_list);
-          print(_list.length);
-        });
-      });
-    }
+    this._getMoreData();
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
 
 
   Future getHttp() async{
      try{
       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-      CloudBaseStorage storage = CloudBaseStorage(core);
       CloudBaseDatabase db = CloudBaseDatabase(core);
+      Collection userInfo = db.collection('userInfo');
       var res = await db.collection('scenicSpot').get();
-      return res.data;
 
+      return res.data;
 
 
      }catch(e){
@@ -59,7 +116,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       for(var i in _list) {
         tiles.add(
           new scenicSpot(scenicSpotID: i['scenicSpotID'],
-          userID: i['creator'],
+          userID: i['userID'],
           position: BMFCoordinate(i['longitude'],i['latitude']),
           photoUrl: i['scenicSpotPhotoUrl'],
           title: i['title'],
@@ -72,8 +129,17 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       )
         );
       }
-      return ListView(
-          children:tiles
+      return ListView.builder(
+//+1 for progressbar
+        itemCount: tiles.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == tiles.length) {
+            return _buildProgressIndicator();
+          } else {
+            return tiles[index];
+          }
+        },
+        controller: _scrollController,
       );
     }
   @override
@@ -141,6 +207,8 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
             ],
           ),
         ),
-        body: buildGrid());
+        body: buildGrid(),
+    resizeToAvoidBottomInset: false,);
+
   }
 }

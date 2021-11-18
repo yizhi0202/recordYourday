@@ -14,13 +14,13 @@ import 'package:dio/dio.dart';
 // }
 
 class loginPassPage extends StatelessWidget {
-  TextEditingController phone =
+  TextEditingController userID =
       TextEditingController(); //get the input of phonenumber
   TextEditingController pass =
       TextEditingController(); //get the input of password
 
   //the function of login
-  void prepareForLogin(String phone, String pass, context) async {
+  void prepareForLogin(String userID, String pass, context) async {
     // 初始化
     CloudBaseCore core = CloudBaseCore.init({
       'env': 'hello-cloudbase-7gk3odah3c13f4d1',
@@ -33,7 +33,7 @@ class loginPassPage extends StatelessWidget {
     var _ = db.command;
     var res = await collection
         .where(_.and([
-          {phone: _.eq(phone)},
+          {userID: _.eq(userID)},
           {pass: _.eq(pass)}
         ]))
         .get();
@@ -44,8 +44,8 @@ class loginPassPage extends StatelessWidget {
     } else {
       print('login success!');
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("user", phone);
-      Navigator.pushNamed(context, '/', arguments: {"user":phone});
+      await prefs.setString("user", userID);
+      Navigator.pushNamed(context, '/', arguments: {"user":userID});
     }
   }
 
@@ -54,7 +54,7 @@ class loginPassPage extends StatelessWidget {
   //     //call the cloud function
   //     var response = await Dio().post(
   //         'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/loginPass',
-  //         data: {'phone': ph, 'pass': pa});
+  //         data: {'userID': ph, 'pass': pa});
   //     print(response);
   //     var result = response.toString();
   //     if (result == 'true') Navigator.pushNamed(context, '/');
@@ -63,12 +63,12 @@ class loginPassPage extends StatelessWidget {
   //   }
   // }
 
-  void callLoginCode(String ph,  context) async {
+  void callLoginCode(String userID,  context) async {
     try {
       //call the cloud function
       var response = await Dio().post(
           'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
-          data: {'phone': ph});
+          data: {'userID': userID});
       print(response);
       var result = response.toString();
       if (result != 'false') Navigator.pushNamed(context, '/');
@@ -103,7 +103,7 @@ class loginPassPage extends StatelessWidget {
                     child: Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
-                    controller: phone,
+                    controller: userID,
                     decoration: InputDecoration(labelText: '请输入手机号'),
                   ),
                 )),
@@ -140,8 +140,8 @@ class loginPassPage extends StatelessWidget {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      prepareForLogin(phone.text, pass.text, context);
-                      // callLoginCode(phone.text, context);
+                      prepareForLogin(userID.text, pass.text, context);
+                      // callLoginCode(userID.text, context);
                     },
                   ),
                 ),

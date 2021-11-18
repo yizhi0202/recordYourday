@@ -80,7 +80,7 @@ class _scenicSpotState extends State<scenicSpot> {
 
 
     // db.collection('userInfo').where({
-    //       "creator":widget.userID
+    //       "userID":widget.userID
     //   }).get().then((res){
     //     print('res.data0的类型是');
     //     print(res.data[0]);
