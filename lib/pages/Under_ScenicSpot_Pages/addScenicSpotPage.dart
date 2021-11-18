@@ -43,7 +43,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   TextEditingController subTitleController = TextEditingController();
   TextEditingController introductionController = TextEditingController();
 
-
   // static final CameraPosition _kInitialPosition = const CameraPosition(
   //   target: LatLng(39.909187, 116.397451),
   //   zoom: 10.0,
@@ -63,8 +62,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   //   return Image.network('https://www.itying.com/images/flutter/3.png');
   // }
 
-  Future eachPhotoUp(
-      Asset photo, CloudBaseStorage cbstorage) async {
+  Future eachPhotoUp(Asset photo, CloudBaseStorage cbstorage) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
     String cloudp = 'image/scenicSpotPhoto/' + path.substring(45);
     try {
@@ -87,14 +85,10 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
 
-      imageURL = imageURL+ res.data[0].downloadUrl + "###";
-
-      
-
+      imageURL = imageURL + res.data[0].downloadUrl + "###";
     } catch (e) {
       print(e);
     }
-
   }
 
   void upCloudDataBase() {
@@ -103,40 +97,34 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection scenicSpot = db.collection('scenicSpot');
     int len = 0;
-    showToast(context,'正在上传请稍后...');
-    images.forEach((element) async  {
-      eachPhotoUp(element, storage).then((_){len++;
-      if(len == images.length)
-      {
-        scenicSpot
-            .add({
-          'userID': widget.arguments["userID"].toString(),
-          'scenicSpotPhotoUrl': imageURL,
-          'title':titleController.text,
-          'subtitle':subTitleController.text,
-          'introduction':introductionController.text,
-          'address':spot["address"],
-          'latitude':spot['position'].latitude,
-          'longitude':spot['position'].longitude,
-          'voteNum':1
-        })
-            .then((res) {showToast(context,'完成上传！');})
-            .catchError((e) {
-          print(e);
-        });
-      }
+    showToast(context, '正在上传请稍后...');
+    images.forEach((element) async {
+      eachPhotoUp(element, storage).then((_) {
+        len++;
+        if (len == images.length) {
+          scenicSpot.add({
+            'userID': widget.arguments["userID"].toString(),
+            'scenicSpotPhotoUrl': imageURL,
+            'title': titleController.text,
+            'subtitle': subTitleController.text,
+            'introduction': introductionController.text,
+            'address': spot["address"],
+            'latitude': spot['position'].latitude,
+            'longitude': spot['position'].longitude,
+            'voteNum': 1
+          }).then((res) {
+            showToast(context, '完成上传！');
+          }).catchError((e) {
+            print(e);
+          });
+        }
       });
     });
-
-
-
-
-
   }
 
   //显示选择后的图像
   Widget buildGridView() {
-    return GridView.count(  
+    return GridView.count(
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
       shrinkWrap: true,
@@ -228,8 +216,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     //to judge if user select a address of scenicSpot
     bool isSelectAddr = false;
     //to receive the address data choosed by user
@@ -259,7 +245,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           GestureDetector(
             onTap: () {
               upCloudDataBase();
-
             },
             child: ButtonBar(
               children: [

@@ -8,7 +8,6 @@ import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
-
     show BMFModel, BMFCoordinate;
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
@@ -19,51 +18,41 @@ class scenicSpotPage extends StatefulWidget {
   @override
   _scenicSpotPageState createState() => _scenicSpotPageState();
 }
- 
+
 class _scenicSpotPageState extends State<scenicSpotPage> {
   List _list = [];
   ScrollController _scrollController = new ScrollController();
   bool isLoading = false;
-  List finalSpotData =[];
-  Future getFinalSpotData() async
-  {
+  List finalSpotData = [];
+  Future getFinalSpotData() async {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection userInfo = db.collection('userInfo');
 
     List temp = await getHttp();
     int len = 0;
-    temp.forEach((element)  async{
-      var result = await userInfo.where({'userID':element['userID']}).get();
+    temp.forEach((element) async {
+      var result = await userInfo.where({'userID': element['userID']}).get();
       element['nickName'] = result.data[0]['nickName'];
       element['profilePhoto'] = result.data[0]['profilePhoto'];
       len++;
-      if(len == temp.length)
-        {
-          setState(() {
-            isLoading = false;
-            _list = temp;
-          });
-        }
+      if (len == temp.length) {
+        setState(() {
+          isLoading = false;
+          _list = temp;
+        });
+      }
     });
-
   }
 
   void _getMoreData() async {
-
-
     if (!isLoading) {
       setState(() {
         isLoading = true;
       });
-    getFinalSpotData();
-
-
+      getFinalSpotData();
     }
   }
-
-  
-    
 
   @override
   initState() {
@@ -95,53 +84,47 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     );
   }
 
-
-  Future getHttp() async{
-     try{
+  Future getHttp() async {
+    try {
       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
       CloudBaseDatabase db = CloudBaseDatabase(core);
       Collection userInfo = db.collection('userInfo');
       var res = await db.collection('scenicSpot').get();
 
       return res.data;
-
-
-     }catch(e){
+    } catch (e) {
       return print(e);
-     }
     }
+  }
 
-   Widget buildGrid() {
-      List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
-      for(var i in _list) {
-        tiles.add(
-          new scenicSpot(scenicSpotID: i['_id'],
+  Widget buildGrid() {
+    List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
+    for (var i in _list) {
+      tiles.add(new scenicSpot(
+          scenicSpotID: i['scenicSpotID'],
           userID: i['userID'],
-          position: BMFCoordinate(i['longitude'],i['latitude']),
+          position: BMFCoordinate(i['longitude'], i['latitude']),
           photoUrl: i['scenicSpotPhotoUrl'],
           title: i['title'],
           address: i['address'],
           introduction: i['introduction'],
           subTitle: i['subtitle'],
-          voteNum: i['voteNum'],
-            profilePhoto: i['profilePhoto'],
-            nickName: i['nickName'],
-      )
-        );
-      }
-      return ListView.builder(
-//+1 for progressbar
-        itemCount: tiles.length + 1,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == tiles.length) {
-            return _buildProgressIndicator();
-          } else {
-            return tiles[index];
-          }
-        },
-        controller: _scrollController,
-      );
+          voteNum: i['voteNum']));
     }
+    return ListView.builder(
+//+1 for progressbar
+      itemCount: tiles.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == tiles.length) {
+          return _buildProgressIndicator();
+        } else {
+          return tiles[index];
+        }
+      },
+      controller: _scrollController,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     BMFCoordinate? pt;
@@ -151,64 +134,64 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
 
     return Scaffold(
       appBar: AppBar(
-          primary: true,
-          backgroundColor: Colors.lightGreen,
-          centerTitle: true,
-          title: Text('景点'),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.search),
+        primary: true,
+        backgroundColor: Colors.lightGreen,
+        centerTitle: true,
+        title: Text('景点'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search),
+          )
+        ],
+      ),
+      drawer: GFDrawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            GFDrawerHeader(
+              decoration: BoxDecoration(
+                  color: Colors.yellow,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15))),
+              currentAccountPicture: GFAvatar(
+                radius: 50.0,
+                backgroundImage:
+                    NetworkImage("https://www.itying.com/images/flutter/3.png"),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('nick name', style: TextStyle(fontSize: 18)),
+                  Icon(
+                    Icons.male,
+                    color: Colors.lightBlue,
+                    size: 32,
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.powerOff,
+                    size: 25,
+                    color: Colors.red,
+                  ),
+                  Text('退出登录', style: TextStyle(fontSize: 18))
+                ],
+              ),
             )
           ],
         ),
-        drawer: GFDrawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              GFDrawerHeader(
-                decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15))),
-                currentAccountPicture: GFAvatar(
-                  radius: 50.0,
-                  backgroundImage: NetworkImage(
-                      "https://www.itying.com/images/flutter/3.png"),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('nick name', style: TextStyle(fontSize: 18)),
-                    Icon(
-                      Icons.male,
-                      color: Colors.lightBlue,
-                      size: 32,
-                    )
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: ButtonBar(
-                  alignment: MainAxisAlignment.start,
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.powerOff,
-                      size: 25,
-                      color: Colors.red,
-                    ),
-                    Text('退出登录', style: TextStyle(fontSize: 18))
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        body: buildGrid(),
-    resizeToAvoidBottomInset: false,);
-
+      ),
+      body: buildGrid(),
+      resizeToAvoidBottomInset: false,
+    );
   }
 }

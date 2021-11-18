@@ -37,7 +37,7 @@ class scenicSpot extends StatefulWidget {
       this.audit = Myaudit.unknown,
       this.voteNum = 0,
         this.nickName = '匿名用户',
-        this.profilePhoto = 'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/scenicSpotPhoto/IMG_1629028455547.png'
+        this.profilePhoto = ''
       })
       : super(key: key) ;
   //change the state of audit

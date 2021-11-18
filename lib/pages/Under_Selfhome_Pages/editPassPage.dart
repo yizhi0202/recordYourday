@@ -1,8 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+class editPassPage extends StatefulWidget {
+  Map arguments;
+  editPassPage({Key? key, required this.arguments}) : super(key: key);
 
-class editPassPage extends StatelessWidget {
+  @override
+  _editPassPageState createState() => _editPassPageState();
+}
+
+class _editPassPageState extends State<editPassPage> {
   TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   TextEditingController vertificationCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -34,24 +49,12 @@ class editPassPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: '请输入手机号',
-                        labelStyle: TextStyle(fontSize: 16.0)),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 32, right: 32),
-                  child: TextField(
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                         labelText: '请输入新密码',
                         labelStyle: TextStyle(fontSize: 16)),
                   ),
-                ),
-                MyBody(
-                  phone: phoneController.text,
-                  codeController: vertificationCodeController,
                 ),
                 SizedBox(height: 32),
                 Container(
@@ -65,7 +68,19 @@ class editPassPage extends StatelessWidget {
                   child: TextButton(
                     child: Text('确认',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {},
+                    onPressed: () { 
+                            print(widget.arguments);
+                            CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+                            CloudBaseStorage storage = CloudBaseStorage(core);
+                            CloudBaseDatabase db = CloudBaseDatabase(core);
+                            db.collection("User").where({
+                              "userID":widget.arguments["userID"]
+                            }).update({
+                              "pass":passwordController.text
+                            }).then((_){
+                              showToast(context, "密码已修改");
+                            });
+                    },
                   ),
                 ),
               ],
@@ -76,3 +91,8 @@ class editPassPage extends StatelessWidget {
     );
   }
 }
+
+
+
+
+  

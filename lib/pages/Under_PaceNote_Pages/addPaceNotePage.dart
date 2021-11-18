@@ -76,13 +76,18 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         print(url);
       });
     }
-    while(len<images.length){}
-    collection.add({
-      'userID':widget.arguments['userID'],
-      'imageUrl':image_url,
-      'paceNoteTitle':paceNoteTitle,
-      'paceNoteFeeling':paceNoteFeeling
-    }).then((_){}).catchError((e){print(e);});
+    while (len < images.length) {}
+    collection
+        .add({
+          'userID': widget.arguments['userID'],
+          'imageUrl': image_url,
+          'paceNoteTitle': paceNoteTitle,
+          'paceNoteFeeling': paceNoteFeeling
+        })
+        .then((_) {})
+        .catchError((e) {
+          print(e);
+        });
   }
 
   //显示选择后的图像
