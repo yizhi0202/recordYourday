@@ -115,7 +115,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
       for(var i in _list) {
         tiles.add(
-          new scenicSpot(scenicSpotID: i['scenicSpotID'],
+          new scenicSpot(scenicSpotID: i['_id'],
           userID: i['userID'],
           position: BMFCoordinate(i['longitude'],i['latitude']),
           photoUrl: i['scenicSpotPhotoUrl'],

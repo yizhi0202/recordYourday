@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/pages/Under_ScenicSpot_Pages/commentsPage.dart';
 import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myFavoritePage.dart';
 import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myPaceNoteDetailPage.dart';
 import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myPaceNotePage.dart';
@@ -46,6 +47,7 @@ final Map<String, Function> routes = {
   '/myScenicSpot':(context,{arguments})=>myScenicSpotPage(),
   '/myFavorite':(context,{arguments})=>myFavoritePage(),
   '/addEmgContact': (context, {arguments}) => addEmgContactPage(),
+  '/comments':(context,{arguments})=>commentsPage(arguments: arguments),
 };
 
 var onGenerateRoute = (RouteSettings settings) {

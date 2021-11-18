@@ -7,6 +7,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:list_tile_more_customizable/list_tile_more_customizable.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+
 import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 
 List<String> newPhotos = [
@@ -40,8 +41,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
   @override
   Widget build(BuildContext context) {
     newPhotos = widget.arguments["photoURL"].split("###").where((s) => !s.isEmpty).toList();
-    print(newPhotos);
-    print(newPhotos.length);
+
     
     double height =
         MediaQuery.of(context).padding.bottom; // 这个很简单，就是获取高度，获取的底部安全区域的高度
@@ -81,10 +81,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             ),
             IconButton(
                 onPressed: () {
-                  if (widget.arguments['userID'] != null)
-                    print('there are arguments,${widget.arguments['userID']}');
-                  else
-                    print('no arguments');
+
                   Navigator.of(context).pop();
                 },
                 icon: Icon(
@@ -149,14 +146,18 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             height: 240,
             child: SingleChildScrollView(
               child: Text(
-                '简介${widget.arguments['introduction'] * 10}',
+                '简介${widget.arguments['introduction']}',
                 style: TextStyle(fontSize: 16),
               ),
             ),
           ),
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            print('scenicSpotDetailPage 页内的scenicSpotID is'+widget.arguments['scenicSpotID']);
+            Navigator.pushNamed(context, '/comments',arguments: {'scenicSpotID':widget.arguments['scenicSpotID']});
+
+          },
           child: Text(
             '查看全部评论({})',
             style: TextStyle(

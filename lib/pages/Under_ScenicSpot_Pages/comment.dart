@@ -9,12 +9,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class comment extends StatefulWidget{
   String content;
-  String profile;
+  String profilePhoto;
   String nickname;
   comment(
       {Key? key,
         required this.content,
-        required this.profile,
+        required this.profilePhoto,
         required this.nickname
       })
       : super(key: key
@@ -35,7 +35,7 @@ class _commentState extends State<comment> {
               horizontalTitleGap: 8.0,
               leading: ClipOval(
                 child: Image.network(
-                  widget.profile,
+                  widget.profilePhoto,
                   fit: BoxFit.cover,
                   height: 40,
                   width: 40,
