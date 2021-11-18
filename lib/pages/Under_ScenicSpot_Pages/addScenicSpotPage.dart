@@ -22,6 +22,7 @@ import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 import 'package:flutter_app_y/res/module/mapSource/POIsearch.dart';
+import '../../res/module/baiduMapmodule/alert_dialog_utils.dart';
 
 // import 'package:amap_flutter_map/amap_flutter_map.dart';
 // import 'package:amap_flutter_base/amap_flutter_base.dart';
@@ -41,7 +42,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
   TextEditingController introductionController = TextEditingController();
-  
+
 
   // static final CameraPosition _kInitialPosition = const CameraPosition(
   //   target: LatLng(39.909187, 116.397451),
@@ -62,7 +63,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   //   return Image.network('https://www.itying.com/images/flutter/3.png');
   // }
 
-  void eachPhotoUp(
+  Future eachPhotoUp(
       Asset photo, CloudBaseStorage cbstorage) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
     String cloudp = 'image/scenicSpotPhoto/' + path.substring(45);
@@ -93,42 +94,43 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     } catch (e) {
       print(e);
     }
-    print(path);
+
   }
 
   void upCloudDataBase() {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    
-    int len = 0;
-
-
-   
-    if (images.length > 0)  {
-      images.forEach((element) async  {
-            eachPhotoUp(element, storage);
-            len++;
-      });
-    }
-    while(len <images.length){int a = 1;}
     Collection scenicSpot = db.collection('scenicSpot');
-    scenicSpot
-          .add({
-            'creator': widget.arguments["user"].toString(),
-            'scenicSpotPhotoUrl': imageURL,
-            'title':titleController.text,
-            'subtitle':subTitleController.text,
-            'introduction':introductionController.text,
-            'address':spot["address"],
-            'latitude':spot['position'].latitude,
-            'longitude':spot['position'].longitude,
-            'vote':1
-          })
-          .then((res) {print('完成上传');})
-          .catchError((e) {
-            print(e);
-          });
+    int len = 0;
+    showToast(context,'正在上传请稍后...');
+    images.forEach((element) async  {
+      eachPhotoUp(element, storage).then((_){len++;
+      if(len == images.length)
+      {
+        scenicSpot
+            .add({
+          'userID': widget.arguments["user"].toString(),
+          'scenicSpotPhotoUrl': imageURL,
+          'title':titleController.text,
+          'subtitle':subTitleController.text,
+          'introduction':introductionController.text,
+          'address':spot["address"],
+          'latitude':spot['position'].latitude,
+          'longitude':spot['position'].longitude,
+          'voteNum':1
+        })
+            .then((res) {showToast(context,'完成上传！');})
+            .catchError((e) {
+          print(e);
+        });
+      }
+      });
+    });
+
+
+
+
 
   }
 
@@ -257,6 +259,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           GestureDetector(
             onTap: () {
               upCloudDataBase();
+
             },
             child: ButtonBar(
               children: [

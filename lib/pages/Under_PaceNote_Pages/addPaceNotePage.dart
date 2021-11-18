@@ -78,7 +78,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     }
     while(len<images.length){}
     collection.add({
-      'creator':widget.arguments['user'],
+      'userID':widget.arguments['user'],
       'imageUrl':image_url,
       'paceNoteTitle':paceNoteTitle,
       'paceNoteFeeling':paceNoteFeeling
@@ -277,12 +277,15 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
                   )),
             ),
           ),
-          ListView.builder(
-            itemCount: paceNoteList.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return paceNoteList[index];
-            },
+          Container(
+            height: 680,
+            child: ListView.builder(
+              itemCount: paceNoteList.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return paceNoteList[index];
+              },
+            ),
           )
         ],
       ),
