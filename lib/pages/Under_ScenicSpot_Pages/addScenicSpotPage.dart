@@ -110,7 +110,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
       {
         scenicSpot
             .add({
-          'userID': widget.arguments["user"].toString(),
+          'userID': widget.arguments["userID"].toString(),
           'scenicSpotPhotoUrl': imageURL,
           'title':titleController.text,
           'subtitle':subTitleController.text,

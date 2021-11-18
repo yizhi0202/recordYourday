@@ -44,8 +44,8 @@ class loginPassPage extends StatelessWidget {
     } else {
       print('login success!');
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("user", userID);
-      Navigator.pushNamed(context, '/', arguments: {"user":userID});
+      await prefs.setString("userID", userID);
+      Navigator.pushNamed(context, '/', arguments: {"userID":userID});
     }
   }
 

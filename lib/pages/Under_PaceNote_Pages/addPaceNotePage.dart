@@ -78,7 +78,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     }
     while(len<images.length){}
     collection.add({
-      'userID':widget.arguments['user'],
+      'userID':widget.arguments['userID'],
       'imageUrl':image_url,
       'paceNoteTitle':paceNoteTitle,
       'paceNoteFeeling':paceNoteFeeling

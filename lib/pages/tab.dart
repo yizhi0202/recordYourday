@@ -55,7 +55,7 @@ class _tabState extends State<tab> {
                   label: '新建景点',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addScenicSpot', arguments: {'user':widget.arguments["user"]});
+                    Navigator.pushNamed(context, '/addScenicSpot', arguments: {'userID':widget.arguments["userID"]});
                   }),
               SpeedDialChild(
                   child: Icon(Icons.menu_book),
@@ -63,7 +63,7 @@ class _tabState extends State<tab> {
                   label: '新建路书',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addPaceNote', arguments:{'user':widget.arguments["user"]});
+                    Navigator.pushNamed(context, '/addPaceNote', arguments:{'userID':widget.arguments["userID"]});
                   }),
             ],
           ),

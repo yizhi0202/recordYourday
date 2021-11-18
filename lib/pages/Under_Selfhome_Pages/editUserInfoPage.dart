@@ -69,7 +69,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
   }
   Future getid() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("user");
+    return prefs.getString("userID");
   }
   void upCloudDataBase()  {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();

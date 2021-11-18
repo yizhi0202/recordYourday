@@ -10,7 +10,7 @@ import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
     show BMFModel, BMFCoordinate;
 
 class scenicSpot extends StatefulWidget {
-  int scenicSpotID = 0; //to find the senicspots of the paceNote
+  String scenicSpotID ; //to find the senicspots of the paceNote
   String userID ; //to find the profilePhoto and the nickName of the user
   DateTime? publishTime = DateTime.now();
   String? title;
@@ -92,7 +92,9 @@ class _scenicSpotState extends State<scenicSpot> {
     return
       GestureDetector(
               onTap: () {
+                print('scenicSpot 页内的scenicSpotID is '+widget.scenicSpotID);
                 Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
+                  'scenicSpotID':widget.scenicSpotID,
                   'scenicSpotName': widget.title,
                   'scenicSpotLocation': widget.address,
                   'introduction':
