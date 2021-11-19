@@ -37,19 +37,25 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       element['profilePhoto'] = result.data[0]['profilePhoto'];
       len++;
       if (len == temp.length) {
-        setState(() {
-          isLoading = false;
-          _list = temp;
-        });
+        if(mounted)
+          {
+            setState(() {
+              isLoading = false;
+              _list = temp;
+            });
+          }
       }
     });
   }
 
   void _getMoreData() async {
     if (!isLoading) {
-      setState(() {
-        isLoading = true;
-      });
+      if(mounted)
+        {
+          setState(() {
+            isLoading = true;
+          });
+        }
       getFinalSpotData();
     }
   }
