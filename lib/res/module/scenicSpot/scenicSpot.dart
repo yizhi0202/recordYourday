@@ -1,13 +1,14 @@
 import 'dart:ui';
 
-import 'package:cloudbase_database/cloudbase_database.dart';
-import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
-import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+
+import '../../module/likeAndFavor/likeAndFavorFunction.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
     show BMFModel, BMFCoordinate;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class scenicSpot extends StatefulWidget {
   String scenicSpotID ; //to find the senicspots of the paceNote
@@ -65,6 +66,11 @@ class _scenicSpotState extends State<scenicSpot> {
   //for change heart's color
   bool like = false;
   bool favor = false;
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+  
   @override
   Widget build(BuildContext context) {
     String cover = "";
@@ -74,9 +80,7 @@ class _scenicSpotState extends State<scenicSpot> {
     {
       cover = 'https://www.itying.com/images/flutter/4.png';
     }
-    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     
-    CloudBaseDatabase db = CloudBaseDatabase(core);
 
 
     // db.collection('userInfo').where({
@@ -107,7 +111,7 @@ class _scenicSpotState extends State<scenicSpot> {
       child :Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage('$cover'), fit: BoxFit.cover)),
+                image: NetworkImage('$cover',scale: 60), fit: BoxFit.cover)),
         margin: EdgeInsets.all(8),
         height: 240,
         width: double.infinity,
@@ -150,25 +154,40 @@ class _scenicSpotState extends State<scenicSpot> {
                     ),
                     Text(widget.nickName,
                         style:
-                            TextStyle(color: Colors.white70, fontSize: 16.0)),
+                            TextStyle(color: Colors.white, fontSize: 16.0)),
                     // SizedBox(
                     //   width: 260,
                     // ),
                     //in favor of the scenicSpot
                     SizedBox(
-                      width: 20,
+                      width: 30,
                     ),
-
-                    
+                    Expanded(
+                      child: IconButton(
+                        icon: FaIcon(FontAwesomeIcons.star,color: !favor? Colors.white: Colors.red,),
+                        onPressed: () {
+                          getid().then((value){
+                            favorObject('myFavorScenicSpot', value, widget.scenicSpotID,context);
+                          });
+                          setState(() {
+                            favor = true;
+                          });
+                        },
+                      ),
+                      flex: 1,
+                    ),
+                    SizedBox(width: 30,),
 
                     Expanded(
                         child: IconButton(
                       icon:Row(children: [
-                        FaIcon(FontAwesomeIcons.heart,color: !like? Colors.black: Colors.red,),
-                        Text(widget.voteNum.toString()),//这里放点赞数
+                        FaIcon(FontAwesomeIcons.heart,color: !like? Colors.white: Colors.red,),
+                        Text(widget.voteNum.toString(),style: TextStyle(color: Colors.white),),//这里放点赞数
                       ],),
                       onPressed: () {
                         if(!like) widget._Vote();
+                        //setVoteNum('scenicSpot');
+                        setVoteNum('scenicSpot', widget.scenicSpotID);
                         setState(() {
                           like = true;
                         });
