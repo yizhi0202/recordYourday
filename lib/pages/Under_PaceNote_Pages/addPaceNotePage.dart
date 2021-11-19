@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:flutter_app_y/res/module/paceNote/paceNote.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
@@ -22,7 +23,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
   TextEditingController paceNoteTitle = TextEditingController();
   TextEditingController paceNoteFeeling = TextEditingController();
   bool isSelect = false;
-
+  String spots = "";
   List<Asset> images = <Asset>[];
   // List<String> imagePath = [];
 
@@ -52,7 +53,6 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
-
       return res.data[0].downloadUrl;
     } catch (e) {
       print(e);
@@ -64,30 +64,37 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
     Collection collection = db.collection('paceNote');
     int len = 0;
-    String image_url = "";
     if (images.length > 0) {
       images.forEach((element) async {
-        String url = await eachPhotoUp(element, storage);
-        len++;
-        image_url = url;
-        print(url);
-      });
-    }
-    while (len < images.length) {}
-    collection
-        .add({
+        eachPhotoUp(element, storage).then((image_url){
+          len++;
+          if(len == images.length)
+          {
+            collection
+           .add({
           'userID': widget.arguments['userID'],
-          'imageUrl': image_url,
-          'paceNoteTitle': paceNoteTitle,
-          'paceNoteFeeling': paceNoteFeeling
+          'photo': image_url,
+          'title': paceNoteTitle.text,
+          'note': paceNoteFeeling.text,
+          'score':60,
+          'scenicSpotInfo':spots,
+          'voteNum':1,
+          'audit':true
         })
-        .then((_) {})
+        .then((_) {
+          Navigator.pop(context);
+        })
         .catchError((e) {
           print(e);
         });
+          }
+        });
+        
+      });
+    }
+    
   }
 
   //显示选择后的图像
@@ -176,9 +183,20 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
   }
 
   List<Widget> paceNoteList = [];
-  void IncreaseSpot(String title, String location) {
-    paceNoteList.add(GetMyCard(
-        title: title, location: location, ordinum: paceNoteList.length));
+  void IncreaseSpot(String title, String location)  {
+  Map spot;
+  Navigator.pushNamed(context, '/searchScenicSpot').then((spot){
+    setState(() {
+      Map term = spot as Map;
+      paceNoteList.add(GetMyCard(
+      title: term['title'], location: term['address'], ordinum: paceNoteList.length));
+      List photoL = term['scenicSpotPhotoUrl'].split("###").where((s) => !s.isEmpty).toList();
+      spots += photoL[0]+"&&&"+term['title']+"&&&"+term['address']+'&&&'+term['introduction']+"&&&"+term['latitude'].toString()+'&&&'+term['longitude'].toString()+"###";
+    });
+     
+  });
+ 
+    
   }
 
   @override
@@ -216,6 +234,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         iconSize: 40,
         onPressed: () {
           setState(() {
+            showToast(context, "上传成功!");
             IncreaseSpot('景点标题', '景点地点');
           });
         },

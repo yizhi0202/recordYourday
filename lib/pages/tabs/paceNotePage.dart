@@ -1,12 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../res/module/paceNote/paceNote.dart';
+
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:getwidget/getwidget.dart';
 import '../../res/module/user/user.dart';
-import '';
+class paceNotePage extends StatefulWidget {
+  paceNotePage({Key? key}) : super(key: key);
 
-class paceNotePage extends StatelessWidget {
-  const paceNotePage({Key? key}) : super(key: key);
+  @override
+  _paceNotePageState createState() => _paceNotePageState();
+}
+
+class _paceNotePageState extends State<paceNotePage> {
+  List _list = [];
+  ScrollController _scrollController = new ScrollController();
+  bool isLoading = false;
+  List finalPaceNoteData = [];
+
+    Future getFinalPaceNoteData() async {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    Collection userInfo = db.collection('userInfo');
+
+    List temp = await getHttp();
+    int len = 0;
+    temp.forEach((element) async {
+      var result = await userInfo.where({'userID': element['userID']}).get();
+      element['nickName'] = result.data[0]['nickName'];
+      element['profilePhoto'] = result.data[0]['profilePhoto'];
+      len++;
+      if (len == temp.length) {
+        setState(() {
+          isLoading = false;
+          _list = temp;
+        });
+      }
+    });
+  }
+    void _getMoreData() async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+      getFinalPaceNoteData();
+    }
+  }
+
+  @override
+  initState() {
+    this._getMoreData();
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Future getHttp() async {
+    try {
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('paceNote').get();
+
+      return res.data;
+    } catch (e) {
+      return print(e);
+    }
+  }
+
+    Widget buildGrid() {
+    List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
+    for (var i in _list) {
+      tiles.add(new paceNote(
+          paceNoteID: i['_id'],
+          profilePhoto: i['profilePhoto'],
+          userID:i['userID'],
+          title: i['title'],
+          nickName:i['nickName'],
+          voteNum:i['voteNum'],
+          score:i['score'],
+          photo:i['photo'],
+          note: i['note'],
+          scenicSpotInfo: i['scenicSpotInfo']
+        ),
+
+      );
+    }
+    return ListView.builder(
+//+1 for progressbar
+      itemCount: tiles.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == tiles.length) {
+          return _buildProgressIndicator();
+        } else {
+          return tiles[index];
+        }
+      },
+      controller: _scrollController,
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,47 +186,9 @@ class paceNotePage extends StatelessWidget {
             ],
           ),
         ),
-        body: ListView(
-          children: <Widget>[
-            GestureDetector(
-              child: paceNote(
-                paceNoteID: 00,
-                userID: 00,
-                title: "明日方舟",
-                note:
-                    "末日生存不服来战,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,突如其来的假期,",
-                photo:
-                    'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/%E6%A3%AE%E6%9E%97%E9%95%9C%E7%89%87.png',
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, '/paceNoteDetail');
-              },
-            ),
-            GestureDetector(
-              child: paceNote(
-                paceNoteID: 01,
-                userID: 01,
-                title: "阚清子",
-                note: "突如其来的假期",
-                photo: 'https://www.itying.com/images/flutter/2.png',
-              ),
-              onTap: () {
-                print('jump to details');
-              },
-            ),
-            GestureDetector(
-              child: paceNote(
-                paceNoteID: 02,
-                userID: 02,
-                title: "小众景点",
-                note: "心旷神怡",
-                photo: 'https://www.itying.com/images/flutter/2.png',
-              ),
-              onTap: () {
-                print('jump to details');
-              },
-            ),
-          ],
-        ));
+        body: buildGrid()
+        );
   }
 }
+
+

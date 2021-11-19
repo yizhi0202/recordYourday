@@ -4,8 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
 
 class paceNote extends StatefulWidget {
-  int paceNoteID = 0; //to find the senicspots of the paceNote
-  int userID = 0; //to find the profilePhoto and the nickname of the user
+  String paceNoteID = ''; //to find the senicspots of the paceNote
+  String userID = ""; //to find the profilePhoto and the nickname of the user
   DateTime? publishTime = DateTime.now();
   String title = '';
   String note = ''; //the feeling of the paceNote
@@ -15,11 +15,13 @@ class paceNote extends StatefulWidget {
   String? photo; //this is the cover of paceNote
   String? profilePhoto;
   String? nickName;
+  String scenicSpotInfo;
 
   paceNote({
     Key? key,
     required this.paceNoteID,
     required this.userID,
+    required this.scenicSpotInfo,
     this.publishTime,
     this.title ='',
     this.note = '',
@@ -28,7 +30,7 @@ class paceNote extends StatefulWidget {
     this.audit,
     this.photo = 'https://www.itying.com/images/flutter/2.png',
     this.profilePhoto = 'https://www.itying.com/images/flutter/4.png',
-    this.nickName = '网瘾少年',
+    this.nickName = '网瘾少年'
   }) : super(key: key) {
     assert(score >= 0 && score <= 100);
   }
@@ -60,7 +62,9 @@ class _paceNoteState extends State<paceNote> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return
+    GestureDetector(
+      child:Card(
       margin: EdgeInsets.all(10),
       shadowColor: Colors.lightGreen,
       shape: RoundedRectangleBorder(
@@ -137,6 +141,22 @@ class _paceNoteState extends State<paceNote> {
           )
         ],
       ),
-    );
+    ),
+    onTap:(){
+      Navigator.pushNamed(context, '/paceNoteDetail',arguments:{
+          'paceNoteID': widget.paceNoteID,
+          'profilePhoto': widget.profilePhoto,
+          'userID':widget.userID,
+          'title': widget.title,
+          'nickName':widget.nickName,
+          'voteNum':widget.voteNum,
+          'score':widget.score,
+          'photo':widget.photo,
+          'note': widget.note,
+          'scenicSpotInfo': widget.scenicSpotInfo
+      });
+    }
+    ); 
+      
   }
 }
