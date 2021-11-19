@@ -3,23 +3,12 @@ import '../../res/module/emgContact/emgContact.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
 
 List<Widget> emgContactList = [
-  emgContact(
-    nickName: '苏珊',
-    profilePhoto: 'https://www.itying.com/images/flutter/1.png',
-    phoneNumber: 18765467890,
-    email: '1927423284@qq.com',
-  ),
-  emgContact(
-      nickName: '苏珊andognni',
-      profilePhoto: 'https://www.itying.com/images/flutter/2.png',
-      phoneNumber: 18765467890),
-  emgContact(
-    nickName: '李月',
-    profilePhoto: 'https://www.itying.com/images/flutter/4.png',
-    phoneNumber: 19876543432,
-  ),
 ];
 
 class emgContactPage extends StatefulWidget {
@@ -31,13 +20,67 @@ class emgContactPage extends StatefulWidget {
 
 class _emgContactPageState extends State<emgContactPage> {
   late SwipeActionController controller;
+  List emgContactInfo =[];
   //设置一个指定时间
   var chooseTime = TimeOfDay(hour: 0, minute: 0);
+  ScrollController _scrollController = new ScrollController();
+  bool isLoading = false;
 
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+  void _getMoreData() async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      getid().then((value) async {
+        var res = await db.collection('emgContact').where({'userID':value}).get();
+        if(mounted)
+        {
+          setState(() {
+            List<Widget> temp =[];
+            emgContactInfo = res.data;
+            emgContactInfo.forEach((element) {
+              temp.add(emgContact(nickName: element['nickName'],email: element['email']));
+            });
+            emgContactList = temp;
+            isLoading = false;
+          });
+        }
+      });
+    }
+  }
   @override
   void initState() {
+    this._getMoreData();
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
     controller = SwipeActionController();
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 
   Widget _item(int index) {
@@ -54,7 +97,10 @@ class _emgContactPageState extends State<emgContactPage> {
           onTap: (CompletionHandler handler) async {
             await handler(true);
             emgContactList.removeAt(index);
-            setState(() {});
+            CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+            CloudBaseDatabase db = CloudBaseDatabase(core);
+            Collection collection = db.collection('emgContact');
+            collection.where({'email':emgContactInfo[index]['email'],'userID':emgContactInfo[index]['userID']}).remove();
           },
           color: Colors.red,
         ),
@@ -87,6 +133,7 @@ class _emgContactPageState extends State<emgContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         appBar: AppBar(
           primary: true,
           backgroundColor: Colors.red,
@@ -195,9 +242,13 @@ class _emgContactPageState extends State<emgContactPage> {
             ListView.builder(
               shrinkWrap: true,
               itemBuilder: (c, index) {
-                return _item(index);
+                if(index == emgContactList.length) return _buildProgressIndicator();
+                else{
+                  return _item(index);
+                }
               },
-              itemCount: emgContactList.length,
+              itemCount: emgContactList.length+1,
+              controller: _scrollController,
             ),
           ],
         ));

@@ -97,7 +97,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
         "userType":"common",
         "sex":_radioGroupA==0 ? "male":"female",
         "profilePhoto":imageURL,
-        "nickname":nickNameController.text
+        "nickName":nickNameController.text
       }).then((res2){print(res2);});
     });
     // userInfo

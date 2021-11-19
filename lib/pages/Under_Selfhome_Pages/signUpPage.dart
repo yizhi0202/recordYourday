@@ -74,6 +74,7 @@ class signUpPage extends StatelessWidget {
                 MyBody(
                   phone: phoneController.text,
                   codeController: vertificationCodeController,
+                  signup: true,
                 ),
                 SizedBox(height: 32),
                 Container(

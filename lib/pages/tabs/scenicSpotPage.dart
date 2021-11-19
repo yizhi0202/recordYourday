@@ -108,7 +108,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
       tiles.add(new scenicSpot(
           scenicSpotID: i['_id'],
           userID: i['userID'],
-          position: BMFCoordinate(i['longitude'], i['latitude']),
+          position: BMFCoordinate(i['latitude'], i['longitude']),
           photoUrl: i['scenicSpotPhotoUrl'],
           title: i['title'],
           address: i['address'],
