@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/pages/Under_PaceNote_Pages/searchScenicSpot.dart';
 import 'package:flutter_app_y/pages/Under_ScenicSpot_Pages/commentsPage.dart';
 import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myFavoritePage.dart';
 import 'package:flutter_app_y/pages/Under_Selfhome_Pages/myPaceNoteDetailPage.dart';
@@ -41,13 +42,14 @@ final Map<String, Function> routes = {
   '/addScenicSpot': (context, {arguments}) => addScenicSpotPage(arguments: arguments),
   '/addPaceNote': (context, {arguments}) => addPaceNotePage(arguments: arguments),
   '/ShowPOICitySearchPage': (context, {arguments}) => ShowPOICitySearchPage(),
-  '/paceNoteDetail': (context, {arguments}) => paceNoteDetailPage(),
+  '/paceNoteDetail': (context, {arguments}) => paceNoteDetailPage(arguments: arguments),
   '/myPaceNote':(context,{arguments})=>myPaceNotePage(),
   '/myPaceNoteDetail':(context,{arguments})=>myPaceNoteDetailPage(),
   '/myScenicSpot':(context,{arguments})=>myScenicSpotPage(),
   '/myFavorite':(context,{arguments})=>myFavoritePage(),
   '/addEmgContact': (context, {arguments}) => addEmgContactPage(),
   '/comments':(context,{arguments})=>commentsPage(arguments: arguments),
+  '/searchScenicSpot':(context,{arguments})=>searchScenicSpotPage()
 };
 
 var onGenerateRoute = (RouteSettings settings) {
