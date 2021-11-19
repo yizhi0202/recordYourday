@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:flutter_app_y/res/module/paceNote/paceNote.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
@@ -82,7 +83,9 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
           'voteNum':1,
           'audit':true
         })
-        .then((_) {print("上传");})
+        .then((_) {showToast(context, "上传成功!");
+          Navigator.pop(context);
+        })
         .catchError((e) {
           print(e);
         });
