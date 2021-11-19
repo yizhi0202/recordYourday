@@ -83,7 +83,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
           'voteNum':1,
           'audit':true
         })
-        .then((_) {showToast(context, "上传成功!");
+        .then((_) {
           Navigator.pop(context);
         })
         .catchError((e) {
@@ -234,6 +234,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         iconSize: 40,
         onPressed: () {
           setState(() {
+            showToast(context, "上传成功!");
             IncreaseSpot('景点标题', '景点地点');
           });
         },
