@@ -88,7 +88,6 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     try {
       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
       CloudBaseDatabase db = CloudBaseDatabase(core);
-      Collection userInfo = db.collection('userInfo');
       var res = await db.collection('scenicSpot').get();
 
       return res.data;
@@ -101,7 +100,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
     for (var i in _list) {
       tiles.add(new scenicSpot(
-          scenicSpotID: i['scenicSpotID'],
+          scenicSpotID: i['_id'],
           userID: i['userID'],
           position: BMFCoordinate(i['longitude'], i['latitude']),
           photoUrl: i['scenicSpotPhotoUrl'],
@@ -109,7 +108,12 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
           address: i['address'],
           introduction: i['introduction'],
           subTitle: i['subtitle'],
-          voteNum: i['voteNum']));
+          voteNum: i['voteNum'],
+          nickName: i['nickName'],
+          profilePhoto: i['profilePhoto'],
+      ),
+
+      );
     }
     return ListView.builder(
 //+1 for progressbar
@@ -127,10 +131,6 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
-    BMFCoordinate? pt;
-    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-    CloudBaseStorage storage = CloudBaseStorage(core);
-    CloudBaseDatabase db = CloudBaseDatabase(core);
 
     return Scaffold(
       appBar: AppBar(
