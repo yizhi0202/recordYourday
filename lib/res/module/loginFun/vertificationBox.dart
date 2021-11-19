@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 class MyBody extends StatefulWidget {
   TextEditingController codeController = TextEditingController();
   String phone = '';
-  MyBody({required this.codeController, required this.phone});
+  bool signup = false;
+  MyBody({required this.codeController, required this.phone, this.signup = false});
   @override
   _MyBodyState createState() => _MyBodyState();
 }
@@ -47,7 +48,7 @@ class _MyBodyState extends State<MyBody> {
       db.collection('Users').where({
         'userID': widget.phone,
       }).get().then((res){
-        if(res.data.length == 0)
+        if(res.data.length == 0 && widget.signup == false)
         {
           showToast(context, "没有此用户");
         }

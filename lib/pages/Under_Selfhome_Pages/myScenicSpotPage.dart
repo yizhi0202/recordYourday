@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:multi_select_item/multi_select_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
+    show BMFModel, BMFCoordinate;
 
 class myScenicSpotPage extends StatefulWidget {
   @override
@@ -8,72 +14,149 @@ class myScenicSpotPage extends StatefulWidget {
 }
 
 class _myScenicSpotPageState extends State<myScenicSpotPage> {
-  List<Widget> myScenicSpotList = [];
+  List<Widget> myScenicSpotList = [];// 用于渲染
+  List myScenicSpotInfoList = [];    //用于删除数据的传递
+  ScrollController _scrollController = new ScrollController();
+  bool isLoading = false;
+
+
   MultiSelectController controller = MultiSelectController();
-  Widget getMyScenicSpot({String title = '',int voteNum = 0})
+  MultiSelectController infoController = MultiSelectController();
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+
+  void _getMoreData() async {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    if (!isLoading) {
+      if(mounted)
+      {
+        setState(() {
+          isLoading = true;
+        });
+      }
+      getid().then((value) async{//获取userＩＤ
+        var res =  await db.collection('scenicSpot').where({
+          'userID':value
+        }).get();
+        if(mounted)
+        {
+          setState(() {
+            List<Widget> temp =[];
+            myScenicSpotInfoList = res.data;
+            myScenicSpotInfoList.forEach((element) {
+              temp.add(getMyScenicSpot(element['_id'], element['title'], element['address'], element['introduction'], BMFCoordinate(element['latitude'],element['longitude']), element['voteNum'],element['scenicSpotPhotoUrl']));
+            });
+            myScenicSpotList = temp;
+            controller.set(myScenicSpotList.length);
+            isLoading = false;
+          });
+        }
+      });
+    }
+  }
+  Widget getMyScenicSpot(String scenicSpotID, String scenicSpotName, String scenicSpotLocation, String introduction, BMFCoordinate position, int voteNum,String photoURL)
   {
     return Card(
-      child: ListTile(leading: Icon(Icons.nature_people,color: Colors.green,),title: Text(title,),trailing: Row(mainAxisSize:MainAxisSize.min ,children: [IconButton(onPressed: (){
+      child: ListTile(leading: Icon(Icons.nature_people,color: Colors.green,),title: Text(scenicSpotName),trailing: Row(mainAxisSize:MainAxisSize.min ,children: [IconButton(onPressed: (){
         Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
-          'userID': '1897654',
-          'scenicSpotName': '荔波',
-          'scenicSpotLocation': '贵州',
-          'photoNum':
-          0, //this varible is to record the number of photo been uploaded by user
-          'introduction':
-          '荔波一生必去的地方，荔波是中共一大代表邓恩铭烈士的故乡，境内生态良好，气候宜人，拥有国家5A级樟江风景名胜区、国家级茂兰自然保护区、水春河漂流、黄江河国家级湿地公园、瑶山古寨景区、四季花海和寨票、水浦、大土民宿等景区景点。'
+          'scenicSpotID':scenicSpotID,
+          'scenicSpotName': scenicSpotName,
+          'scenicSpotLocation': scenicSpotLocation,
+          'introduction':introduction,
+          'position': position,
+          'voteNum': voteNum,
+          'photoURL':photoURL
         });
-      }, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('景点详情'),onTap: (){ Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
-        'userID': '1897654',
-        'scenicSpotName': '荔波',
-        'scenicSpotLocation': '贵州',
-        'photoNum':
-        0, //this varible is to record the number of photo been uploaded by user
-        'introduction':
-        '荔波一生必去的地方，荔波是中共一大代表邓恩铭烈士的故乡，境内生态良好，气候宜人，拥有国家5A级樟江风景名胜区、国家级茂兰自然保护区、水春河漂流、黄江河国家级湿地公园、瑶山古寨景区、四季花海和寨票、水浦、大土民宿等景区景点。'
-      });},),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
+      }, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('景点详情'),onTap: (){
+        Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
+          'scenicSpotID':scenicSpotID,
+          'scenicSpotName': scenicSpotName,
+          'scenicSpotLocation': scenicSpotLocation,
+          'introduction':introduction,
+          'position': position,
+          'voteNum': voteNum,
+          'photoURL':photoURL
+        });
+      },),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
     );
   }
 
-  void addScenicSpot(String title, int voteNum)
-  {
-    myScenicSpotList.add(getMyScenicSpot(title: title,voteNum: voteNum));
-    setState(() {
-      controller.set(myScenicSpotList.length);
-    });
-  }
   void deleteScenicSpot() {
     var list = controller.selectedIndexes;
+    var infoList = controller.selectedIndexes;
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    var _ = db.command;
+    Collection collection = db.collection('scenicSpot');
+
     list.sort((b, a) =>
         a.compareTo(b));
+    infoList.sort((b,a)=>a.compareTo(b));
+    infoList.forEach((element) {
+      collection.where({'_id':myScenicSpotInfoList[element]['_id']}).remove()
+          .then((res) {
+      })
+          .catchError((e) {
+          print(e);
+      });
+    });
     list.forEach((element) {
       myScenicSpotList.removeAt(element);
     });
-
     setState(() {
       controller.set(myScenicSpotList.length);
+      infoController.set(myScenicSpotInfoList.length);
     });
   }
 
   void selectAll() {
     setState(() {
       controller.toggleAll();
+      infoController.toggleAll();
     });
   }
 
 
   @override
   void initState() {
+    this._getMoreData();
     super.initState();
-    addScenicSpot('初始标题',10);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
+    infoController.disableEditingWhenNoneSelected = false;
+    infoController.set(myScenicSpotInfoList.length);
     controller.disableEditingWhenNoneSelected = false;
     controller.set(myScenicSpotList.length);
   }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
@@ -100,25 +183,23 @@ class _myScenicSpotPageState extends State<myScenicSpotPage> {
                   onPressed: deleteScenicSpot,
                 ),Text('删除')]
           ),
-          IconButton(onPressed: (){
-            addScenicSpot('景点标题', 89);
-          }, icon: Icon(Icons.add)),
           Container(
             height: 680,
-            child: ListView.builder(shrinkWrap:true,itemCount:myScenicSpotList.length,itemBuilder: (context,index){
-              return InkWell(
-                onTap: (){},
-                child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
-                  controller.toggle(index);
-                });},child: Container(
-                  color: controller.isSelected(index)
-                      ? Colors.yellowAccent:Colors.transparent,
-                  height:75,
-                  margin: EdgeInsets.only(left:10,right:10,top:10),
-                  child:myScenicSpotList[index],
-                ),
-                ),
-              );
+            child: ListView.builder(shrinkWrap:true,itemCount:myScenicSpotList.length+1,controller: _scrollController,itemBuilder: (context,index){
+             if(index == myScenicSpotList.length) return _buildProgressIndicator();
+             else return InkWell(
+               onTap: (){},
+               child: MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
+                 controller.toggle(index);
+               });},child: Container(
+                 color: controller.isSelected(index)
+                     ? Colors.yellowAccent:Colors.transparent,
+                 height:75,
+                 margin: EdgeInsets.only(left:10,right:10,top:10),
+                 child:myScenicSpotList[index],
+               ),
+               ),
+             );
             }),
           )
         ],
