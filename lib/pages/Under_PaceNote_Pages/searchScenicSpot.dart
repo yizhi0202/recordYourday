@@ -19,7 +19,7 @@ class _searchScenicSpotPageState extends State<searchScenicSpotPage> {
     Map spot = {};
     List _list = [];
     final _keywordController =
-    TextEditingController(text: "输入心怡景点吧"); 
+    TextEditingController();
     dataBack(BuildContext context) {
     Navigator.pop(context, spot);
   }
@@ -114,7 +114,7 @@ class _searchScenicSpotPageState extends State<searchScenicSpotPage> {
             width: MediaQuery.of(context).size.width - 20 - 80,
             child: TextField(
               controller: _keywordController,
-              decoration: InputDecoration(border: InputBorder.none),
+              decoration: InputDecoration(border: InputBorder.none,hintText: '输入心怡景点吧'),
             ),
           ),
           IconButton(icon: Icon(Icons.search), onPressed: _onTapSearch)

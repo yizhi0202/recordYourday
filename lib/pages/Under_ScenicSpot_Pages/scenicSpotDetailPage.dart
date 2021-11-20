@@ -12,6 +12,8 @@ import 'package:flutter_app_y/res/module/likeAndFavor/likeAndFavorFunction.dart'
 
 import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 
+import 'comment.dart';
+
 List<String> newPhotos = [
   'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
   'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
@@ -30,6 +32,7 @@ class scenicSpotDetailPage extends StatefulWidget {
 class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
   bool keyboard = false; //键盘的弹起、收回状态
   bool favor  = false;
+  List commentList =[];
   TextEditingController editingController =
       new TextEditingController(); //输入框的编辑
   //get the photoUrl of uploading by userID
@@ -39,11 +42,96 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
     Collection collection = db.collection('scenicSpotPhoto');
     var _ = db.command;
   }
+  bool isLoading  = false;
+  ScrollController _scrollController  =ScrollController();
+  _getMoreData() async
+  {
+    if(!isLoading)
+      {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    var res = await db.collection('comments').where({'objectID':widget.arguments['scenicSpotID']}).limit(3).get();
+    if(res.data.length == 0)
+      {
+        showToast(context, '此景点还没有发表评论，抢沙发吧!');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    else{
+      List temp = [];
+      int len = 0;
+      res.data.forEach((element) async{
+        var result  = await db.collection('userInfo').where({'userID':element['userID']}).get();
+        temp.add(comment(content: element['content'], profilePhoto: result.data[0]['profilePhoto'], nickname: result.data[0]['nickName']));
+        len++;
+        if(len == res.data.length)
+        {
+          if(mounted)
+          {
+            setState(() {
+              isLoading = false;
+              commentList = temp;
+            });
+          }
+        }
+      });
+    }
+
+  }
+
   Future getid() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("userID");
   }
 
+  @override
+  void initState() {
+    this._getMoreData();
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+  Widget _buildList() {
+    return ListView.builder(
+//+1 for progressbar
+      itemCount: commentList.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == commentList.length) {
+          return _buildProgressIndicator();
+        } else {
+          return commentList[index];
+        }
+      },
+      controller: _scrollController,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     newPhotos = widget.arguments["photoURL"].split("###").where((s) => !s.isEmpty).toList();
@@ -182,7 +270,8 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             ],
           ),)
         ),
-
+        Container(height: 180,child:
+          _buildList(),)
       ],
     ));
   }

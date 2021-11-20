@@ -210,14 +210,13 @@ class _myFavoritePageState extends State<myFavoritePage> {
     var infoList = infoOfSpotController.selectedIndexes;
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    var _ = db.command;
     Collection collection = db.collection('myFavorScenicSpot');
 
     list.sort((b, a) =>
         a.compareTo(b));
     infoList.sort((b,a)=>a.compareTo(b));
     infoList.forEach((element) {
-      collection.where({'_id':myFavorSpotInfoList[element]['scenicSpotID'],'userID':myFavorSpotInfoList[element]['userId']}).remove()
+      collection.where({'scenicSpotID':myFavorSpotInfoList[element]['scenicSpotID'],'userID':myFavorSpotInfoList[element]['userID']}).remove()
           .then((res) {
       })
           .catchError((e) {
@@ -301,6 +300,21 @@ class _myFavoritePageState extends State<myFavoritePage> {
 
   void deleteMyFavorPaceNote() {
     var list = myFavorPaceNotesController.selectedIndexes;
+    var infoList = infoOfPaceNoteController.selectedIndexes;
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    Collection collection = db.collection('myFavorPaceNote');
+    list.sort((b, a) =>
+        a.compareTo(b));
+    infoList.sort((b,a)=>a.compareTo(b));
+    infoList.forEach((element) {
+      collection.where({'paceNoteID':myFavorPaceNoteInfoList[element]['paceNoteID'],'userID':myFavorPaceNoteInfoList[element]['userID']}).remove()
+          .then((res) {
+      })
+          .catchError((e) {
+        print(e);
+      });
+    });
     list.sort((b, a) =>
         a.compareTo(b));
     list.forEach((element) {
@@ -309,6 +323,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
 
     setState(() {
       myFavorPaceNotesController.set(myFavorPaceNoteList.length);
+      infoOfPaceNoteController.set(myFavorPaceNoteInfoList.length);
     });
   }
 
@@ -365,6 +380,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
                       onTap: (){},
                       child: MultiSelectItem(isSelecting: myFavorPaceNotesController.isSelecting, onSelected: (){setState(() {
                         myFavorPaceNotesController.toggle(index);
+                        infoOfPaceNoteController.toggle(index);
                       });},child: Container(
                         color: myFavorPaceNotesController.isSelected(index)
                             ? Colors.yellowAccent:Colors.transparent,
@@ -397,6 +413,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
                   onTap: (){},
                   child: MultiSelectItem(isSelecting: myFavorSpotsController.isSelecting, onSelected: (){setState(() {
                     myFavorSpotsController.toggle(index);
+                    infoOfSpotController.toggle(index);
                   });},child: Container(
                     color: myFavorSpotsController.isSelected(index)
                         ? Colors.yellowAccent:Colors.transparent,
