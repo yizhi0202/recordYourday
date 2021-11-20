@@ -11,6 +11,8 @@ import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
 
 
 class myPaceNoteDetailPage extends StatefulWidget {
+  Map arguments;
+  myPaceNoteDetailPage({Key? key, required this.arguments}) : super(key: key);
   @override
   _myPaceNoteDetailPageState createState() => _myPaceNoteDetailPageState();
 }
@@ -18,6 +20,7 @@ class myPaceNoteDetailPage extends StatefulWidget {
 class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   String imgUrl = 'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/paceNotePhoto/IMG_1636716605212.png';
   List isClockInList = [false,false];
+  List<Widget> spotList = [];
   void clockIn(BMFMarker marker)
   {
     //先判断经纬度是否符合再改变颜色
@@ -27,9 +30,9 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   }
 
 
-  Widget getMyScenicSpot(int index)
+  Widget getMyScenicSpot(String info, int index)
   {
-
+    List infoList = info.split("&&&").where((s) => !s.isEmpty).toList();
     return Padding(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -47,7 +50,7 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
 
                     /// 创建BMFMarker
                     BMFMarker marker = BMFMarker(
-                        position: BMFCoordinate(39.928617, 116.40329),
+                        position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
                         title: 'flutterMaker',
                         identifier: 'flutter_marker',
                         icon: 'images/animation_red.png');
@@ -68,25 +71,17 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
             ],),
           ],)),
           childrenPadding: EdgeInsets.all(10),
-          leading: GFIconButton(
-            color: Colors.yellow,
-            icon: Text(
-              '序',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            onPressed: () {},
-            shape: GFIconButtonShape.circle,
-          ),
-          title: Text('第一段景点'),
+          title: Text(info[1]),
           children: [
-            Text('第一个景点对应的内容与图片'),
+            Text(info[2]),
+            Text(info[3]),
             Align(
               alignment: Alignment.center,
               child: Container(
                 height: 270,
                 width: 480,
                 child: Image.network(
-                  'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/paceNotePhoto/IMG_1636716605212.png',
+                  info[0],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -125,7 +120,15 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    Map paceNote = widget.arguments['info'];
+    List info = widget.arguments['scenicSpotInfo'].split("###").where((s) => !s.isEmpty).toList();
+    List<Widget> spots = [];
+    int len = 0;
+    for(var i in info)
+    {
+      spots.add(getMyScenicSpot(i, len));
+      len++;
+    }
     return Scaffold(
         appBar: AppBar(centerTitle: true,title: Text('我的路书'),leading: IconButton(
           onPressed: () {
@@ -173,8 +176,8 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
           onBMFMapCreated: onBMFMapCreated,
           mapOptions: initMapOptions(),
         ),),
-        getMyScenicSpot(0),
-        getMyScenicSpot(1)
+        ListView(shrinkWrap: true,
+        children: spots,)
       ],));
   }
 }
