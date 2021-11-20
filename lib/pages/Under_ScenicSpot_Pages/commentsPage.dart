@@ -40,6 +40,43 @@ class _commentsPageState extends State<commentsPage> {
       if(widget.arguments['paceNoteID'] =='')
         {
           var res = await db.collection('comments').where({'objectID':widget.arguments['scenicSpotID']}).get();
+          if(res.data.length == 0)
+            {
+              showToast(context,'该景点还没有发表评论，抢沙发吧！');
+              setState(() {
+                isLoading = false;
+              });
+            }
+          else{
+            List temp = [];
+            int len = 0;
+            res.data.forEach((element) async{
+              var result  = await db.collection('userInfo').where({'userID':element['userID']}).get();
+              temp.add(comment(content: element['content'], profilePhoto: result.data[0]['profilePhoto'], nickname: result.data[0]['nickName']));
+              len++;
+              if(len == res.data.length)
+              {
+                if(mounted)
+                {
+                  setState(() {
+                    isLoading = false;
+                    commentList = temp;
+                  });
+                }
+              }
+            });
+          }
+        }
+      else{
+        var res = await db.collection('comments').where({'objectID':widget.arguments['paceNoteID']}).get();
+        if(res.data.length == 0)
+          {
+            showToast(context,'该路书还没有发表评论，抢沙发吧！');
+            setState(() {
+              isLoading = false;
+            });
+          }
+        else{
           List temp = [];
           int len = 0;
           res.data.forEach((element) async{
@@ -58,25 +95,6 @@ class _commentsPageState extends State<commentsPage> {
             }
           });
         }
-      else{
-        var res = await db.collection('comments').where({'objectID':widget.arguments['paceNoteID']}).get();
-        List temp = [];
-        int len = 0;
-        res.data.forEach((element) async{
-          var result  = await db.collection('userInfo').where({'userID':element['userID']}).get();
-          temp.add(comment(content: element['content'], profilePhoto: result.data[0]['profilePhoto'], nickname: result.data[0]['nickName']));
-          len++;
-          if(len == res.data.length)
-            {
-              if(mounted)
-                {
-                  setState(() {
-                    isLoading = false;
-                    commentList = temp;
-                  });
-                }
-            }
-        });
       }
     }
   }

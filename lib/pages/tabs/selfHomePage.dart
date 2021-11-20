@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import '../../res/module/user/user.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,14 +9,17 @@ import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+
 
 class selfHomePage extends StatefulWidget {
-  int userID = 0;
-  String userPass = '';
-  userType myType = userType.traveler;
-  String profilePhoto = 'https://www.itying.com/images/flutter/3.png';
-  userSex mySex = userSex.male;
-  String nickName = 'ak43';
+  // int userID = 0;
+  // String userPass = '';
+  // userType myType = userType.traveler;
+  // String profilePhoto = 'https://www.itying.com/images/flutter/3.png';
+  // userSex mySex = userSex.male;
+  // String nickName = 'ak43';
   selfHomePage({Key? key}) : super(key: key);
 
   @override
@@ -23,67 +27,57 @@ class selfHomePage extends StatefulWidget {
 }
 
 class _selfHomePageState extends State<selfHomePage> {
-  final ImagePicker picker = ImagePicker();
-//用户本地图片
-  late File imagePath; //存放获取到的本地路径
-  String selfPath = '';
-  String cloudPath = 'image/profilePhoto';
-  String fileName = '';
-  _openGallery() async {
-    // final imagePicker = await picker.pickImage(source: ImageSource.gallery);
-    // if (imagePicker != null) {
-    //   imagePath = File(imagePicker.path);
-    //   selfPath = imagePath.path;
-    //   print('图片的路径是${selfPath}');
-    //   fileName = selfPath.substring(45);
-    //   print('filename is ' + fileName);
-    //   String cloudp = cloudPath + '/' + fileName;
-    //   try {
-    //     CloudBaseCore core = CloudBaseCore.init({
-    //       'env': 'hello-cloudbase-7gk3odah3c13f4d1',
-    //       'appAccess': {
-    //         'key': 'f9fadd353a3e75450ba4080b75789ebd',
-    //         'version': '1'
-    //       }
-    //     });
-    //     CloudBaseStorage storage = CloudBaseStorage(core);
+  String profilePhoto = '';
+  bool isLoading =false;
+  bool isMale = true;
+  String nickName ='';
 
-    //     await storage.uploadFile(
-    //       cloudPath: cloudp,
-    //       filePath: selfPath,
-    //       onProcess: (int count, int total) {
-    //         // 当前进度
-    //         print(count);
-    //         // 总进度
-    //         print(total);
-    //       },
-    //     );
-
-    //     //get the url of the upload photo
-    //     String cloudp2 =
-    //         'cloud://hello-cloudbase-7gk3odah3c13f4d1.6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742/' +
-    //             cloudp;
-
-    //     // var response = await Dio().post(
-    //     //     'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/getPhotoURL',
-    //     //     data: {'cloudpath': cloudp2});
-    //     // print(response);
-    //     // var result = response.toString();
-    //     // print('temp link is ${result}');
-    //     List<String> fileIds = [cloudp2];
-    //     CloudBaseStorageRes<List<DownloadMetadata>> res =
-    //         await storage.getFileDownloadURL(fileIds);
-    //     setState(() {
-    //       widget.profilePhoto = res.data[0].downloadUrl;
-    //     });
-    //   } catch (e) {
-    //     print(e);
-    //   }
-    // } else {
-    //   imagePath = File('');
-    //   print('没有照片');
-    // }
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
   }
+  void _getMoreData()
+  {
+    if(!isLoading)
+      {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    getid().then((value) async{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('userInfo').where({'userID':value}).get();
+        if(mounted)
+          {
+            setState(() {
+              isLoading = false;
+              if(res.data[0]['sex'] == 'female') isMale = false;
+              profilePhoto = res.data[0]['profilePhoto'];
+              nickName = res.data[0]['nickName'];
+            });
+          }
+    });
+  }
+  @override
+  void initState() {
+    this._getMoreData();
+    super.initState();
+  }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,25 +92,29 @@ class _selfHomePageState extends State<selfHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
+            (isLoading)?_buildProgressIndicator():
             GFDrawerHeader(
               decoration: BoxDecoration(
                   color: Colors.yellow,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15))),
-              currentAccountPicture: GFAvatar(
-                radius: 50.0,
-                backgroundImage:
-                    NetworkImage("https://www.itying.com/images/flutter/3.png"),
+              currentAccountPicture: ClipOval(
+                child: Image.network(
+                  profilePhoto,
+                  fit: BoxFit.cover,
+                  height: 30,
+                  width: 30,
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('nick name', style: TextStyle(fontSize: 18)),
+                  Text(nickName, style: TextStyle(fontSize: 16)),
                   Icon(
-                    Icons.male,
-                    color: Colors.lightBlue,
+                    (isMale)?Icons.male:Icons.female,
+                    color: (isMale)?Colors.lightBlue:Colors.pink,
                     size: 32,
                   )
                 ],
@@ -144,6 +142,7 @@ class _selfHomePageState extends State<selfHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          (isLoading)?_buildProgressIndicator():
           Container(
             padding: EdgeInsets.only(top: 8.0, left: 8.0),
             height: 100,
@@ -151,7 +150,7 @@ class _selfHomePageState extends State<selfHomePage> {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               ClipOval(
                 child: Image.network(
-                  '${widget.profilePhoto}',
+                  profilePhoto,
                   fit: BoxFit.cover,
                   height: 60,
                   width: 60,
@@ -162,11 +161,11 @@ class _selfHomePageState extends State<selfHomePage> {
                   Padding(
                     padding: EdgeInsets.only(top: 25, left: 20),
                     child: Text(
-                      '${widget.nickName}',
+                      nickName,
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
-                  (widget.mySex == userSex.male)
+                  (isMale)
                       ? Icon(
                     Icons.male,
                     color: Colors.lightBlue,
@@ -179,7 +178,7 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           Divider(
               color:
-                  widget.mySex == userSex.male ? Colors.lightBlue : Colors.pink,
+              (isMale)? Colors.lightBlue : Colors.pink,
               indent: 8.0,
               endIndent: 8.0),
           SizedBox(height: 8),

@@ -105,7 +105,7 @@ class _scenicSpotState extends State<scenicSpot> {
                       widget.introduction,
                   'position':widget.position,
                   'voteNum':widget.voteNum,
-                  'photoURL':widget.photoUrl
+                  'photoURL':widget.photoUrl,
                 });
               },
       child :Container(

@@ -26,9 +26,37 @@ class _emgContactPageState extends State<emgContactPage> {
   ScrollController _scrollController = new ScrollController();
   bool isLoading = false;
 
+  String profilePhoto = '';
+  bool isUserInfoLoading =false;
+  bool isMale = true;
+  String nickName ='';
+
   Future getid() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("userID");
+  }
+
+  void _getUserInfo() async{
+    if(!isUserInfoLoading)
+    {
+      setState(() {
+        isUserInfoLoading = true;
+      });
+    }
+    getid().then((value) async{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('userInfo').where({'userID':value}).get();
+      if(mounted)
+      {
+        setState(() {
+          isUserInfoLoading = false;
+          if(res.data[0]['sex'] == 'female') isMale = false;
+          profilePhoto = res.data[0]['profilePhoto'];
+          nickName = res.data[0]['nickName'];
+        });
+      }
+    });
   }
   void _getMoreData() async {
     if (!isLoading) {
@@ -57,6 +85,7 @@ class _emgContactPageState extends State<emgContactPage> {
   @override
   void initState() {
     this._getMoreData();
+    this._getUserInfo();
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -70,6 +99,17 @@ class _emgContactPageState extends State<emgContactPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+  Widget _buildUserInfoProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isUserInfoLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
   Widget _buildProgressIndicator() {
     return new Padding(
@@ -144,6 +184,7 @@ class _emgContactPageState extends State<emgContactPage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
+              (isUserInfoLoading)?_buildUserInfoProgressIndicator():
               GFDrawerHeader(
                 decoration: BoxDecoration(
                     color: Colors.yellow,
@@ -153,16 +194,16 @@ class _emgContactPageState extends State<emgContactPage> {
                 currentAccountPicture: GFAvatar(
                   radius: 50.0,
                   backgroundImage: NetworkImage(
-                      "https://www.itying.com/images/flutter/3.png"),
+                      profilePhoto),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('nickName', style: TextStyle(fontSize: 18)),
+                    Text(nickName, style: TextStyle(fontSize: 18)),
                     Icon(
-                      Icons.male,
-                      color: Colors.lightBlue,
+                      (isMale)?Icons.male:Icons.female,
+                      color: (isMale)?Colors.lightBlue:Colors.pink,
                       size: 32,
                     )
                   ],

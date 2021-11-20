@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../res/module/user/user.dart';
 import 'package:getwidget/getwidget.dart';
@@ -17,14 +18,14 @@ class editUserInfoPage extends StatefulWidget {
 }
 
 class _editUserInfoPageState extends State<editUserInfoPage> {
-  userSex user_sex = userSex.female;
 
-  String profilePhoto = 'https://www.itying.com/images/flutter/3.png';
-
-  String nickName = '此人昵称艺术已死';
+  String profilePhoto = '';   //用户未修改信息前的头像
+  bool isLoading =false;
+  bool isMale = true;
+  String nickName ='';
 
   bool isSelect = false;
-  String imageURL = "";
+  String imageURL = "https://www.itying.com/images/flutter/2.png";//存储用户修改后的头像地址
   bool uploaded = false; 
   TextEditingController nickNameController = TextEditingController();
 
@@ -37,7 +38,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
     });
   }
 
-  void eachPhotoUp(
+  Future eachPhotoUp(
       Asset photo,
       CloudBaseStorage cbstorage,
       ) async {
@@ -48,10 +49,10 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
         cloudPath: cloudp,
         filePath: path,
         onProcess: (int count, int total) {
-          // 当前进度
-          print(count);
-          // 总进度
-          print(total);
+          // // 当前进度
+          // print(count);
+          // // 总进度
+          // print(total);
         },
       ).then((a){});
 
@@ -71,47 +72,83 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("userID");
   }
+  void _getMoreData()
+  {
+    if(!isLoading)
+    {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    getid().then((value) async{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('userInfo').where({'userID':value}).get();
+      if(mounted)
+      {
+        setState(() {
+          isLoading = false;
+          if(res.data[0]['sex'] == 'female') {
+            _radioGroupA = 1;
+            isMale =false;
+          }
+          profilePhoto = res.data[0]['profilePhoto'];
+          nickName = res.data[0]['nickName'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    this._getMoreData();
+    super.initState();
+  }
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
   void upCloudDataBase()  {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    
-    int len = 0;
-    if (images.length > 0) {
-      images.forEach((element) async {
-        eachPhotoUp(element, storage);
-        len++;
-      });
-    }
-    while(len<images.length){int a = 1;}
     Collection userInfo = db.collection('userInfo');
-    getid().then((id){
-        userInfo.where(
+    getid().then((value) {
+      if(images.length > 0)
       {
-        "userID":id
+        images.forEach((element) async {
+          eachPhotoUp(element, storage).then((v){
+            if(nickName == '') showToast(context, '您点击过快，请稍等');
+            userInfo.where({'userID':value}).update({
+              "sex":_radioGroupA==0 ? "male":"female",
+              'profilePhoto':imageURL,
+              'nickName':(nickNameController.text == '') ?nickName:nickNameController.text
+            });
+            showToast(context, '修改信息完成！');
+            Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+              Navigator.pushNamed(context,'/');
+            });
+          });
+        });
       }
-    ).remove().then((res1){
-      // while(false == uploaded){int a = 1;}
-      userInfo.add({
-        "userID":id,
-        "userType":"common",
-        "sex":_radioGroupA==0 ? "male":"female",
-        "profilePhoto":imageURL,
-        "nickName":nickNameController.text
-      }).then((res2){print(res2);});
-    });
-    // userInfo
-    //     .add({
-    //         "nickname":,
-    //         "profilePhoto":,
-    //         "sex":,
-    //         "userID":,
-
-    //       })
-    //       .then((shit) {print(shit);})
-    //       .catchError((e) {
-    //         print(e);
-    //       });
+      else{
+        userInfo.where({'userID':value}).update({
+          "sex":_radioGroupA==0 ? "male":"female",
+          'nickName':nickNameController.text
+        });
+        showToast(context, '修改信息完成！');
+        Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+          Navigator.pushNamed(context,'/');
+        });
+      }
     });
     
   }
@@ -196,6 +233,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            (isLoading)?_buildProgressIndicator():
             Container(
               padding: EdgeInsets.only(top: 8.0, left: 8.0),
               height: 100,
@@ -218,7 +256,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    (user_sex == userSex.male)
+                    (isMale)
                         ? Icon(
                       Icons.male,
                       color: Colors.lightBlue,
@@ -231,7 +269,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
             ),
             Divider(
                 color:
-                user_sex == userSex.male ? Colors.lightBlue : Colors.pink,
+                (isMale) ? Colors.lightBlue : Colors.pink,
                 indent: 8.0,
                 endIndent: 8.0),
             Padding(padding: EdgeInsets.all(10),child: Text('修改头像'),),

@@ -7,6 +7,7 @@ import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:getwidget/getwidget.dart';
 import '../../res/module/user/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class paceNotePage extends StatefulWidget {
   paceNotePage({Key? key}) : super(key: key);
 
@@ -19,6 +20,16 @@ class _paceNotePageState extends State<paceNotePage> {
   ScrollController _scrollController = new ScrollController();
   bool isLoading = false;
   List finalPaceNoteData = [];
+  String profilePhoto = '';
+  bool isUserInfoLoading =false;
+  bool isMale = true;
+  String nickName ='';
+
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+
 
     Future getFinalPaceNoteData() async {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
@@ -52,10 +63,33 @@ class _paceNotePageState extends State<paceNotePage> {
       getFinalPaceNoteData();
     }
   }
+  void _getUserInfo() async{
+    if(!isUserInfoLoading)
+    {
+      setState(() {
+        isUserInfoLoading = true;
+      });
+    }
+    getid().then((value) async{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('userInfo').where({'userID':value}).get();
+      if(mounted)
+      {
+        setState(() {
+          isUserInfoLoading = false;
+          if(res.data[0]['sex'] == 'female') isMale = false;
+          profilePhoto = res.data[0]['profilePhoto'];
+          nickName = res.data[0]['nickName'];
+        });
+      }
+    });
+  }
 
   @override
   initState() {
     this._getMoreData();
+    this._getUserInfo();
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -77,6 +111,18 @@ class _paceNotePageState extends State<paceNotePage> {
       child: new Center(
         child: new Opacity(
           opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isUserInfoLoading ? 1.0 : 00,
           child: new CircularProgressIndicator(),
         ),
       ),
@@ -140,7 +186,9 @@ class _paceNotePageState extends State<paceNotePage> {
           title: Text('路书'),
           actions: <Widget>[
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/search',arguments: {'searchObject':'paceNote'});
+              },
               icon: Icon(Icons.search),
             )
           ],
@@ -149,6 +197,7 @@ class _paceNotePageState extends State<paceNotePage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
+              (isUserInfoLoading)?_buildUserInfoProgressIndicator():
               GFDrawerHeader(
                 decoration: BoxDecoration(
                     color: Colors.yellow,
@@ -158,16 +207,16 @@ class _paceNotePageState extends State<paceNotePage> {
                 currentAccountPicture: GFAvatar(
                   radius: 50.0,
                   backgroundImage: NetworkImage(
-                      "https://www.itying.com/images/flutter/3.png"),
+                      profilePhoto),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('nick name', style: TextStyle(fontSize: 18)),
+                    Text(nickName, style: TextStyle(fontSize: 18)),
                     Icon(
-                      Icons.male,
-                      color: Colors.lightBlue,
+                      (isMale)?Icons.male:Icons.female,
+                      color: (isMale)?Colors.lightBlue:Colors.pink,
                       size: 32,
                     )
                   ],
