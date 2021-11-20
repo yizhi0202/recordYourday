@@ -20,7 +20,7 @@ class _ShowPOICitySearchPageState
     extends BMFBaseMapState<ShowPOICitySearchPage> {
   final _cityController = TextEditingController(text: "南京"); //暂未使用
   final _keywordController =
-      TextEditingController(text: "输入心怡景点吧"); //检索用户输入的景点位置
+      TextEditingController(); //检索用户输入的景点位置
 
   /// 自定义检索参数
   BMFPoiCitySearchOption? _citySearchOption;
@@ -169,8 +169,9 @@ class _ShowPOICitySearchPageState
             padding: EdgeInsets.all(8),
             width: MediaQuery.of(context).size.width - 20 - 80,
             child: TextField(
+
               controller: _keywordController,
-              decoration: InputDecoration(border: InputBorder.none),
+              decoration: InputDecoration(border: InputBorder.none,hintText: '输入心怡景点名吧'),
             ),
           ),
           IconButton(icon: Icon(Icons.search), onPressed: _onTapSearch)

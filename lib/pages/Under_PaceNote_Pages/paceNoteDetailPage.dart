@@ -6,6 +6,8 @@ import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app_y/res/module/likeAndFavor/likeAndFavorFunction.dart';
 
 class paceNoteDetailPage extends StatefulWidget {
   Map arguments;
@@ -17,6 +19,10 @@ class paceNoteDetailPage extends StatefulWidget {
 
 class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
   bool favor = false;
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -73,7 +79,7 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
                 fit: StackFit.expand,
                 children: [
                   Image.network(
-                    'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/paceNotePhoto/IMG_1636716605212.png',
+                    widget.arguments['photo'],
                     fit: BoxFit.cover,
                   ),
                   Align(
@@ -106,6 +112,9 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
                     padding: EdgeInsets.only(right: 2),
                     child: IconButton(
                         onPressed: () {
+                          getid().then((value){
+                            favorObject('myFavorPaceNote', value, widget.arguments['paceNoteID'],context);
+                          });
                           setState(() {
                             favor = true;
                           });
@@ -137,7 +146,7 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
           Padding(
             padding: EdgeInsets.all(10),
             child: Container(
-              height: 240,
+              height: 180,
               child: SingleChildScrollView(
                 child: Text(
                   widget.arguments['note'],
@@ -146,9 +155,29 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
               ),
             ),
           ),
-          ListView(
+          Container(height: 380,child: ListView(
             children: spots,
             shrinkWrap: true,
+          ),),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/comments',arguments: {'paceNoteID':widget.arguments['paceNoteID'],'scenicSpotID':''});
+            },
+            child:Padding(padding: EdgeInsets.all(10),child:
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.comment,color: Colors.black,),
+                Text(
+                  '查看全部评论',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),)
           ),
         ],
       ),
