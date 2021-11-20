@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:dio/dio.dart';
 
 List<Widget> emgContactList = [
 ];
@@ -225,7 +226,15 @@ class _emgContactPageState extends State<emgContactPage> {
                             );
                           }).then((value) {if(value == null) return; setState(() {
                             chooseTime = value;
-                            print('the chooseTime is'+chooseTime.hour.toString());
+                            getid().then((ID){
+                              Dio().post(
+                            'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/emgCounting',
+                            data: {'userID': ID, 'alarmEndTime':value.hour*60+ value.minute}).then((message) {
+                              print('posted');
+                              print(message);
+                            });
+                            });
+                            
                           });});
                     },
                     icon: Icon(

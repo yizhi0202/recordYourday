@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_app_y/res/module/baiduMapmodule/map_base_page_state.dart';
 import 'package:flutter_baidu_mapapi_map/flutter_baidu_mapapi_map.dart';
+import 'package:dio/dio.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
+import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
     show BMFCoordinate, BMFPoint;
@@ -29,7 +34,35 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
     myMapController.addMarker(marker);
   }
 
+  LocationFlutterPlugin baibuGps(){
+  //创建一个定位对象，后续操作时使用
+  LocationFlutterPlugin _locationPlugin = new LocationFlutterPlugin();
 
+// 设置安卓定位参数(按官方文档复制过来就可以了)
+  BaiduLocationAndroidOption androidOption = new BaiduLocationAndroidOption();
+  androidOption.setCoorType("bd09ll"); // 设置返回的位置坐标系类型
+  androidOption.setIsNeedAltitude(false); // 设置是否需要返回海拔高度信息
+  androidOption.setIsNeedAddres(false); // 设置是否需要返回地址信息
+  androidOption.setIsNeedLocationPoiList(false); // 设置是否需要返回周边poi信息
+  androidOption.setIsNeedNewVersionRgc(false); // 设置是否需要返回最新版本rgc信息
+  androidOption.setIsNeedLocationDescribe(false); // 设置是否需要返回位置描述
+  androidOption.setOpenGps(true); // 设置是否需要使用gps
+  androidOption.setLocationMode(LocationMode.Hight_Accuracy); // 设置定位模式
+  androidOption.setScanspan(1000); // 设置发起定位请求时间间隔
+  Map androidMap = androidOption.getMap();
+
+//ios定位参数设置(用不上也要设置,按默认就可以了)
+  BaiduLocationIOSOption iosOption = new BaiduLocationIOSOption();
+  Map iosdMap = iosOption.getMap();
+
+  _locationPlugin.requestPermission(); //请求定位权限
+  _locationPlugin.prepareLoc(androidMap,iosdMap); //ios和安卓定位设置
+
+  _locationPlugin.startLocation(); //开始定位
+  return _locationPlugin;
+  //  获取定位结果
+  //_locationPlugin.stopLocation();//停止定位（这里暂时不用）
+}
   Widget getMyScenicSpot(String info, int index)
   {
     List infoList = info.split("&&&").where((s) => !s.isEmpty).toList();
@@ -45,9 +78,20 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
           trailing: Container(width: 160,child: Row(mainAxisSize: MainAxisSize.min,children: [
             GestureDetector(
               onTap: (){
-                setState(() {
+                LocationFlutterPlugin _locationPlugin = baibuGps();
+                var gps=_locationPlugin.onResultCallback();
+                gps.listen((event) {
+                  _locationPlugin.stopLocation();
+                  double Lo = event['longitude'] as double;
+                  double La = event['latitude'] as double;
+                  if( (double.parse(infoList[4])-La)<0.00001 && (double.parse(infoList[5])-Lo)<0.00001)
+                  {
+                    Dio().post(
+                    'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/clockIn',
+                    data: {'userID': widget.arguments['info']['userID']}).then((value) {
+                    });
+                    setState(() {
                     isClockInList[index] = true;
-
                     /// 创建BMFMarker
                     BMFMarker marker = BMFMarker(
                         position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
@@ -55,8 +99,10 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
                         identifier: 'flutter_marker',
                         icon: 'images/animation_red.png');
                     clockIn(marker);
-
+                    });
+                  }
                 });
+                
               },
               child: ButtonBar(
                 children: [
@@ -71,17 +117,17 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
             ],),
           ],)),
           childrenPadding: EdgeInsets.all(10),
-          title: Text(info[1]),
+          title: Text(infoList[1]),
           children: [
-            Text(info[2]),
-            Text(info[3]),
+            Text(infoList[2]),
+            Text(infoList[3]),
             Align(
               alignment: Alignment.center,
               child: Container(
                 height: 270,
                 width: 480,
                 child: Image.network(
-                  info[0],
+                  infoList[0],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -121,7 +167,7 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   @override
   Widget build(BuildContext context) {
     Map paceNote = widget.arguments['info'];
-    List info = widget.arguments['scenicSpotInfo'].split("###").where((s) => !s.isEmpty).toList();
+    List info = paceNote['scenicSpotInfo'].split("###").where((s) => !s.isEmpty).toList();
     List<Widget> spots = [];
     int len = 0;
     for(var i in info)
