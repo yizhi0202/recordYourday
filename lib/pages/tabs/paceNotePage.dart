@@ -33,10 +33,14 @@ class _paceNotePageState extends State<paceNotePage> {
       element['profilePhoto'] = result.data[0]['profilePhoto'];
       len++;
       if (len == temp.length) {
-        setState(() {
-          isLoading = false;
-          _list = temp;
-        });
+        if(mounted)
+          {
+            setState(() {
+              isLoading = false;
+              _list = temp;
+            });
+          }
+
       }
     });
   }

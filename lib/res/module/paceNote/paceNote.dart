@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
+import 'package:flutter_app_y/res/module/likeAndFavor/likeAndFavorFunction.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class paceNote extends StatefulWidget {
   String paceNoteID = ''; //to find the senicspots of the paceNote
@@ -59,7 +61,10 @@ class paceNote extends StatefulWidget {
 class _paceNoteState extends State<paceNote> {
   bool favor = false;
   bool like = false;
-
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
   @override
   Widget build(BuildContext context) {
     return
@@ -107,7 +112,9 @@ class _paceNoteState extends State<paceNote> {
               Expanded(
                 child: IconButton(
                   icon: Icon(Icons.comment,color: Colors.black,),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/comments',arguments: {'paceNoteID':widget.paceNoteID,'scenicSpotID':''});
+                  },
                 ),
                 flex: 1,
               ),
@@ -115,6 +122,9 @@ class _paceNoteState extends State<paceNote> {
                 child: IconButton(
                   icon: FaIcon(FontAwesomeIcons.star,color: !favor? Colors.black: Colors.red,),
                   onPressed: () {
+                    getid().then((value){
+                      favorObject('myFavorPaceNote', value, widget.paceNoteID, context);
+                    });
                     setState(() {
                       favor = true;
                     });
@@ -129,7 +139,9 @@ class _paceNoteState extends State<paceNote> {
                     Text(widget.voteNum.toString()),//这里放点赞数
                   ],),
                   onPressed: () {
+                    setVoteNum('paceNote',widget.paceNoteID);
                     if(!like) widget._Vote();
+                    
                     setState(() {
                       like = true;
                     });

@@ -111,9 +111,13 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
             'address': spot["address"],
             'latitude': spot['position'].latitude,
             'longitude': spot['position'].longitude,
-            'voteNum': 1
+            'voteNum': 1,
+            'publishTime':DateTime.now()
           }).then((res) {
             showToast(context, '完成上传！');
+            Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+              Navigator.pushNamed(context,'/');
+            });
           }).catchError((e) {
             print(e);
           });

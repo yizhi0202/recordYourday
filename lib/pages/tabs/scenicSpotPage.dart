@@ -19,31 +19,44 @@ class scenicSpotPage extends StatefulWidget {
 
 class _scenicSpotPageState extends State<scenicSpotPage> {
   List _list = [];
+  List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
   ScrollController _scrollController = new ScrollController();
   bool isLoading = false;
-  List finalSpotData = [];
+  int getNum = 0;  //the number to control the amount of Spots
+  int preGetNum = 0;
+  int maxNum = 0;
+
   Future getFinalSpotData() async {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection userInfo = db.collection('userInfo');
-
-    List temp = await getHttp();
-    int len = 0;
-    temp.forEach((element) async {
-      var result = await userInfo.where({'userID': element['userID']}).get();
-      element['nickName'] = result.data[0]['nickName'];
-      element['profilePhoto'] = result.data[0]['profilePhoto'];
-      len++;
-      if (len == temp.length) {
-        if(mounted)
+    var contResult = await db.collection('scenicSpot').count();
+    maxNum = contResult.total;
+    if(getNum < maxNum)
+    {
+      List temp = await getHttp();
+      preGetNum = getNum;
+      getNum  = getNum + temp.length;
+      int len = 0;
+      temp.forEach((element) async {
+        var result = await userInfo.where({'userID': element['userID']}).get();
+        element['nickName'] = result.data[0]['nickName'];
+        element['profilePhoto'] = result.data[0]['profilePhoto'];
+        len++;
+        if (len == temp.length) {
+          if(mounted)
           {
             setState(() {
               isLoading = false;
-              _list = temp;
+              _list.addAll(temp);
             });
           }
-      }
-    });
+
+        }
+      });
+    }
+
+
   }
 
   void _getMoreData() async {
@@ -92,8 +105,7 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
     try {
       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
       CloudBaseDatabase db = CloudBaseDatabase(core);
-      var res = await db.collection('scenicSpot').get();
-
+      var res = await db.collection('scenicSpot').skip(getNum).limit(5).get();
       return res.data;
     } catch (e) {
       return print(e);
@@ -101,24 +113,24 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
   }
 
   Widget buildGrid() {
-    List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
-    for (var i in _list) {
-      tiles.add(new scenicSpot(
-          scenicSpotID: i['_id'],
-          userID: i['userID'],
-          position: BMFCoordinate(i['latitude'], i['longitude']),
-          photoUrl: i['scenicSpotPhotoUrl'],
-          title: i['title'],
-          address: i['address'],
-          introduction: i['introduction'],
-          subTitle: i['subtitle'],
-          voteNum: i['voteNum'],
-          nickName: i['nickName'],
-          profilePhoto: i['profilePhoto'],
-      ),
 
+    for (int i = preGetNum; i < _list.length; ++i ) {
+      tiles.add(new scenicSpot(
+          scenicSpotID: _list[i]['_id'],
+          userID: _list[i]['userID'],
+          position: BMFCoordinate(_list[i]['latitude'], _list[i]['longitude']),
+          photoUrl: _list[i]['scenicSpotPhotoUrl'],
+          title: _list[i]['title'],
+          address: _list[i]['address'],
+          introduction: _list[i]['introduction'],
+          subTitle: _list[i]['subtitle'],
+          voteNum: _list[i]['voteNum'],
+          nickName: _list[i]['nickName'],
+          profilePhoto: _list[i]['profilePhoto'],
+      ),
       );
     }
+    preGetNum = _list.length;
     return ListView.builder(
 //+1 for progressbar
       itemCount: tiles.length + 1,

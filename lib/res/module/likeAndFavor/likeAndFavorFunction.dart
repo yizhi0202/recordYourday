@@ -25,9 +25,6 @@ Future setVoteNum(String recordName, String objectID) async{
   if('myFavorScenicSpot' == storeFavorRecordName)
     {
       IDname = 'scenicSpotID';
-      print('IDname is'+IDname);
-      print('userID is'+userID);
-      print('objectID is'+ objectID);
     }
   else if('myFavorPaceNote' == storeFavorRecordName)
     {
@@ -42,9 +39,8 @@ Future setVoteNum(String recordName, String objectID) async{
   var _ = db.command;
   db.collection(storeFavorRecordName).where({
     'userID':userID,
-    'scenicSpotID':objectID
+    IDname:objectID
   }).get().then((value) {
-    print('查询集合内容结果'+value.data.toString());
     if(value.data.length == 0)
       {
         showToast(context, '收藏成功!');

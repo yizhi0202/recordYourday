@@ -143,7 +143,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
         a.compareTo(b));
     infoList.sort((b,a)=>a.compareTo(b));
     infoList.forEach((element) {
-      collection.where({'_id':myFavorSpotInfoList[element]['scenicSpotID']}).remove()
+      collection.where({'_id':myFavorSpotInfoList[element]['scenicSpotID'],'userID':myFavorSpotInfoList[element]['userId']}).remove()
           .then((res) {
       })
           .catchError((e) {
