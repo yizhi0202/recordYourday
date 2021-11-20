@@ -72,7 +72,57 @@ class _myFavoritePageState extends State<myFavoritePage> {
       });
     }
   }
-  Widget getMyFavorPaceNote({String title = '',int voteNum = 0,String nickName = '匿名用户',String photo = 'https://www.itying.com/images/flutter/4.png', })
+
+    void _getMorePaceNoteData() async {
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    if (!isLoadingOfPaceNote) {
+      if(mounted)
+      {
+        setState(() {
+          isLoadingOfPaceNote = true;
+        });
+      }
+      getid().then((value) async{//获取userＩＤ
+        var res =  await db.collection('myFavorPaceNote').where({
+          'userID':value
+        }).get();
+        myFavorPaceNoteInfoList = res.data;
+        List<Widget> temp = [];
+        int len= 0;//信号量控制最后的渲染
+        myFavorPaceNoteInfoList.forEach((element) async{
+          var result = await db.collection('paceNote').where({'_id':element['paceNoteID']}).get();//注意 我的收藏中的景点ID是scenicSpotID,而在景点表中是_id
+          if(result.data.length != 0)
+            {
+              temp.add(getMyFavorPaceNote(title:result.data[0]['title'], voteNum:result.data[0]['voteNum'], photo:result.data[0]['photo'], userID:result.data[0]['userID'], note:result.data[0]['note'],scenicSpotInfo:result.data[0]['scenicSpotInfo'], paceNoteID:result.data[0]['_id'] ));
+            }
+          len++;
+          if(len == myFavorPaceNoteInfoList.length)
+          {
+            if(mounted)
+            {
+              setState(() {
+                myFavorPaceNoteList = temp;
+                myFavorPaceNotesController.set(myFavorPaceNoteList.length);
+                isLoadingOfPaceNote = false;
+              });
+            }
+          }
+
+        });
+      });
+    }
+  }
+  Future getNickName(String userID) async {
+    
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    var res = await db.collection('userInfo').where({
+      'userID':userID
+    }).get();
+    return res.data;
+  }
+  Widget getMyFavorPaceNote({String title = '',int voteNum = 0, String photo = 'https://www.itying.com/images/flutter/4.png', String userID = "", String note = "", String scenicSpotInfo = "", String paceNoteID = ""})
   {
     return Card(
       child: Column(
@@ -82,10 +132,34 @@ class _myFavoritePageState extends State<myFavoritePage> {
       Row(mainAxisSize: MainAxisSize.min,children: [
           Text(title,overflow: TextOverflow.ellipsis,),
           // SizedBox(width: 160,),
-        Text( ' |'+nickName,overflow: TextOverflow.ellipsis),
         ],),
           //Container(width: 380,child:  ListTile(leading: Container(height: 180,child: Image.network(photo),),title: Text(title,overflow: TextOverflow.ellipsis,),subtitle:Text(nickName)),),
-          ButtonBar(children: [IconButton(onPressed: (){print('跳转到详情页');}, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('路书详情页'),onTap: (){}),SizedBox(width: 20,),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],
+          ButtonBar(
+          children: [IconButton(onPressed: (){
+            getNickName(userID).then((info)
+            {
+                Navigator.pushNamed(context, '/paceNoteDetail',arguments:{
+                'paceNoteID': paceNoteID,
+                'profilePhoto':info[0]['profilePhoto'],
+                'userID':userID,
+                'title': title,
+                'nickName':info[0]['nickName'],
+                'voteNum':voteNum,
+                'score': 60,
+                'photo':photo,
+                'note': note,
+                'scenicSpotInfo': scenicSpotInfo
+            });
+            }
+          );
+            
+          }, 
+        icon: FaIcon(FontAwesomeIcons.hiking)),
+        GestureDetector(
+        child: Text('路书详情页'),
+        onTap: (){}),SizedBox(width: 20,),
+        FaIcon(FontAwesomeIcons.heart),
+        Text(voteNum.toString())],
           )
         ],
       ),
@@ -143,7 +217,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
         a.compareTo(b));
     infoList.sort((b,a)=>a.compareTo(b));
     infoList.forEach((element) {
-      collection.where({'_id':myFavorSpotInfoList[element]['scenicSpotID']}).remove()
+      collection.where({'_id':myFavorSpotInfoList[element]['scenicSpotID'],'userID':myFavorSpotInfoList[element]['userId']}).remove()
           .then((res) {
       })
           .catchError((e) {
@@ -170,17 +244,19 @@ class _myFavoritePageState extends State<myFavoritePage> {
   @override
   void initState() {
     this._getMoreScenicSpotData();
+    this._getMorePaceNoteData();
     super.initState();
     _scrollControllerOfSpot.addListener(() {
       if (_scrollControllerOfSpot.position.pixels ==
           _scrollControllerOfSpot.position.maxScrollExtent) {
         _getMoreScenicSpotData();
       }
+      
     });
     _scrollControllerOfPaceNote.addListener(() {
       if (_scrollControllerOfPaceNote.position.pixels ==
           _scrollControllerOfPaceNote.position.maxScrollExtent) {
-        _getMoreScenicSpotData();
+        _getMorePaceNoteData();
       }
     });
     infoOfSpotController.disableEditingWhenNoneSelected = false;
@@ -191,7 +267,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
     infoOfPaceNoteController.disableEditingWhenNoneSelected = false;
     infoOfPaceNoteController.set(myFavorSpotInfoList.length);
     myFavorPaceNotesController.disableEditingWhenNoneSelected = false;
-    myFavorPaceNotesController.set(myFavorSpotList.length);
+    myFavorPaceNotesController.set(myFavorPaceNoteList.length);
   }
   @override
   void dispose() {

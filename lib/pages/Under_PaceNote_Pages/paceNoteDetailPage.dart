@@ -73,7 +73,7 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
                 fit: StackFit.expand,
                 children: [
                   Image.network(
-                    'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/paceNotePhoto/IMG_1636716605212.png',
+                    widget.arguments['photo'],
                     fit: BoxFit.cover,
                   ),
                   Align(

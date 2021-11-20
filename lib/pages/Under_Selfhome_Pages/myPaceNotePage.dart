@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:multi_select_item/multi_select_item.dart';
 
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class myPaceNotePage extends StatefulWidget {
   @override
   _myPaceNotePageState createState() => _myPaceNotePageState();
@@ -10,18 +14,22 @@ class myPaceNotePage extends StatefulWidget {
 class _myPaceNotePageState extends State<myPaceNotePage> {
   List<Widget> myPaceNoteList = [];
   MultiSelectController controller = MultiSelectController();
-  Widget getMyPaceNote({String title = '',int voteNum = 0})
+  Widget getMyPaceNote({String title = '',int voteNum = 0, Map info =const {}})
   {
     return Card(
       child: ListTile(leading: Icon(Icons.menu_book,color: Colors.yellow,),title: Text(title,),trailing: Row(mainAxisSize:MainAxisSize.min ,children: [IconButton(onPressed: (){
-        Navigator.pushNamed(context, '/myPaceNoteDetail');
-      }, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('路书详情'),onTap: (){ Navigator.pushNamed(context, '/myPaceNoteDetail');},),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
+        Navigator.pushNamed(context, '/myPaceNoteDetail',arguments:{'info':info});
+      }, icon: FaIcon(FontAwesomeIcons.hiking)),GestureDetector(child: Text('路书详情'),onTap: (){ Navigator.pushNamed(context, '/myPaceNoteDetail',arguments:{'info':info});},),FaIcon(FontAwesomeIcons.heart),Text(voteNum.toString())],)),
     );
   }
+  Future getid() async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("userID");
+  }
 
-  void addPaceNote(String title, int voteNum)
+  void addPaceNote(String title, int voteNum, Map info)
   {
-    myPaceNoteList.add(getMyPaceNote(title: title,voteNum: voteNum));
+    myPaceNoteList.add(getMyPaceNote(title: title,voteNum: voteNum, info:info));
     setState(() {
       controller.set(myPaceNoteList.length);
     });
@@ -49,9 +57,21 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
   @override
   void initState() {
     super.initState();
-    addPaceNote('初始标题',10);
     controller.disableEditingWhenNoneSelected = false;
     controller.set(myPaceNoteList.length);
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    getid().then((userID){
+        db.collection('paceNote').where({
+      'userID': userID
+        }).get().then((res){
+          for(var i in res.data)
+          {
+            addPaceNote(i['title'],i['voteNum'],i);
+          }
+        });
+    });
+    
   }
 
 
@@ -85,9 +105,7 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
                 onPressed: deletePaceNote,
               ),Text('删除')]
           ),
-          IconButton(onPressed: (){
-            addPaceNote('路书标题', 89);
-          }, icon: Icon(Icons.add)),
+        
          Container(height: 680,child:  ListView.builder(shrinkWrap:true,itemCount:myPaceNoteList.length,itemBuilder: (context,index){
            return MultiSelectItem(isSelecting: controller.isSelecting, onSelected: (){setState(() {
              controller.toggle(index);
