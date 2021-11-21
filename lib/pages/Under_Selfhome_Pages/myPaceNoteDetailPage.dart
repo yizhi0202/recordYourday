@@ -15,6 +15,8 @@ import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
 
 
 
+
+
 class myPaceNoteDetailPage extends StatefulWidget {
   Map arguments;
   myPaceNoteDetailPage({Key? key, required this.arguments}) : super(key: key);
@@ -42,13 +44,13 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   BaiduLocationAndroidOption androidOption = new BaiduLocationAndroidOption();
   androidOption.setCoorType("bd09ll"); // 设置返回的位置坐标系类型
   androidOption.setIsNeedAltitude(false); // 设置是否需要返回海拔高度信息
-  androidOption.setIsNeedAddres(false); // 设置是否需要返回地址信息
+  androidOption.setIsNeedAddres(true); // 设置是否需要返回地址信息
   androidOption.setIsNeedLocationPoiList(false); // 设置是否需要返回周边poi信息
   androidOption.setIsNeedNewVersionRgc(false); // 设置是否需要返回最新版本rgc信息
   androidOption.setIsNeedLocationDescribe(false); // 设置是否需要返回位置描述
-  androidOption.setOpenGps(true); // 设置是否需要使用gps
+  androidOption.setOpenGps(false); // 设置是否需要使用gps
   androidOption.setLocationMode(LocationMode.Hight_Accuracy); // 设置定位模式
-  androidOption.setScanspan(1000); // 设置发起定位请求时间间隔
+  androidOption.setScanspan(0); // 设置发起定位请求时间间隔
   Map androidMap = androidOption.getMap();
 
 //ios定位参数设置(用不上也要设置,按默认就可以了)
@@ -81,26 +83,37 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
                 LocationFlutterPlugin _locationPlugin = baibuGps();
                 var gps=_locationPlugin.onResultCallback();
                 gps.listen((event) {
-                  _locationPlugin.stopLocation();
                   double Lo = event['longitude'] as double;
                   double La = event['latitude'] as double;
-                  if( (double.parse(infoList[4])-La)<0.00001 && (double.parse(infoList[5])-Lo)<0.00001)
+                  print('address is'+event['address'].toString());
+                  print('lo is '+Lo.toString());
+                  print('la is '+La.toString());
+                  print('info lo' + infoList[5]);
+                  print('info la' + infoList[4]);
+                  print('userID in arguments '+widget.arguments['info']['userID']);
+                   _locationPlugin.stopLocation();
+                  if( (double.parse(infoList[4])-La).abs()<0.01 && (double.parse(infoList[5])-Lo).abs()<0.01)
                   {
+                    print('userID in arguments '+widget.arguments['info']['userID']);
                     Dio().post(
                     'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/clockIn',
                     data: {'userID': widget.arguments['info']['userID']}).then((value) {
                     });
-                    setState(() {
-                    isClockInList[index] = true;
-                    /// 创建BMFMarker
-                    BMFMarker marker = BMFMarker(
-                        position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
-                        title: 'flutterMaker',
-                        identifier: 'flutter_marker',
-                        icon: 'images/animation_red.png');
-                    clockIn(marker);
-                    });
+                    if(mounted)
+                      {
+                        setState(() {
+                          isClockInList[index] = true;
+                          // /// 创建BMFMarker
+                          // BMFMarker marker = BMFMarker(
+                          //     position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
+                          //     title: 'flutterMaker',
+                          //     identifier: 'flutter_marker',
+                          //     icon: 'images/animation_red.png');
+                          // clockIn(marker);
+                        });
+                      }
                   }
+                  return ;
                 });
                 
               },
@@ -214,7 +227,7 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
         ],
         ),body:ListView(
       children: [
-        Padding(padding: EdgeInsets.all(10),child: Container(height: 220,child: Image.network(imgUrl),)),
+        Padding(padding: EdgeInsets.all(10),child: Container(height: 220,child: Image.network(paceNote['photo']),)),
         Padding(padding: EdgeInsets.all(10),child: Row(mainAxisSize: MainAxisSize.min,children: [Text('路书标题'),GestureDetector(onTap: (){
           freshMap();
         },child: ButtonBar(children: [Text('显示地点图标'),FaIcon(FontAwesomeIcons.syncAlt)],),)],),),
