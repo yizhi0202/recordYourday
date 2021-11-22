@@ -211,7 +211,10 @@ class _emgContactPageState extends State<emgContactPage> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+              "/loginPass", ModalRoute.withName("/loginPass"));
+                },
                 child: ButtonBar(
                   alignment: MainAxisAlignment.start,
                   children: [

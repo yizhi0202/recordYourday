@@ -13,6 +13,7 @@ class myPaceNotePage extends StatefulWidget {
 //Navigator.pushNamed(context, '/myPaceNoteDetail')
 class _myPaceNotePageState extends State<myPaceNotePage> {
   List<Widget> myPaceNoteList = [];
+  List for_removing = [];
   MultiSelectController controller = MultiSelectController();
   Widget getMyPaceNote({String title = '',int voteNum = 0, Map info =const {}})
   {
@@ -41,7 +42,16 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
     list.forEach((element) {
       myPaceNoteList.removeAt(element);
     });
-
+    
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    for(int i in list)
+    {
+      db.collection('paceNote').where(
+        for_removing[i]
+      ).remove();
+      for_removing.removeAt(i);
+    }
     setState(() {
       controller.set(myPaceNoteList.length);
     });
@@ -65,6 +75,7 @@ class _myPaceNotePageState extends State<myPaceNotePage> {
         db.collection('paceNote').where({
       'userID': userID
         }).get().then((res){
+          for_removing = res.data;
           for(var i in res.data)
           {
             addPaceNote(i['title'],i['voteNum'],i);
