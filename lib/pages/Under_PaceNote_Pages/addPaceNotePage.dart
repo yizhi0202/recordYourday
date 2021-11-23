@@ -84,7 +84,11 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
           'audit':true
         })
         .then((_) {
-          Navigator.pop(context);
+              showToast(context, '完成上传！');
+              Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                Navigator.pushNamed(context,'/tab');
+              });
+
         })
         .catchError((e) {
           print(e);

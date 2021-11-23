@@ -116,7 +116,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
           }).then((res) {
             showToast(context, '完成上传！');
             Future.delayed(Duration(milliseconds: 800)).whenComplete((){
-              Navigator.pushNamed(context,'/');
+              Navigator.pushNamed(context,'/tab');
             });
           }).catchError((e) {
             print(e);

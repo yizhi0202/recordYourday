@@ -134,7 +134,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
             });
             showToast(context, '修改信息完成！');
             Future.delayed(Duration(milliseconds: 800)).whenComplete((){
-              Navigator.pushNamed(context,'/');
+              Navigator.pushNamed(context,'/tab');
             });
           });
         });

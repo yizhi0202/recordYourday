@@ -62,7 +62,7 @@ class addEmgContactPage extends StatelessWidget {
                          'nickName':emgNickname.text
                        }).then((_){showToast(context, '新建成功');
                        Future.delayed(Duration(milliseconds: 800)).whenComplete((){
-                         Navigator.pushNamed(context,'/');
+                         Navigator.pushNamed(context,'/tab');
                        });
                        });
                      }
