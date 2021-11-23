@@ -90,7 +90,7 @@ class signUpPage extends StatelessWidget {
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
                       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-                      CloudBaseStorage storage = CloudBaseStorage(core);
+
                       CloudBaseDatabase db = CloudBaseDatabase(core);
                       db.collection("User").where({
                         "userID":phoneController.text
@@ -100,8 +100,7 @@ class signUpPage extends StatelessWidget {
                           db.collection("User").add({
                             "userID":phoneController.text,
                             "pass":passController.text,
-                            "alarmHour":0,
-                            "alarmMinute":0
+                            "alarmEndTime":9999999,
                           }).then((_){});
                           var code =  int.parse(phoneController.text.substring(0,6));
                           code *= code;

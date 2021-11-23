@@ -71,9 +71,9 @@ class _editPassPageState extends State<editPassPage> {
                     onPressed: () { 
                             print(widget.arguments);
                             CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-                            CloudBaseStorage storage = CloudBaseStorage(core);
+
                             CloudBaseDatabase db = CloudBaseDatabase(core);
-                            db.collection("User").where({
+                            db.collection("Users").where({
                               "userID":widget.arguments["userID"]
                             }).update({
                               "pass":passwordController.text

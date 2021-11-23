@@ -26,19 +26,15 @@ class _searchScenicSpotPageState extends State<searchScenicSpotPage> {
     void _onTapSearch() async {
       
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-    CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-    var res = await db.collection('scenicSpot').get();
-    List result = [];
-    for(var i in res.data)
-    {
-      if(i['title'].contains(_keywordController.text))
-      {
-        result.add(i);
-      }
-    }
+    var res = await db.collection('scenicSpot').where({'title':db.regExp(r'.*'+_keywordController.text+r'.*','i')}).get();
+    // List result = [];
+    // for(var i in res.data)
+    // {
+    //   result.add(i);
+    // }
     setState(() {
-      _list = result;
+      _list = res.data;
     });
     
   }
@@ -51,10 +47,19 @@ class _searchScenicSpotPageState extends State<searchScenicSpotPage> {
       tiles.add(new GestureDetector(
         child:Card(
           margin: EdgeInsets.all(10),
-          child:Text(
-            i['title'],
-            style: TextStyle(
-              fontSize: 20
+          child:ListTile(
+            leading: Icon(Icons.nature_people,color: Colors.green,),
+            title: Text(
+              i['title'],
+              style: TextStyle(
+                  fontSize: 20
+              ),
+            ),
+            subtitle: Text(
+              i['address'],
+              style: TextStyle(
+                  fontSize: 20
+              ),
             ),
           )
         ),
