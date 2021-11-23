@@ -16,13 +16,18 @@ class signUpPage extends StatelessWidget {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
+    db.collection("Users").add({
+                            "userID":phoneController.text,
+                            "pass":passController.text,
+                            "alarmHour":0,
+                            "alarmMinute":0
+                          }).then((_){});
     db.collection("userInfo").add({
       'userID': phoneController.text,
-      'nickname':"新用户",
+      'nickName':"新用户",
       'sex':"male",
       'userType':"common",
-      'profilePhoto':"https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/image_picker1815102638.jpg?sign=0ea5363e965b4e7154feda0ce453f135&t=1637205770"
+      'profilePhoto':"https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/IMG_1637400423192.png"
     }).then((_){print("添加新用户");});
   }
   @override
@@ -72,7 +77,7 @@ class signUpPage extends StatelessWidget {
                   ),
                 ),
                 MyBody(
-                  phone: phoneController.text,
+                  phone: phoneController,
                   codeController: vertificationCodeController,
                   signup: true,
                 ),
@@ -92,23 +97,18 @@ class signUpPage extends StatelessWidget {
                       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
                       CloudBaseStorage storage = CloudBaseStorage(core);
                       CloudBaseDatabase db = CloudBaseDatabase(core);
-                      db.collection("User").where({
+                      db.collection("Users").where({
                         "userID":phoneController.text
                       }).get().then((res){
                         if(0 == res.data.length)
                         {
-                          db.collection("User").add({
-                            "userID":phoneController.text,
-                            "pass":passController.text,
-                            "alarmHour":0,
-                            "alarmMinute":0
-                          }).then((_){});
                           var code =  int.parse(phoneController.text.substring(0,6));
                           code *= code;
                           String result = code.toString().substring(0,6);
                           if(vertificationCodeController.text == result) 
                           {
                               addInfo();
+                              Navigator.pop(context);
                           }
                           else
                           {

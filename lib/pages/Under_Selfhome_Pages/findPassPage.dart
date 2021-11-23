@@ -48,7 +48,7 @@ class _findPassPageState extends State<findPassPage> {
                   ),
                 ),
                 MyBody(
-                    phone: phoneController.text,
+                    phone: phoneController,
                     codeController: vertificationCodeController),
                 SizedBox(height: 32),
                 Container(
