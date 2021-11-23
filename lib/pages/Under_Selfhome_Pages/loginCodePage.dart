@@ -111,7 +111,7 @@ void prepareForLogin(context) async {
                 ),
                 //this is vertification code widget
                 MyBody(
-                  phone: phoneController.text,
+                  phone: phoneController,
                   codeController: vertificationCodeController,
                 ),
                 SizedBox(height: 32),

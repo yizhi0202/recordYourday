@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 
 class MyBody extends StatefulWidget {
   TextEditingController codeController = TextEditingController();
-  String phone = '';
+  TextEditingController phone = TextEditingController();
   bool signup = false;
   MyBody({required this.codeController, required this.phone, this.signup = false});
   @override
@@ -46,7 +46,7 @@ class _MyBodyState extends State<MyBody> {
       CloudBaseDatabase db = CloudBaseDatabase(core);
       print(widget.phone);
       db.collection('Users').where({
-        'userID': widget.phone,
+        'userID': widget.phone.text,
       }).get().then((res){
         if(res.data.length == 0 && widget.signup == false)
         {
@@ -57,8 +57,8 @@ class _MyBodyState extends State<MyBody> {
           print('phone is '+widget.phone);
            Dio().post(
           'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
-          data: {'phone': widget.phone}).then((value) {
-            print('the result is '+value.toString());
+          data: {'phone': widget.phone.text}).then((value) {
+
           });
         }
       });
