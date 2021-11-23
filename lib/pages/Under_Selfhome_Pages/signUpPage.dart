@@ -27,7 +27,9 @@ class signUpPage extends StatelessWidget {
       'sex':"male",
       'userType':"common",
       'profilePhoto':"https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/profilePhoto/IMG_1637400423192.png"
-    }).then((_){print("添加新用户");});
+    }).then((_){
+
+      print("添加新用户");});
   }
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,11 @@ class signUpPage extends StatelessWidget {
                           if(vertificationCodeController.text == result) 
                           {
                               addInfo();
-                              Navigator.pop(context);
+                              showToast(context, '注册成功！');
+                              Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                                Navigator.pushNamed(context,'/loginPass');
+                          });
+
                           }
                           else
                           {
