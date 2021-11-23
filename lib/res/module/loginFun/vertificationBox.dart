@@ -54,7 +54,6 @@ class _MyBodyState extends State<MyBody> {
         }
         else
         {
-          print('phone is '+widget.phone);
            Dio().post(
           'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
           data: {'phone': widget.phone.text}).then((value) {
