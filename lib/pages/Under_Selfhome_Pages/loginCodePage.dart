@@ -64,7 +64,7 @@ void prepareForLogin(context) async {
       print('login success!');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("userID", phoneController.text);
-      Navigator.pushNamed(context, '/', arguments: {"user":phoneController.text});
+      Navigator.pushNamed(context, '/tab', arguments: {"user":phoneController.text});
     }
     else
     {

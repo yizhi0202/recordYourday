@@ -6,6 +6,8 @@ import 'package:cloudbase_auth/cloudbase_auth.dart';
 import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+
 
 // void QueryMobileLocation(String phonenumber) async {
 //   Apifm.init("bd1a95e20f10394f7ea5fd7ec06cfaa5 ");
@@ -17,7 +19,9 @@ class loginPassPage extends StatelessWidget {
   TextEditingController userID =
       TextEditingController(); //get the input of phonenumber
   TextEditingController pass =
-      TextEditingController(); //get the input of password
+      TextEditingController();//get the input of password
+
+  DateTime lastPopTime = DateTime.now();
 
   //the function of login
   void prepareForLogin(String userID, String pass, context) async {
@@ -44,7 +48,7 @@ class loginPassPage extends StatelessWidget {
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("userID", userID);
-      Navigator.pushNamed(context, '/', arguments: {"userID": userID});
+      Navigator.pushNamed(context, '/tab', arguments: {"userID": userID});
     }
   }
 
@@ -70,7 +74,7 @@ class loginPassPage extends StatelessWidget {
           data: {'userID': userID});
       print(response);
       var result = response.toString();
-      if (result != 'false') Navigator.pushNamed(context, '/');
+      if (result != 'false') Navigator.pushNamed(context, '/tab');
     } catch (e) {
       print(e);
     }
@@ -78,7 +82,7 @@ class loginPassPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
@@ -100,12 +104,12 @@ class loginPassPage extends StatelessWidget {
                 ),
                 SingleChildScrollView(
                     child: Padding(
-                  padding: EdgeInsets.only(left: 32, right: 32),
-                  child: TextField(
-                    controller: userID,
-                    decoration: InputDecoration(labelText: '请输入手机号'),
-                  ),
-                )),
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: TextField(
+                        controller: userID,
+                        decoration: InputDecoration(labelText: '请输入手机号'),
+                      ),
+                    )),
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
@@ -202,6 +206,19 @@ class loginPassPage extends StatelessWidget {
           )
         ],
       ),
+    ), onWillPop: () async {
+      // 点击返回键的操作
+      if(DateTime.now().difference(lastPopTime) > Duration(seconds: 2)){
+        lastPopTime = DateTime.now();
+        showToast(context, '再按一次退出应用');
+        return false;
+      }else{
+        lastPopTime = DateTime.now();
+        // 退出app
+        await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        return true;
+      }
+    },
     );
   }
 }

@@ -42,7 +42,7 @@ class _MyBodyState extends State<MyBody> {
   void getHttp() async {
     try {
       CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
-      CloudBaseStorage storage = CloudBaseStorage(core);
+
       CloudBaseDatabase db = CloudBaseDatabase(core);
       print(widget.phone);
       db.collection('Users').where({
@@ -54,9 +54,11 @@ class _MyBodyState extends State<MyBody> {
         }
         else
         {
+          print('phone is '+widget.phone);
            Dio().post(
           'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
           data: {'phone': widget.phone.text}).then((value) {
+
           });
         }
       });

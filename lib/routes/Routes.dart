@@ -25,7 +25,7 @@ import '../res/module/mapSource/POIsearch.dart';
 
 //配置路由,定义 Map 类型的 routes,Key 为 String 类型，Value 为 Function 类型
 final Map<String, Function> routes = {
-  '/': (context, {arguments}) => tab(arguments: arguments),
+  '/tab': (context, {arguments}) => tab(arguments: arguments),
   '/scenicSpot': (context, {arguments}) => scenicSpotPage(),
   '/paceNote': (context, {arguments}) => paceNotePage(),
   '/emgContact': (context, {arguments}) => emgContactPage(),
