@@ -237,7 +237,10 @@ class _scenicSpotPageState extends State<scenicSpotPage> {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                 Navigator.of(context).pushNamedAndRemoveUntil(
+              "/loginPass", ModalRoute.withName("/loginPass"));
+              },
               child: ButtonBar(
                 alignment: MainAxisAlignment.start,
                 children: [

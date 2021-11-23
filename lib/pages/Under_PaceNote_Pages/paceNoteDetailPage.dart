@@ -158,6 +158,7 @@ class _paceNoteDetailPageState extends State<paceNoteDetailPage> {
       );
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       primary: false,
       body: ListView(
         children: [

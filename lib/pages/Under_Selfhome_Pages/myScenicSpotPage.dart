@@ -18,8 +18,10 @@ class _myScenicSpotPageState extends State<myScenicSpotPage> {
   List myScenicSpotInfoList = [];    //用于删除数据的传递
   ScrollController _scrollController = new ScrollController();
   bool isLoading = false;
-
-
+  int getNum = 0;  //the number to control the amount of Spots
+  int preGetNum = 0;
+  int maxNum = 0;
+  List<Widget> temp =[];
   MultiSelectController controller = MultiSelectController();
   MultiSelectController infoController = MultiSelectController();
   Future getid() async{
@@ -40,11 +42,12 @@ class _myScenicSpotPageState extends State<myScenicSpotPage> {
       getid().then((value) async{//获取userＩＤ
         var res =  await db.collection('scenicSpot').where({
           'userID':value
-        }).get();
+        }).skip(getNum).limit(15).get();
+        getNum+=5;
         if(mounted)
         {
           setState(() {
-            List<Widget> temp =[];
+            
             myScenicSpotInfoList = res.data;
             myScenicSpotInfoList.forEach((element) {
               temp.add(getMyScenicSpot(element['_id'], element['title'], element['address'], element['introduction'], BMFCoordinate(element['latitude'],element['longitude']), element['voteNum'],element['scenicSpotPhotoUrl']));

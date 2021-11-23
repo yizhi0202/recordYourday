@@ -121,7 +121,9 @@ class _selfHomePageState extends State<selfHomePage> {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                  Navigator.pop(context);
+              },
               child: ButtonBar(
                 alignment: MainAxisAlignment.start,
                 children: [
@@ -263,7 +265,12 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           SizedBox(height: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              getid().then((userID){
+                 Navigator.pushNamed(context, '/editPass', arguments:{'userID':userID});
+              });
+             
+            },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
@@ -281,7 +288,9 @@ class _selfHomePageState extends State<selfHomePage> {
           ),
           SizedBox(height: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+               Navigator.pop(context);
+            },
             child: ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [

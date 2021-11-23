@@ -30,15 +30,14 @@ class loginPassPage extends StatelessWidget {
     //初始化数据库
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection collection = db.collection('Users');
-    var _ = db.command;
     var res = await collection
-        .where(_.and([
-          {userID: _.eq(userID)},
-          {pass: _.eq(pass)}
-        ]))
+        .where({
+          "userID":userID,
+          "pass":pass
+        })
         .get();
     print(res);
-    if (res.data == null) {
+    if (res.data.length == 0) {
       showToast(context, "name or password is wrong!");
     } else {
       print('login success!');
