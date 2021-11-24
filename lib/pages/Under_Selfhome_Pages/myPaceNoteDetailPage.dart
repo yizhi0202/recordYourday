@@ -1,4 +1,6 @@
+import 'package:cloudbase_database/cloudbase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_app_y/res/module/baiduMapmodule/map_base_page_state.dart';
 import 'package:flutter_baidu_mapapi_map/flutter_baidu_mapapi_map.dart';
@@ -11,6 +13,8 @@ import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 import 'package:getwidget/shape/gf_icon_button_shape.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
     show BMFCoordinate, BMFPoint;
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
 
 
 
@@ -25,15 +29,18 @@ class myPaceNoteDetailPage extends StatefulWidget {
 }
 
 class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
-  String imgUrl = 'https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/paceNotePhoto/IMG_1636716605212.png';
-  List isClockInList = [false,false];
-  List<Widget> spotList = [];
+  List<Map> markerList = [];
+  List<Widget> spots = [];
+  TextEditingController paceNoteFeeling = TextEditingController();
+
   void clockIn(BMFMarker marker)
   {
     //先判断经纬度是否符合再改变颜色
     myMapController.removeMarker(marker);
     marker.icon = 'images/animation_green.png';
     myMapController.addMarker(marker);
+    myMapController.setCenterCoordinate(marker.position, true);
+
   }
 
   LocationFlutterPlugin baibuGps(){
@@ -68,6 +75,14 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   Widget getMyScenicSpot(String info, int index)
   {
     List infoList = info.split("&&&").where((s) => !s.isEmpty).toList();
+    // /// 创建BMFMarker
+    // BMFMarker marker = BMFMarker(
+    //     position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
+    //     title: 'flutterMaker',
+    //     identifier: index.toString(),
+    //     icon: 'images/animation_red.png');
+    // markerList.add({'marker':marker,'isClockIn':false});
+
     return Padding(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -80,46 +95,47 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
           trailing: Container(width: 160,child: Row(mainAxisSize: MainAxisSize.min,children: [
             GestureDetector(
               onTap: (){
-                LocationFlutterPlugin _locationPlugin = baibuGps();
-                var gps=_locationPlugin.onResultCallback();
-                gps.listen((event) {
-                  double Lo = event['longitude'] as double;
-                  double La = event['latitude'] as double;
-                  print('address is'+event['address'].toString());
-                  print('lo is '+Lo.toString());
-                  print('la is '+La.toString());
-                  print('info lo' + infoList[5]);
-                  print('info la' + infoList[4]);
-                  print('userID in arguments '+widget.arguments['info']['userID']);
-                   _locationPlugin.stopLocation();
-                  if( (double.parse(infoList[4])-La).abs()<0.01 && (double.parse(infoList[5])-Lo).abs()<0.01)
+                if(markerList[index]['isClockIn'])
                   {
+                    showToast(context, '已经打过卡了！');
+                  }
+                else{
+                  LocationFlutterPlugin _locationPlugin = baibuGps();
+                  var gps=_locationPlugin.onResultCallback();
+                  gps.listen((event) {
+                    double Lo = event['longitude'] as double;
+                    double La = event['latitude'] as double;
+                    print('address is'+event['address'].toString());
+                    print('lo is '+Lo.toString());
+                    print('la is '+La.toString());
+                    print('info lo' + infoList[5]);
+                    print('info la' + infoList[4]);
                     print('userID in arguments '+widget.arguments['info']['userID']);
-                    Dio().post(
-                    'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/clockIn',
-                    data: {'userID': widget.arguments['info']['userID']}).then((value) {
-                    });
-                    if(mounted)
+                    //_locationPlugin.stopLocation();
+                    if( (double.parse(infoList[4])-La).abs()<0.01 && (double.parse(infoList[5])-Lo).abs()<0.01)
+                    {
+                      showToast(context, '打卡成功！');
+                      Dio().post(
+                          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/clockIn',
+                          data: {'userID': widget.arguments['info']['userID']}).then((value) {
+                      });
+                      if(mounted)
                       {
                         setState(() {
-                          isClockInList[index] = true;
-                          // /// 创建BMFMarker
-                          // BMFMarker marker = BMFMarker(
-                          //     position: BMFCoordinate(double.parse(infoList[4]), double.parse(infoList[5])),
-                          //     title: 'flutterMaker',
-                          //     identifier: 'flutter_marker',
-                          //     icon: 'images/animation_red.png');
-                          // clockIn(marker);
+                          markerList[index]['isClockIn'] = true;
+                          clockIn(markerList[index]['marker']);
                         });
                       }
-                  }
-                  return ;
-                });
-                
+                    }
+                    else{
+                      showToast(context, '打卡失败，请再靠近一点景点。');
+                    }
+                  });
+                }
               },
               child: ButtonBar(
                 children: [
-                  FaIcon(FontAwesomeIcons.mapMarkedAlt,color:(!isClockInList[index])?Colors.grey:Colors.greenAccent,),
+                  FaIcon(FontAwesomeIcons.mapMarkedAlt,color:(!markerList[index]['isClockIn'])?Colors.grey:Colors.greenAccent,),
                   Text('打卡',style: TextStyle(color: Colors.black),),
                 ],
               ),
@@ -155,39 +171,46 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Map paceNote = widget.arguments['info'];
+    List infoList = paceNote['scenicSpotInfo'].split("###").where((s) => !s.isEmpty).toList();
+    int idx = 0;    //地图上的每一个点唯一identifier
+
+    for(var value in infoList)
+    {
+      List detailInfoList = value.split("&&&").where((s) => !s.isEmpty).toList();
+      /// 创建BMFMarker
+      BMFMarker marker = BMFMarker(
+          position: BMFCoordinate(double.parse(detailInfoList[4]), double.parse(detailInfoList[5])),
+          title: 'flutterMaker',
+          identifier: idx.toString(),
+          icon: 'images/animation_red.png');
+      markerList.add({'marker':marker,'isClockIn':false});
+      spots.add(getMyScenicSpot(value, idx));
+      idx++;
+    }
+
   }
   freshMap()
   {
-    /// 创建BMFMarker
-    BMFMarker marker = BMFMarker(
-        position: BMFCoordinate(39.928617, 116.40329),
-        title: 'flutterMaker',
-        identifier: 'flutter_marker',
-        icon: 'images/animation_red.png');
     List<BMFMarker> markers = [];
-    markers.add(marker);
+   markerList.forEach((element) {
+     markers.add(element['marker']);
+   });
     //删除原来地图上搜索出来的点
     myMapController.cleanAllMarkers();
     //将搜索出来的点显示在界面上
     myMapController.addMarkers(markers);
     //将地图中心点移动到选择的点
     myMapController.setCenterCoordinate(markers.first.position, true);
-
-
   }
+
+
+
 
 
   @override
   Widget build(BuildContext context) {
     Map paceNote = widget.arguments['info'];
-    List info = paceNote['scenicSpotInfo'].split("###").where((s) => !s.isEmpty).toList();
-    List<Widget> spots = [];
-    int len = 0;
-    for(var i in info)
-    {
-      spots.add(getMyScenicSpot(i, len));
-      len++;
-    }
     return Scaffold(
         appBar: AppBar(centerTitle: true,title: Text('我的路书'),leading: IconButton(
           onPressed: () {
@@ -198,7 +221,19 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
         ),actions: [
           GestureDetector(
             onTap: () {
-
+              CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+              CloudBaseDatabase db = CloudBaseDatabase(core);
+              if(paceNoteFeeling.text != '')
+                {
+                  db.collection('paceNote').where({'_id':paceNote['_id']}).update({'note':paceNoteFeeling.text});
+                  showToast(context, '发布成功！');
+                  Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                    Navigator.pushNamed(context,'/tab');
+                  });
+                }
+              else{
+                showToast(context,'请输入感受后再发布！');
+              }
             },
             child: ButtonBar(
               children: [
@@ -235,8 +270,27 @@ class _myPaceNoteDetailPageState extends BMFBaseMapState<myPaceNoteDetailPage> {
           onBMFMapCreated: onBMFMapCreated,
           mapOptions: initMapOptions(),
         ),),
-        ListView(shrinkWrap: true,
-        children: spots,)
+        Column(mainAxisSize: MainAxisSize.min,
+        children: spots,),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: TextField(
+            keyboardType: TextInputType.multiline,
+            controller: paceNoteFeeling,
+            maxLength: 1000,
+            maxLines: 6,
+            decoration: InputDecoration(
+                hintText: '请输入此次路书的整体感受',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                    width: 2.0,
+                  ),
+                )),
+          ),
+        ),
+
       ],));
   }
 }

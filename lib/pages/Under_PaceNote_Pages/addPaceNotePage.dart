@@ -67,6 +67,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     Collection collection = db.collection('paceNote');
     int len = 0;
     if (images.length > 0) {
+      showToast(context, '正在上传请稍后...');
       images.forEach((element) async {
         eachPhotoUp(element, storage).then((image_url){
           len++;
@@ -97,6 +98,9 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         });
         
       });
+    }
+    else{
+      showToast(context, '您还没有选择封面哦，请选择封面后上传！');
     }
     
   }

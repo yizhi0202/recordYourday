@@ -122,6 +122,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
     return ListView.builder(
 //+1 for progressbar
       itemCount: commentList.length + 1,
+      shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         if (index == commentList.length) {
           return _buildProgressIndicator();
@@ -140,8 +141,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
     double height =
         MediaQuery.of(context).padding.bottom; // 这个很简单，就是获取高度，获取的底部安全区域的高度
     return Scaffold(
-        body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+        body: ListView(
       children: [
         Stack(
           alignment: Alignment.topLeft,

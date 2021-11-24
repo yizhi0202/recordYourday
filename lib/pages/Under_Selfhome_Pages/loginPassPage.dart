@@ -107,7 +107,7 @@ class loginPassPage extends StatelessWidget {
                       padding: EdgeInsets.only(left: 32, right: 32),
                       child: TextField(
                         controller: userID,
-                        decoration: InputDecoration(labelText: '请输入手机号'),
+                        decoration: InputDecoration(labelText: '请输入qq邮箱'),
                       ),
                     )),
                 Padding(
@@ -168,7 +168,7 @@ class loginPassPage extends StatelessWidget {
                     Navigator.pushNamed(context, '/loginCode');
                   },
                   child: Text(
-                    '手机验证码登录',
+                    'qq邮箱验证码登录',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
