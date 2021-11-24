@@ -170,9 +170,6 @@ class _myScenicSpotPageState extends State<myScenicSpotPage> {
           color: Colors.white24,
         ),
         title: Text('我的景点'),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
-        ],
       ),
       body: ListView(
         children: [

@@ -354,9 +354,7 @@ class _myFavoritePageState extends State<myFavoritePage> {
           color: Colors.white24,
         ),
         title: Text('我的路书'),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
-        ],
+
       ),
       body:  ListView(
         children: [

@@ -97,33 +97,40 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection scenicSpot = db.collection('scenicSpot');
     int len = 0;
-    showToast(context, '正在上传请稍后...');
-    images.forEach((element) async {
-      eachPhotoUp(element, storage).then((_) {
-        len++;
-        if (len == images.length) {
-          scenicSpot.add({
-            'userID': widget.arguments["userID"].toString(),
-            'scenicSpotPhotoUrl': imageURL,
-            'title': titleController.text,
-            'subtitle': subTitleController.text,
-            'introduction': introductionController.text,
-            'address': spot["address"],
-            'latitude': spot['position'].latitude,
-            'longitude': spot['position'].longitude,
-            'voteNum': 1,
-            'publishTime':DateTime.now()
-          }).then((res) {
-            showToast(context, '完成上传！');
-            Future.delayed(Duration(milliseconds: 800)).whenComplete((){
-              Navigator.pushNamed(context,'/tab');
-            });
-          }).catchError((e) {
-            print(e);
+    if(images.length > 0)
+      {
+        showToast(context, '正在上传请稍后...');
+        images.forEach((element) async {
+          eachPhotoUp(element, storage).then((_) {
+            len++;
+            if (len == images.length) {
+              scenicSpot.add({
+                'userID': widget.arguments["userID"].toString(),
+                'scenicSpotPhotoUrl': imageURL,
+                'title': titleController.text,
+                'subtitle': subTitleController.text,
+                'introduction': introductionController.text,
+                'address': spot["address"],
+                'latitude': spot['position'].latitude,
+                'longitude': spot['position'].longitude,
+                'voteNum': 1,
+                'publishTime':DateTime.now()
+              }).then((res) {
+                showToast(context, '完成上传！');
+                Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                  Navigator.pushNamed(context,'/tab');
+                });
+              }).catchError((e) {
+                print(e);
+              });
+            }
           });
-        }
-      });
-    });
+        });
+      }
+    else{
+      showToast(context, '请至少选择一张图片后上传！');
+    }
+
   }
 
   //显示选择后的图像
@@ -227,7 +234,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     getScenicSpotAddr(BuildContext context) async {
       spot =
           await Navigator.pushNamed(context, '/ShowPOICitySearchPage') as Map;
-      print('地点的经度为：' + spot['position'].latitude.toString());
       //刷新用户选择后的名称和地址
       setState(() {
         spot = spot;
