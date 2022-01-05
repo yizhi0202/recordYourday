@@ -17,6 +17,7 @@ A new Flutter application.
 6 Welcome to join us if you are interested in it, let's make it better together. :blush:
 
 **Contact Information**:e-mail:
+
 yizhi020208@gmail.com
 
 z31071025@gmail.com
