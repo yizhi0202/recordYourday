@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:flutter_app_y/res/module/paceNote/paceNote.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/getwidget.dart';
@@ -11,7 +12,8 @@ import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 class addPaceNotePage extends StatefulWidget {
-  addPaceNotePage({Key? key}) : super(key: key);
+  Map arguments;
+  addPaceNotePage({Key? key, required this.arguments}) : super(key: key);
 
   @override
   _addPaceNotePageState createState() => _addPaceNotePageState();
@@ -21,7 +23,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
   TextEditingController paceNoteTitle = TextEditingController();
   TextEditingController paceNoteFeeling = TextEditingController();
   bool isSelect = false;
-
+  String spots = "";
   List<Asset> images = <Asset>[];
   // List<String> imagePath = [];
 
@@ -51,7 +53,6 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
-
       return res.data[0].downloadUrl;
     } catch (e) {
       print(e);
@@ -63,14 +64,45 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
     Collection collection = db.collection('paceNote');
+    int len = 0;
     if (images.length > 0) {
+      showToast(context, '正在上传请稍后...');
       images.forEach((element) async {
-        String url = await eachPhotoUp(element, storage);
-        print(url);
+        eachPhotoUp(element, storage).then((image_url){
+          len++;
+          if(len == images.length)
+          {
+            collection
+           .add({
+          'userID': widget.arguments['userID'],
+          'photo': image_url,
+          'title': paceNoteTitle.text,
+          'note': paceNoteFeeling.text,
+          'score':60,
+          'scenicSpotInfo':spots,
+          'voteNum':1,
+          'audit':true
+        })
+        .then((_) {
+              showToast(context, '完成上传！');
+              Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                Navigator.pushNamed(context,'/tab');
+              });
+
+        })
+        .catchError((e) {
+          print(e);
+        });
+          }
+        });
+        
       });
     }
+    else{
+      showToast(context, '您还没有选择封面哦，请选择封面后上传！');
+    }
+    
   }
 
   //显示选择后的图像
@@ -159,9 +191,20 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
   }
 
   List<Widget> paceNoteList = [];
-  void IncreaseSpot(String title, String location) {
-    paceNoteList.add(GetMyCard(
-        title: title, location: location, ordinum: paceNoteList.length));
+  void IncreaseSpot(String title, String location)  {
+  Map spot;
+  Navigator.pushNamed(context, '/searchScenicSpot').then((spot){
+    setState(() {
+      Map term = spot as Map;
+      paceNoteList.add(GetMyCard(
+      title: term['title'], location: term['address'], ordinum: paceNoteList.length));
+      List photoL = term['scenicSpotPhotoUrl'].split("###").where((s) => !s.isEmpty).toList();
+      spots += photoL[0]+"&&&"+term['title']+"&&&"+term['address']+'&&&'+term['introduction']+"&&&"+term['latitude'].toString()+'&&&'+term['longitude'].toString()+"###";
+    });
+     
+  });
+ 
+    
   }
 
   @override
@@ -199,6 +242,7 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
         iconSize: 40,
         onPressed: () {
           setState(() {
+            showToast(context, "上传成功!");
             IncreaseSpot('景点标题', '景点地点');
           });
         },
@@ -265,12 +309,15 @@ class _addPaceNotePageState extends State<addPaceNotePage> {
                   )),
             ),
           ),
-          ListView.builder(
-            itemCount: paceNoteList.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return paceNoteList[index];
-            },
+          Container(
+            height: 680,
+            child: ListView.builder(
+              itemCount: paceNoteList.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return paceNoteList[index];
+              },
+            ),
           )
         ],
       ),

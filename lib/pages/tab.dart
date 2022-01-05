@@ -5,16 +5,22 @@ import 'tabs/emgContactPage.dart';
 import 'tabs/paceNotePage.dart';
 import 'tabs/selfHomePage.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 
 class tab extends StatefulWidget {
-  tab({Key? key}) : super(key: key);
+  Map arguments;
+  tab({Key? key, required this.arguments} ) : super(key: key);
 
   @override
   _tabState createState() => _tabState();
+  
 }
 
 class _tabState extends State<tab> {
   int _currentIndex = 0;
+  DateTime lastPopTime = DateTime.now();
   Color selectColor = Colors.yellow;
   List _pageList = [
     paceNotePage(),
@@ -23,12 +29,13 @@ class _tabState extends State<tab> {
     emgContactPage(),
     selfHomePage()
   ];
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return WillPopScope(child: Container(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: this._pageList[this._currentIndex],
+        body:this._pageList[this._currentIndex],
         floatingActionButton: Container(
           height: 90,
           width: 90,
@@ -52,7 +59,7 @@ class _tabState extends State<tab> {
                   label: '新建景点',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addScenicSpot');
+                    Navigator.pushNamed(context, '/addScenicSpot', arguments: {'userID':widget.arguments["userID"]});
                   }),
               SpeedDialChild(
                   child: Icon(Icons.menu_book),
@@ -60,7 +67,7 @@ class _tabState extends State<tab> {
                   label: '新建路书',
                   labelStyle: TextStyle(fontSize: 18.0),
                   onTap: () {
-                    Navigator.pushNamed(context, '/addPaceNote');
+                    Navigator.pushNamed(context, '/addPaceNote', arguments:{'userID':widget.arguments["userID"]});
                   }),
             ],
           ),
@@ -103,7 +110,11 @@ class _tabState extends State<tab> {
           ],
           onItemSelected: (index) {
             setState(() {
-              if (index != 2) this._currentIndex = index;
+              if (index != 2)
+              {
+                this._currentIndex = index;
+              }
+
             });
           },
         ),
@@ -130,7 +141,19 @@ class _tabState extends State<tab> {
         //   ],
         // ),
       ),
-    );
+    ), onWillPop: () async{
+      // 点击返回键的操作
+      if(DateTime.now().difference(lastPopTime) > Duration(seconds: 2)){
+        lastPopTime = DateTime.now();
+        showToast(context, '再按一次退出应用');
+        return false;
+      }else{
+        lastPopTime = DateTime.now();
+        // 退出app
+        await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        return true;
+      }
+    });
   }
 }
 

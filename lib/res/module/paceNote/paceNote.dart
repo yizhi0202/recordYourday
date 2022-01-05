@@ -2,35 +2,39 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
+import 'package:flutter_app_y/res/module/likeAndFavor/likeAndFavorFunction.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class paceNote extends StatefulWidget {
-  int paceNoteID = 0; //to find the senicspots of the paceNote
-  int userID = 0; //to find the profilePhoto and the nickname of the user
+  String paceNoteID = ''; //to find the senicspots of the paceNote
+  String userID = ""; //to find the profilePhoto and the nickname of the user
   DateTime? publishTime = DateTime.now();
-  String? title = '';
-  String? note = ''; //the feeling of the paceNote
-  int? score = 0; //the score of the paceNote, the autor gives
-  int? voteNum = 0;
+  String title = '';
+  String note = ''; //the feeling of the paceNote
+  int score = 0; //the score of the paceNote, the autor gives
+  int voteNum = 0;
   Myaudit? audit = Myaudit.unknown;
   String? photo; //this is the cover of paceNote
   String? profilePhoto;
   String? nickName;
+  String scenicSpotInfo;
 
   paceNote({
     Key? key,
     required this.paceNoteID,
     required this.userID,
+    required this.scenicSpotInfo,
     this.publishTime,
-    this.title,
-    this.note,
+    this.title ='',
+    this.note = '',
     this.score = 0,
     this.voteNum = 0,
     this.audit,
     this.photo = 'https://www.itying.com/images/flutter/2.png',
     this.profilePhoto = 'https://www.itying.com/images/flutter/4.png',
-    this.nickName = '网瘾少年',
+    this.nickName = '网瘾少年'
   }) : super(key: key) {
-    assert(score! >= 0 && score! <= 100);
+    assert(score >= 0 && score <= 100);
   }
   _SetAudit(int index) {
     if (index == 0)
@@ -42,16 +46,31 @@ class paceNote extends StatefulWidget {
     else
       this.audit = Myaudit.reject;
   }
+  _Vote()
+  {
+    voteNum ++;
+  }
+
+
+
 
   @override
   _paceNoteState createState() => _paceNoteState();
 }
 
 class _paceNoteState extends State<paceNote> {
+  bool favor = false;
+  bool like = false;
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8),
+    return
+    GestureDetector(
+      child:Card(
+      margin: EdgeInsets.all(10),
       shadowColor: Colors.lightGreen,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -92,22 +111,41 @@ class _paceNoteState extends State<paceNote> {
             children: <Widget>[
               Expanded(
                 child: IconButton(
-                  icon: Icon(Icons.comment),
-                  onPressed: () {},
+                  icon: Icon(Icons.comment,color: Colors.black,),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/comments',arguments: {'paceNoteID':widget.paceNoteID,'scenicSpotID':''});
+                  },
                 ),
                 flex: 1,
               ),
               Expanded(
                 child: IconButton(
-                  icon: Icon(Icons.star_rate),
-                  onPressed: () {},
+                  icon: FaIcon(FontAwesomeIcons.star,color: !favor? Colors.black: Colors.red,),
+                  onPressed: () {
+                    getid().then((value){
+                      favorObject('myFavorPaceNote', value, widget.paceNoteID, context);
+                    });
+                    setState(() {
+                      favor = true;
+                    });
+                  },
                 ),
                 flex: 1,
               ),
               Expanded(
                 child: IconButton(
-                  icon: FaIcon(FontAwesomeIcons.heart),
-                  onPressed: () {},
+                  icon: Row(children: [
+                    FaIcon(FontAwesomeIcons.heart,color: !like? Colors.black: Colors.red,),
+                    Text(widget.voteNum.toString()),//这里放点赞数
+                  ],),
+                  onPressed: () {
+                    setVoteNum('paceNote',widget.paceNoteID);
+                    if(!like) widget._Vote();
+                    
+                    setState(() {
+                      like = true;
+                    });
+                  },
                 ),
                 flex: 1,
               ),
@@ -115,6 +153,22 @@ class _paceNoteState extends State<paceNote> {
           )
         ],
       ),
-    );
+    ),
+    onTap:(){
+      Navigator.pushNamed(context, '/paceNoteDetail',arguments:{
+          'paceNoteID': widget.paceNoteID,
+          'profilePhoto': widget.profilePhoto,
+          'userID':widget.userID,
+          'title': widget.title,
+          'nickName':widget.nickName,
+          'voteNum':widget.voteNum,
+          'score':widget.score,
+          'photo':widget.photo,
+          'note': widget.note,
+          'scenicSpotInfo': widget.scenicSpotInfo
+      });
+    }
+    ); 
+      
   }
 }

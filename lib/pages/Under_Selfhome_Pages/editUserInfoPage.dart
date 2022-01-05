@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../res/module/user/user.dart';
 import 'package:getwidget/getwidget.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
 import 'package:cloudbase_core/cloudbase_core.dart';
 import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class editUserInfoPage extends StatefulWidget {
   @override
@@ -15,14 +18,15 @@ class editUserInfoPage extends StatefulWidget {
 }
 
 class _editUserInfoPageState extends State<editUserInfoPage> {
-  userSex user_sex = userSex.female;
 
-  String profilePhoto = 'https://www.itying.com/images/flutter/3.png';
-
-  String nickName = '此人昵称艺术已死';
+  String profilePhoto = '';   //用户未修改信息前的头像
+  bool isLoading =false;
+  bool isMale = true;
+  String nickName ='';
 
   bool isSelect = false;
-
+  String imageURL = "https://www.itying.com/images/flutter/2.png";//存储用户修改后的头像地址
+  bool uploaded = false; 
   TextEditingController nickNameController = TextEditingController();
 
   List<Asset> images = <Asset>[];
@@ -34,23 +38,23 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
     });
   }
 
-  Future<String> eachPhotoUp(
+  Future eachPhotoUp(
       Asset photo,
       CloudBaseStorage cbstorage,
       ) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
-    String cloudp = 'image/paceNotePhoto/' + path.substring(45);
+    String cloudp = 'image/profilePhoto/' + path.substring(45);
     try {
       await cbstorage.uploadFile(
         cloudPath: cloudp,
         filePath: path,
         onProcess: (int count, int total) {
-          // 当前进度
-          //print(count);
-          // 总进度
-          //print(total);
+          // // 当前进度
+          // print(count);
+          // // 总进度
+          // print(total);
         },
-      );
+      ).then((a){});
 
       //getUrl
       String fileID =
@@ -59,26 +63,94 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
       List<String> fileIds = [fileID];
       CloudBaseStorageRes<List<DownloadMetadata>> res =
       await cbstorage.getFileDownloadURL(fileIds);
-
-      return res.data[0].downloadUrl;
+      imageURL = res.data[0].downloadUrl;
     } catch (e) {
       print(e);
-      return 'error';
     }
   }
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+  void _getMoreData()
+  {
+    if(!isLoading)
+    {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    getid().then((value) async{
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      var res = await db.collection('userInfo').where({'userID':value}).get();
+      if(mounted)
+      {
+        setState(() {
+          isLoading = false;
+          if(res.data[0]['sex'] == 'female') {
+            _radioGroupA = 1;
+            isMale =false;
+          }
+          profilePhoto = res.data[0]['profilePhoto'];
+          nickName = res.data[0]['nickName'];
+        });
+      }
+    });
+  }
 
-  void upCloudDataBase() {
+  @override
+  void initState() {
+    this._getMoreData();
+    super.initState();
+  }
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  void upCloudDataBase()  {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
-    Collection collection = db.collection('paceNote');
-    if (images.length > 0) {
-      images.forEach((element) async {
-        String url = await eachPhotoUp(element, storage);
-        print(url);
-      });
-    }
+    Collection userInfo = db.collection('userInfo');
+    getid().then((value) {
+      if(images.length > 0)
+      {
+        images.forEach((element) async {
+          eachPhotoUp(element, storage).then((v){
+            if(nickName == '') showToast(context, '您点击过快，请稍等');
+            userInfo.where({'userID':value}).update({
+              "sex":_radioGroupA==0 ? "male":"female",
+              'profilePhoto':imageURL,
+              'nickName':(nickNameController.text == '') ?nickName:nickNameController.text
+            });
+            showToast(context, '修改信息完成！');
+            Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+              Navigator.pushNamed(context,'/tab');
+            });
+          });
+        });
+      }
+      else{
+        userInfo.where({'userID':value}).update({
+          "sex":_radioGroupA==0 ? "male":"female",
+          'nickName':nickNameController.text
+        });
+        showToast(context, '修改信息完成！');
+        Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+          Navigator.pushNamed(context,'/');
+        });
+      }
+    });
+    
   }
 
   Widget buildGridView() {
@@ -102,7 +174,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
       },
     );
   }
-
+  
   Future<void> loadAssets() async {
     List<Asset> resultList = <Asset>[];
     String error = 'No Error Detected';
@@ -153,12 +225,15 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
           icon: FaIcon(FontAwesomeIcons.arrowCircleLeft),
           color: Colors.white24,
         ),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.save))],
+        actions: [IconButton(onPressed: () {
+            upCloudDataBase();
+        }, icon: Icon(Icons.save))],
       ),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            (isLoading)?_buildProgressIndicator():
             Container(
               padding: EdgeInsets.only(top: 8.0, left: 8.0),
               height: 100,
@@ -181,7 +256,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                    (user_sex == userSex.male)
+                    (isMale)
                         ? Icon(
                       Icons.male,
                       color: Colors.lightBlue,
@@ -194,7 +269,7 @@ class _editUserInfoPageState extends State<editUserInfoPage> {
             ),
             Divider(
                 color:
-                user_sex == userSex.male ? Colors.lightBlue : Colors.pink,
+                (isMale) ? Colors.lightBlue : Colors.pink,
                 indent: 8.0,
                 endIndent: 8.0),
             Padding(padding: EdgeInsets.all(10),child: Text('修改头像'),),

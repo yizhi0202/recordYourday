@@ -22,12 +22,14 @@ import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
 import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 import 'package:flutter_app_y/res/module/mapSource/POIsearch.dart';
+import '../../res/module/baiduMapmodule/alert_dialog_utils.dart';
 
 // import 'package:amap_flutter_map/amap_flutter_map.dart';
 // import 'package:amap_flutter_base/amap_flutter_base.dart';
 
 class addScenicSpotPage extends StatefulWidget {
-  addScenicSpotPage({Key? key}) : super(key: key);
+  Map arguments;
+  addScenicSpotPage({Key? key, required this.arguments}) : super(key: key);
 
   @override
   _addScenicSpotPageState createState() => _addScenicSpotPageState();
@@ -35,7 +37,7 @@ class addScenicSpotPage extends StatefulWidget {
 
 class _addScenicSpotPageState extends State<addScenicSpotPage> {
   List<Asset> images = <Asset>[];
-  // List<String> imagePath = [];
+  String imageURL = "";
   Map spot = {'title': '名称', 'address': '地址', 'position': ''};
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
@@ -60,8 +62,7 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
   //   return Image.network('https://www.itying.com/images/flutter/3.png');
   // }
 
-  void eachPhotoUp(
-      Asset photo, CloudBaseStorage cbstorage, Collection collection) async {
+  Future eachPhotoUp(Asset photo, CloudBaseStorage cbstorage) async {
     var path = await FlutterAbsolutePath.getAbsolutePath(photo.identifier);
     String cloudp = 'image/scenicSpotPhoto/' + path.substring(45);
     try {
@@ -70,9 +71,9 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
         filePath: path,
         onProcess: (int count, int total) {
           // 当前进度
-          print(count);
+          //print(count);
           // 总进度
-          print(total);
+          //print(total);
         },
       );
 
@@ -84,33 +85,52 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
       CloudBaseStorageRes<List<DownloadMetadata>> res =
           await cbstorage.getFileDownloadURL(fileIds);
 
-      //storage to database
-      collection
-          .add({
-            'userID': '18670343782',
-            'scenicSpotPhotoUrl': res.data[0].downloadUrl
-          })
-          .then((res) {})
-          .catchError((e) {
-            print(e);
-          });
+      imageURL = imageURL + res.data[0].downloadUrl + "###";
     } catch (e) {
       print(e);
     }
-    print(path);
   }
 
   void upCloudDataBase() {
     CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
     CloudBaseStorage storage = CloudBaseStorage(core);
     CloudBaseDatabase db = CloudBaseDatabase(core);
-
-    Collection collection = db.collection('scenicSpotPhoto');
-    if (images.length > 0) {
-      images.forEach((element) async {
-        eachPhotoUp(element, storage, collection);
-      });
+    Collection scenicSpot = db.collection('scenicSpot');
+    int len = 0;
+    if(images.length > 0)
+      {
+        showToast(context, '正在上传请稍后...');
+        images.forEach((element) async {
+          eachPhotoUp(element, storage).then((_) {
+            len++;
+            if (len == images.length) {
+              scenicSpot.add({
+                'userID': widget.arguments["userID"].toString(),
+                'scenicSpotPhotoUrl': imageURL,
+                'title': titleController.text,
+                'subtitle': subTitleController.text,
+                'introduction': introductionController.text,
+                'address': spot["address"],
+                'latitude': spot['position'].latitude,
+                'longitude': spot['position'].longitude,
+                'voteNum': 1,
+                'publishTime':DateTime.now()
+              }).then((res) {
+                showToast(context, '完成上传！');
+                Future.delayed(Duration(milliseconds: 800)).whenComplete((){
+                  Navigator.pushNamed(context,'/tab');
+                });
+              }).catchError((e) {
+                print(e);
+              });
+            }
+          });
+        });
+      }
+    else{
+      showToast(context, '请至少选择一张图片后上传！');
     }
+
   }
 
   //显示选择后的图像
@@ -207,11 +227,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
 
   @override
   Widget build(BuildContext context) {
-    // AmapService.init(
-    //   iosKey: 'c3b60c1f305f5b18aab83056c6971709',
-    //   androidKey: 'be529103cc824e1978a8611fa623ebe1',
-    // );
-
     //to judge if user select a address of scenicSpot
     bool isSelectAddr = false;
     //to receive the address data choosed by user
@@ -219,7 +234,6 @@ class _addScenicSpotPageState extends State<addScenicSpotPage> {
     getScenicSpotAddr(BuildContext context) async {
       spot =
           await Navigator.pushNamed(context, '/ShowPOICitySearchPage') as Map;
-      print('地点的经度为：' + spot['position'].latitude.toString());
       //刷新用户选择后的名称和地址
       setState(() {
         spot = spot;

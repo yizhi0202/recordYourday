@@ -1,14 +1,18 @@
 import 'dart:ui';
 
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+
+import '../../module/likeAndFavor/likeAndFavorFunction.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../auditState.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart'
     show BMFModel, BMFCoordinate;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class scenicSpot extends StatefulWidget {
-  int scenicSpotID = 0; //to find the senicspots of the paceNote
-  int userID = 0; //to find the avatar and the nickname of the user
+  String scenicSpotID ; //to find the senicspots of the paceNote
+  String userID ; //to find the profilePhoto and the nickName of the user
   DateTime? publishTime = DateTime.now();
   String? title;
   String? address;
@@ -16,15 +20,16 @@ class scenicSpot extends StatefulWidget {
   String? introduction;
   String? subTitle;
   Myaudit audit = Myaudit.unknown;
-  List<String>? photo;
   int voteNum = 0; //记录投票数量
-  String? profilePhoto; //the avatar of uploader
-  String? nickName;
+  String profilePhoto;
+  String nickName;//the profilePhoto of uploader
+  String photoUrl;
   scenicSpot(
       {Key? key,
       required this.scenicSpotID,
       required this.userID,
       required this.position,
+      required this.photoUrl,
       this.publishTime,
       this.title = '难忘景点',
       this.address = '中国',
@@ -32,12 +37,10 @@ class scenicSpot extends StatefulWidget {
       this.subTitle = '',
       this.audit = Myaudit.unknown,
       this.voteNum = 0,
-      required this.photo,
-      this.profilePhoto = 'https://www.itying.com/images/flutter/4.png',
-      this.nickName = '肥宅快乐水'})
-      : super(key: key) {
-    assert(photo!.length <= 9); //the number of photos must less than 9
-  }
+        this.nickName = '匿名用户',
+        this.profilePhoto = ''
+      })
+      : super(key: key) ;
   //change the state of audit
   _SetAudit(int index) {
     if (index == 0)
@@ -61,13 +64,54 @@ class scenicSpot extends StatefulWidget {
 
 class _scenicSpotState extends State<scenicSpot> {
   //for change heart's color
+  bool like = false;
   bool favor = false;
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Container(
+    String cover = "";
+    cover = widget.photoUrl.split("###")[0];
+
+    if(cover.length == 0)
+    {
+      cover = 'https://www.itying.com/images/flutter/4.png';
+    }
+    
+
+
+    // db.collection('userInfo').where({
+    //       "userID":widget.userID
+    //   }).get().then((res){
+    //     print('res.data0的类型是');
+    //     print(res.data[0]);
+    //
+    //     nickName = (res.data[0]["nickName"] ==null)? '匿名用户':res.data[0]["nickName"];
+    //     profilePhoto = res.data[0]["profilePhoto"];
+    //     print('profilePhoto的内容'+profilePhoto);
+    //   });
+    return
+      GestureDetector(
+              onTap: () {
+                print('scenicSpot 页内的scenicSpotID is '+widget.scenicSpotID);
+                Navigator.pushNamed(context, '/scenicSpotDetail', arguments: {
+                  'scenicSpotID':widget.scenicSpotID,
+                  'scenicSpotName': widget.title,
+                  'scenicSpotLocation': widget.address,
+                  'introduction':
+                      widget.introduction,
+                  'position':widget.position,
+                  'voteNum':widget.voteNum,
+                  'photoURL':widget.photoUrl,
+                });
+              },
+      child :Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage('${widget.photo![0]}'), fit: BoxFit.cover)),
+                image: NetworkImage('$cover',scale: 60), fit: BoxFit.cover)),
         margin: EdgeInsets.all(8),
         height: 240,
         width: double.infinity,
@@ -99,34 +143,53 @@ class _scenicSpotState extends State<scenicSpot> {
                 )),
                 Row(
                   children: <Widget>[
+
                     Padding(
                       padding: EdgeInsets.only(
                         left: 30.0,
                       ),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage('${widget.profilePhoto}'),
+                        backgroundImage: NetworkImage(widget.profilePhoto),
                       ),
                     ),
-                    Text('${widget.nickName}',
+                    Text(widget.nickName,
                         style:
-                            TextStyle(color: Colors.white70, fontSize: 16.0)),
+                            TextStyle(color: Colors.white, fontSize: 16.0)),
                     // SizedBox(
                     //   width: 260,
                     // ),
                     //in favor of the scenicSpot
                     SizedBox(
-                      width: 20,
+                      width: 30,
                     ),
                     Expanded(
-                        child: IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.heart,
-                        color: !favor ? Colors.white : Colors.red,
+                      child: IconButton(
+                        icon: FaIcon(FontAwesomeIcons.star,color: !favor? Colors.white: Colors.red,),
+                        onPressed: () {
+                          getid().then((value){
+                            favorObject('myFavorScenicSpot', value, widget.scenicSpotID,context);
+                          });
+                          setState(() {
+                            favor = true;
+                          });
+                        },
                       ),
+                      flex: 1,
+                    ),
+                    SizedBox(width: 30,),
+
+                    Expanded(
+                        child: IconButton(
+                      icon:Row(children: [
+                        FaIcon(FontAwesomeIcons.heart,color: !like? Colors.white: Colors.red,),
+                        Text(widget.voteNum.toString(),style: TextStyle(color: Colors.white),),//这里放点赞数
+                      ],),
                       onPressed: () {
-                        widget._Vote();
+                        if(!like) widget._Vote();
+                        //setVoteNum('scenicSpot');
+                        setVoteNum('scenicSpot', widget.scenicSpotID);
                         setState(() {
-                          favor = true;
+                          like = true;
                         });
                       },
                     )),
@@ -135,6 +198,6 @@ class _scenicSpotState extends State<scenicSpot> {
               ],
             ),
           ),
-        ));
+        )));
   }
 }

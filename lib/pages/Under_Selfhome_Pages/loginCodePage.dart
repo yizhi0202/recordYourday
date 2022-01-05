@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -49,15 +55,23 @@ class _loginCodePageState extends State<loginCodePage> {
   //     debugLable = platformVersion;
   //   });
   // }
-  void getHttp() async {
-    try {
-      var response = await Dio().get(
-          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/hello');
-      print(response);
-    } catch (e) {
-      print(e);
+void prepareForLogin(context) async {
+    var code =  int.parse(phoneController.text.substring(0,6));
+    code *= code;
+    String result = code.toString().substring(0,6);
+    if(vertificationCodeController.text == result) 
+    {
+      print('login success!');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("userID", phoneController.text);
+      Navigator.pushNamed(context, '/tab', arguments: {"user":phoneController.text});
+    }
+    else
+    {
+      showToast(context, "验证码错误");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -90,15 +104,14 @@ class _loginCodePageState extends State<loginCodePage> {
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
                     controller: phoneController,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        labelText: '请输入手机号',
+                        labelText: '请输入邮箱',
                         labelStyle: TextStyle(fontSize: 16.0)),
                   ),
                 ),
                 //this is vertification code widget
                 MyBody(
-                  phone: phoneController.text,
+                  phone: phoneController,
                   codeController: vertificationCodeController,
                 ),
                 SizedBox(height: 32),
@@ -114,7 +127,8 @@ class _loginCodePageState extends State<loginCodePage> {
                     child: Text('登录',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
                     onPressed: () {
-                      getHttp();
+                      prepareForLogin(context);
+                      
                       // /*三秒后出发本地推送*/
                       // var fireDate = DateTime.fromMillisecondsSinceEpoch(
                       //     DateTime.now().millisecondsSinceEpoch + 3000);

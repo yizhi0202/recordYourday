@@ -1,12 +1,18 @@
 import 'dart:async';
-
+import 'package:cloudbase_database/cloudbase_database.dart';
+import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:cloudbase_core/cloudbase_core.dart';
+import 'package:cloudbase_storage/cloudbase_storage.dart';
+import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MyBody extends StatefulWidget {
   TextEditingController codeController = TextEditingController();
-  String phone = '';
-  MyBody({required this.codeController, required this.phone});
+  TextEditingController phone = TextEditingController();
+  bool signup = false;
+  MyBody({required this.codeController, required this.phone, this.signup = false});
   @override
   _MyBodyState createState() => _MyBodyState();
 }
@@ -32,6 +38,33 @@ class _MyBodyState extends State<MyBody> {
         return null; //返回null按钮禁止点击
       }
     });
+  }
+  void getHttp() async {
+    try {
+      CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+
+      CloudBaseDatabase db = CloudBaseDatabase(core);
+      print(widget.phone);
+      db.collection('Users').where({
+        'userID': widget.phone.text,
+      }).get().then((res){
+        if(res.data.length == 0 && widget.signup == false)
+        {
+          showToast(context, "没有此用户");
+        }
+        else
+        {
+           Dio().post(
+          'https://hello-cloudbase-7gk3odah3c13f4d1.service.tcloudbase.com/sendEmail',
+          data: {'phone': widget.phone.text}).then((value) {
+
+          });
+        }
+      });
+     
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _initTimer() {
@@ -116,7 +149,7 @@ class _MyBodyState extends State<MyBody> {
                     shape: StadiumBorder(side: BorderSide.none),
                     onPressed: () {
                       //http 发送信息
-
+                      getHttp();
                       setState(() {
                         _buttonClickListen();
                       });

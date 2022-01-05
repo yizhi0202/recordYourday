@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../res/module/loginFun/vertificationBox.dart';
 
-class findPassPage extends StatelessWidget {
+class findPassPage extends StatefulWidget {
+  findPassPage({ Key? key }) : super(key: key);
+
+  @override
+  _findPassPageState createState() => _findPassPageState();
+}
+
+class _findPassPageState extends State<findPassPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController vertificationCodeController = TextEditingController();
   @override
@@ -34,14 +41,14 @@ class findPassPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 32, right: 32),
                   child: TextField(
-                    keyboardType: TextInputType.number,
+                    controller: phoneController,
                     decoration: InputDecoration(
-                        labelText: '请输入手机号',
+                        labelText: '请输入邮箱',
                         labelStyle: TextStyle(fontSize: 16.0)),
                   ),
                 ),
                 MyBody(
-                    phone: phoneController.text,
+                    phone: phoneController,
                     codeController: vertificationCodeController),
                 SizedBox(height: 32),
                 Container(
@@ -55,7 +62,17 @@ class findPassPage extends StatelessWidget {
                   child: TextButton(
                     child: Text('确认',
                         style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {},
+                    onPressed: () {
+                      var code =  int.parse(phoneController.text.substring(0,6));
+                      code *= code;
+                      String result = code.toString().substring(0,6);
+                      if(vertificationCodeController.text == result) 
+                      {
+                        String userID = phoneController.text;
+                        Navigator.pushNamed(context, '/editPass', arguments:{'userID':userID});
+                      }
+                      
+                    },
                   ),
                 ),
               ],

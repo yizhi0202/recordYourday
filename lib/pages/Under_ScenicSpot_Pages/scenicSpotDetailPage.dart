@@ -7,7 +7,12 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:list_tile_more_customizable/list_tile_more_customizable.dart';
 import 'package:flutter_app_y/res/module/dataBase/getCloudBaseCore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app_y/res/module/likeAndFavor/likeAndFavorFunction.dart';
+
 import 'package:flutter_app_y/res/module/baiduMapmodule/alert_dialog_utils.dart';
+
+import 'comment.dart';
 
 List<String> newPhotos = [
   'https://www.itying.com/images/flutter/1.png', //will be override later ,so it doesn't matter
@@ -26,6 +31,8 @@ class scenicSpotDetailPage extends StatefulWidget {
 
 class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
   bool keyboard = false; //键盘的弹起、收回状态
+  bool favor  = false;
+  List commentList =[];
   TextEditingController editingController =
       new TextEditingController(); //输入框的编辑
   //get the photoUrl of uploading by userID
@@ -34,19 +41,107 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
     CloudBaseDatabase db = CloudBaseDatabase(core);
     Collection collection = db.collection('scenicSpotPhoto');
     var _ = db.command;
-    var res = await collection.where({'userID': _.eq(userID)}).get();
-    for (var i = 0; i < res.data.length; ++i) {
-      newPhotos[i] = res.data[i]['scenicSpotPhotoUrl'];
+  }
+  bool isLoading  = false;
+  ScrollController _scrollController  =ScrollController();
+  _getMoreData() async
+  {
+    if(!isLoading)
+      {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    CloudBaseCore core = MyCloudBaseDataBase().getCloudBaseCore();
+    CloudBaseDatabase db = CloudBaseDatabase(core);
+    var res = await db.collection('comments').where({'objectID':widget.arguments['scenicSpotID']}).limit(3).get();
+    if(res.data.length == 0)
+      {
+        showToast(context, '此景点还没有发表评论，抢沙发吧!');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    else{
+      List temp = [];
+      int len = 0;
+      res.data.forEach((element) async{
+        var result  = await db.collection('userInfo').where({'userID':element['userID']}).get();
+        temp.add(comment(content: element['content'], profilePhoto: result.data[0]['profilePhoto'], nickname: result.data[0]['nickName']));
+        len++;
+        if(len == res.data.length)
+        {
+          if(mounted)
+          {
+            setState(() {
+              isLoading = false;
+              commentList = temp;
+            });
+          }
+        }
+      });
     }
+
+  }
+
+  Future getid() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("userID");
   }
 
   @override
+  void initState() {
+    this._getMoreData();
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+  Widget _buildList() {
+    return ListView.builder(
+//+1 for progressbar
+      itemCount: commentList.length + 1,
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == commentList.length) {
+          return _buildProgressIndicator();
+        } else {
+          return commentList[index];
+        }
+      },
+      controller: _scrollController,
+    );
+  }
+  @override
   Widget build(BuildContext context) {
+    newPhotos = widget.arguments["photoURL"].split("###").where((s) => !s.isEmpty).toList();
+
+    
     double height =
         MediaQuery.of(context).padding.bottom; // 这个很简单，就是获取高度，获取的底部安全区域的高度
     return Scaffold(
-        body: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+        body: ListView(
       children: [
         Stack(
           alignment: Alignment.topLeft,
@@ -80,10 +175,7 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             ),
             IconButton(
                 onPressed: () {
-                  if (widget.arguments['userID'] != null)
-                    print('there are arguments,${widget.arguments['userID']}');
-                  else
-                    print('no arguments');
+
                   Navigator.of(context).pop();
                 },
                 icon: Icon(
@@ -108,8 +200,12 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                       color: Colors.yellow,
                     ),
                   ),
+                  Expanded(
+                      child: 
                   Text(
                     '景点位置${widget.arguments['scenicSpotLocation']}',
+                    maxLines: 20,
+                  )
                   )
                 ],
               ),
@@ -119,13 +215,20 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
                       child: Icon(
                         Icons.circle,
                         size: 42,
-                        color: Colors.grey,
+                        color: (!favor)?Colors.grey:Colors.yellowAccent,
                       ),
                       padding: EdgeInsets.only(top: 8, right: 0)),
                   Padding(
                     padding: EdgeInsets.only(right: 2),
                     child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          getid().then((value){
+                            favorObject('myFavorScenicSpot', value, widget.arguments['scenicSpotID'],context);
+                          });
+                          setState(() {
+                            favor = true;
+                          });
+                        },
                         icon: FaIcon(
                           FontAwesomeIcons.star,
                           color: Colors.white,
@@ -140,248 +243,36 @@ class _scenicSpotDetailPageState extends State<scenicSpotDetailPage> {
             height: 240,
             child: SingleChildScrollView(
               child: Text(
-                '简介${widget.arguments['introduction'] * 10}',
+                '简介${widget.arguments['introduction']}',
                 style: TextStyle(fontSize: 16),
               ),
             ),
           ),
         ),
         GestureDetector(
-          onTap: () {},
-          child: Text(
-            '全部评论({26})',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.start,
-          ),
-        ),
-        Container(
-          child: ListTile(
-              horizontalTitleGap: 8.0,
-              leading: ClipOval(
-                child: Image.network(
-                  'https://www.itying.com/images/flutter/1.png',
-                  fit: BoxFit.cover,
-                  height: 40,
-                  width: 40,
-                ),
-              ),
-              title: Padding(
-                padding: EdgeInsets.only(
-                  left: 0,
-                ),
-                child: Row(
-                  children: [
-                    TextButton(
-                      child: Text('此人昵称'),
-                      onPressed: () {},
-                    ),
-                    Text(
-                      '2021-8-12 14:34',
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-              subtitle: Padding(
-                padding: EdgeInsets.only(
-                  left: 7,
-                ),
-                child: Text(
-                  '评论，不错的',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-          height: 100,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 210, right: 32),
-          child: TextButton(
-              onPressed: () {
-                print('查看更多的评论');
-              },
-              child: Text(
-                '查看更多 >',
-                style: TextStyle(color: Colors.grey),
-                textAlign: TextAlign.center,
-              )),
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: ButtonBar(
-                children: [Icon(Icons.comment), Text('24')],
-              ),
-              flex: 1,
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  getPhotoList('18670343782');
-                  print('点赞数增加');
-                },
-                child: ButtonBar(
-                  children: [FaIcon(FontAwesomeIcons.heart), Text('36')],
-                ),
-              ),
-              flex: 1,
-            ),
-            Expanded(
-                flex: 1,
-                child: SizedBox(
-                  width: 16,
-                )),
-            // Container(
-            //   child: AnimatedPadding(
-            //     //可以添加一个动画效果
-            //     padding: MediaQuery.of(context).viewInsets, //边距（必要）
-            //     duration: const Duration(milliseconds: 100), //动画时常 （必要）
-            //     child: Container(
-            //       color: Colors.white, //评论位置颜色
-            //       padding: new EdgeInsets.only(
-            //           bottom: keyboard
-            //               ? 0
-            //               : height), //距离底部边界距离，这个是为了适配全面屏的，keyboard，bool类型，代表键盘的弹起和收回。true谈起，false收回，这个值怎么获取下面会有提到。
-            //       child: Container(
-            //         height: keyboard ? 60 : 30, //设置输入框谈起和收回时的高度
-            //         width: double.infinity, //设置宽度
-            //         child: Flex(
-            //           //控件横向排版弹性布局
-            //           direction: Axis.horizontal,
-            //           crossAxisAlignment: CrossAxisAlignment.end, //剧右边显示
-            //           children: <Widget>[
-            //             Expanded(
-            //               flex: 1,
-            //               child: Container(
-            //                 height: double.infinity,
-            //                 margin: new EdgeInsets.all(10),
-            //                 child: TextField(
-            //                   maxLines: 50, //最大行数
-            //                   controller:
-            //                       editingController, //绑定TextEditController更好操作
-            //                   style: TextStyle(
-            //                     //设置字体、颜色
-            //                     fontSize: 16,
-            //                     color: Colors.black,
-            //                   ),
-            //                   autocorrect: true,
-            //                   decoration: InputDecoration(
-            //                     //设置提示内容，字体颜色、大小等
-            //                     border: InputBorder.none,
-            //                     hintText: "请发表你的评论",
-            //                     hintStyle: TextStyle(
-            //                       fontSize: 16,
-            //                       color: Colors.grey,
-            //                     ),
-            //                   ),
-            //                   onChanged: (text) {
-            //                     // 获取时时输入框的内容
-            //                   },
-            //                 ),
-            //                 decoration: BoxDecoration(
-            //                     //设置边框、圆角效果
-            //                     color: Colors.white,
-            //                     borderRadius: BorderRadius.circular(5),
-            //                     border: new Border.all(
-            //                         width: 0.5, color: Colors.grey)),
-            //               ),
-            //             ),
-            //             Offstage(
-            //               offstage: !keyboard, //键盘弹起，发布按钮显示、反之隐藏
-            //               child: GestureDetector(
-            //                 onTap: () {
-            //                   // 点击发布按钮判断输入框内容是否为空，并提示用户
-            //                   if (editingController.text.isEmpty) {
-            //                     showToast(context, "请填写评论信息");
-            //                     return;
-            //                   }
-            //                   editingController.text = ""; //不为空，点击发布后，清空内容
-            //                   FocusScope.of(context)
-            //                       .requestFocus(FocusNode()); //关闭键盘
-            //                 },
-            //                 child: Container(
-            //                   // 设置点击按钮样式
-            //                   height: 30,
-            //                   alignment: Alignment.center,
-            //                   padding: new EdgeInsets.fromLTRB(10, 0, 10, 0),
-            //                   margin:
-            //                       new EdgeInsets.only(bottom: 14, right: 10),
-            //                   decoration: BoxDecoration(
-            //                       borderRadius: BorderRadius.all(
-            //                         Radius.circular(8.0),
-            //                       ),
-            //                       color: Colors.grey),
-            //                   child: Text(
-            //                     "发布",
-            //                     style: TextStyle(
-            //                         color: Colors.white, fontSize: 14),
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+          onTap: () {
+            Navigator.pushNamed(context, '/comments',arguments: {'scenicSpotID':widget.arguments['scenicSpotID'],'paceNoteID':''});
 
-            Expanded(
-              child: Container(
-                  height: 30,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 0),
-                    child: TextField(
-                      onTap: () {},
-                      decoration: InputDecoration(
-                        labelText: '评论显真情...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            /// 里面的数值尽可能大才是左右半圆形，否则就是普通的圆角形
-                            Radius.circular(50),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )),
-              flex: 2,
-            ),
-          ],
-        )
+          },
+          child: Padding(padding: EdgeInsets.all(10),child:
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.comment,color: Colors.black,),
+              Text(
+                '查看全部评论',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.start,
+              ),
+            ],
+          ),)
+        ),
+        Container(height: 180,child:
+          _buildList(),)
       ],
     ));
   }
 }
-
-//  Card(
-//             child: Row(
-//               children: [
-//                 ClipOval(
-//                   child: Image.network(
-//                     'https://www.itying.com/images/flutter/1.png',
-//                     fit: BoxFit.cover,
-//                     height: 40,
-//                     width: 40,
-//                   ),
-//                 ),
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Row(
-//                       children: [],
-//                     ),
-//                     Expanded(
-//                       child: Text(
-//                         ' 评论，不错的' * 10,
-//                         maxLines: 3,
-//                         overflow: TextOverflow.ellipsis,
-//                       ),
-//                     )
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
