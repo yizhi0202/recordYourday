@@ -17,7 +17,10 @@ A new Flutter application.
 6 Welcome to join us if you are interested in it, let's make it better together. :blush:
 
 **Contact Information**:e-mail:
+
 yizhi020208@gmail.com
+
+z31071025@gmail.com
 
 **Photo**:camera:
 ![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/login.jpg)
