@@ -23,7 +23,6 @@ yizhi020208@gmail.com
 z31071025@gmail.com
 
 **Photo**:camera:
-![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/login.jpg)
 
 ![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/paceNote.jpg#pic_center)
 
