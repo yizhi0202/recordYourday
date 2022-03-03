@@ -28,7 +28,7 @@ z31071025@gmail.com
 
 ![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/scenicSpot.jpg#pic_center)
 
-![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/.jpg#pic_center)
+![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/favorite.jpg#pic_center)
 
 ![](https://6865-hello-cloudbase-7gk3odah3c13f4d1-1306308742.tcb.qcloud.la/image/application_photo/emgContact.jpg#pic_center)
 
